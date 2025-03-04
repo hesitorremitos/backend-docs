@@ -10,13 +10,19 @@ export default defineConfig({
 			social: {
 				github: 'https://github.com/withastro/starlight',
 			},
+			pagination: true,
+			tagline: 'A simple documentation theme for Astro',
+			titleDelimiter: ' | ',
+			locales:{
+				root:{
+					label: 'Español',
+					lang: 'es',
+				}
+			},
 			sidebar: [
 				{
 					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
+					autogenerate: { directory: 'guides' },
 				},
 				{
 					label: 'Reference',
