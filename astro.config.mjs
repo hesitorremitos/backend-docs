@@ -21,7 +21,7 @@ export default defineConfig({
 			},
 			sidebar: [
 				{
-					label: 'Guides',
+					label: 'Fundamentos del diseño web',
 					autogenerate: { directory: 'guides' },
 				},
 				{

@@ -1,0 +1,68 @@
+---
+title: HTML5
+---
+
+## ¿Qué es HTML5?
+Html5 es la última versión de HTML (HyperText Markup Language), el lenguaje de marcado estándar para documentos diseñados para ser mostrados en un navegador web. Es una tecnología clave en la web y es fundamental para cualquier desarrollador web.
+
+Si bien HTML no es una 
+
+## Etiquetas HTML
+Las etiquetas HTML son palabras clave rodeadas por los signos de mayor y menor ej:`<div>`. Estas pueden tener o no contenido.
+
+### Etiquetas con contenido
+Son las que tienen etiqueta de apertura y cierre, y entre ellas se encuentra el contenido, que puede ser texto u otras etiquetas.
+
+Primero se escribe la etiqueta de apertura `<p>`, luego el contenido, y finalmente la etiqueta de cierre `</p>`
+
+- `<p>` Define un párrafo
+- `<div>` Define una sección de la página, tambien sirve como contenedor para darle mas _diseño_.
+```html
+<p>Este es un párrafo</p>
+
+<div>
+    <!-- Aqui ira tu contenido -->
+    <p>Este es un párrafo dentro de un div</p>
+</div>
+```
+
+### Etiquetas sin contenido
+Son las que no tienen contenido, y se cierran en la misma etiqueta de apertura.
+
+- `<img>` Inserta una imagen
+- `<input>` Crea un campo de texto
+```html
+<img>
+<input>
+```
+
+Existen muchas etiquetas HTML, cada una con un propósito diferente. Puedes encontrar una lista completa de etiquetas en la [documentación de Mozilla](https://developer.mozilla.org/es/docs/Web/HTML/Elemento).
+
+
+## Propiedades de las etiquetas
+Las etiquetas HTML pueden tener propiedades o atributos, que se definen dentro de la etiqueta de apertura. se escriben como `nombre="valor"` o simplemente la propiedad.
+
+- `ìd` Identificador único de la etiqueta. Es como asignar un nombre a la etiqueta.
+- `src` Especifica la URL de la imagen a mostrar.
+- `alt` Texto alternativo que se muestra si la imagen no se puede cargar.
+- `type` Define el tipo de campo de texto.
+- `placeholder` Texto de ayuda que se muestra en el campo de texto.
+```html "id="contenedor"" "src="imagen.jpg"" "alt="Descripcion de la imagen"" "type="text"" "placeholder="Escribe algo""
+<div id="contenedor">
+    <p>Este es un párrafo dentro de un div</p>
+</div>
+
+<div>
+    <p> Esto es una imagen de Muestra</p>
+    <img src="imagen.jpg" alt="Descripcion de la imagen">
+    <input type="text" placeholder="Escribe algo">
+</div>
+```
+
+Cada una de las etiquetas tiene propiedades específicas, por lo que es importante revisar la documentación de cada una.
+Algunas propiedades comunes que tiene todas las etiquetas son:
+- `class` Clase de la etiqueta, se usa para darle estilos con CSS o asignarle una categoría a la etiqueta.
+- `style` Estilos en línea, se usa para darle estilos a la etiqueta directamente.
+
+
+## Estructura base de un documento HTML
