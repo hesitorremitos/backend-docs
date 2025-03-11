@@ -83,12 +83,74 @@ Ahora que conocemos las etiquetas y sus propiedades, vamos a ver cómo se estruc
 
 2. Usamos la etiqueta `<html>` que envuelve todo el contenido de la página. Esta etiqueta tiene un atributo `lang` que indica el idioma de la página(esto se usa para accesibilidad o SEO).
 
-    ```html {2-4}
+    ```html {2-4} "lang="es""
     <!DOCTYPE html>
     <html lang="es">
         <!-- Aquí va el contenido de la página -->
     </html>
     ```
 
+3. Dentro de la etiqueta `<html>` se encuentran dos secciones: `<head>` y `<body>`. La primera contiene información sobre la página, como el título, metadatos, enlaces a estilos y scripts, etc. La segunda contiene el contenido visible de la página(Visible por el usuario).
+
+    ```html {3-5, 7-9}
+    <!DOCTYPE html>
+    <html lang="es">
+        <head>
+            <!-- Metadatos, enlaces a estilos y scripts -->
+        </head>
+
+        <body>
+            <!-- Contenido visible de la página -->
+        </body>
+    </html>
+    ```
 </Steps>
+
+### Etiqueta `<title>`
+[Con contenido](/guides/02-html/#etiquetas-con-contenido)(con cierre)
+
+La etiqueta `<title>` se usa dentro de la etiqueta `<head>` para definir el título de la página, que se muestra en la pestaña del navegador.
+
+```html ins={2}
+<head>
+    <title>Título de la página</title>
+</head>
+```
+
+### Etiqueta `<meta>`
+*[Sin contenido](/guides/02-html/#etiquetas-sin-contenido)(sin cierre)*
+
+La etiqueta `<meta>` se usa para definir metadatos sobre la página, como la descripción, autor, palabras clave, etc. Estos metadatos son importantes para el SEO y la accesibilidad.
+
+```html ins={2-5}
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Descripción de la página">
+    <meta name="keywords" content="palabras clave, separadas, por, comas">
+    <meta name="author" content="Nombre del autor">
+</head>
+```
+
+### Etiqueta `<link>`
+*[Sin contenido](/guides/02-html/#etiquetas-sin-contenido)(sin cierre)*
+La etiqueta `<link>` se usa para enlazar o cargar archivos externos como:
+- Hojas de estilos CSS
+- Fuentes
+- Iconos
+- Archivos JavaScript
+
+Lo que indica que dichos recursos estaran disponibles para la página.
+```html 
+<head>
+    <!-- Cargando estilos CSS -->  
+    <link rel="stylesheet" href="estilos.css">
+    
+    <!-- Cargando fuente -->
+    <link rel="icon" href="favicon.ico">
+
+    <!-- Cargando fuente -->
+    <link rel="preload" href="fuente.woff2" as="font" type="font/woff2">
+</head>
+```
+
 

@@ -1,0 +1,103 @@
+---
+title: Estilos CSS
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+Ya que hemos creado la estructura básica de nuestro documento HTML, es hora de agregar estilos para que se vea más atractivo. En este tutorial, nos enfocaremos en los estilos CSS básicos para darle un aspecto más agradable a nuestro formulario de inicio de sesión.
+Usaremos el anterior documento HTML(Login) como base para agregar estilos.
+
+
+## Reglas CSS
+Tambien conocida como **sintaxis** de CSS. Se componente principalmente de 2 partes: Los **selectores** y las **declaraciones**.
+
+Los selectores son la parte de la regla CSS que indica a qué elementos se aplicarán los estilos. Pueden ser de diferentes tipos, como selectores de etiqueta, selectores de clase, selectores de ID, etc.
+
+### Selectores de etiqueta
+Selecciona todas las etiquetas con el nombre especificado como  `h1`, `div`,`br`, `p`, etc.
+
+```html "h1" "div" "br" "p"
+<h1>Titulo</h1>
+<div>Contenido</div>
+<br>
+<p>Párrafo</p>
+```
+
+
+### Selector de clase
+Selecciona todas las etiquetas con la clase especificada como `.[clase]`. del atributo `class` de las etiquetas HTML.
+
+```html "contenedor" "formulario"
+<div class="contenedor formulario">
+    <h1>Titulo</h1>
+</div>
+```
+De lo anterior se dice que el contenedor tiene la clase `.formulario` y `.contenedor`.
+El `.`(punto) indica que es una clase.
+
+### Selector de ID
+Selecciona una etiqueta con el ID especificado como `#[id]`. del atributo `id` de las etiquetas HTML.
+
+```html "formulario" "title"
+<div id="formulario">
+    <h1 id="title">Titulo</h1>
+</div>
+```
+De lo anterior se dice que el contenedor tiene el id `#formulario`, y el titulo tiene el id `#title`.
+El `#`(numeral) indica que es un ID.
+
+
+### Declaraciones
+Las declaraciones son la parte de la regla CSS que define los estilos que se aplicarán a los elementos seleccionados. Se componen de una propiedad y un valor separados por dos puntos `:`.
+```css "propiedad : valor;"
+h1 {
+propiedad : valor;
+}
+```
+
+## Agregando estilos CSS
+Para agregar estilos a nuestro documento HTML, usaremos la etiqueta `<style>` dentro de la etiqueta `<head>`. Esta etiqueta se usa para definir estilos en línea, que se aplican directamente a las etiquetas HTML.
+
+```html {4-6}
+<head>
+    <title>Mi primer login</title>
+    <link rel="icon" href="favicon.ico">
+    <style>
+        /* Estilos CSS */
+    </style>
+</head>
+```
+
+## Agregando estilos a etiquetas HTML
+Como mencionamos, usaremos en **login** anteioremente creado como base para agregar estilos.
+Dentro de la etiqueta `<style>`, agregaremos los estilos CSS para darle un aspecto más atractivo a nuestro formulario de inicio de sesión.
+
+Agregaremos un fondo a nuestro formulario, siguiendo los siquintes pasos:
+
+<Steps>
+
+1. Identificamos la etiqueta a estilizar, en este caso `<form>`. y despues abrimos y cerramos las llaves `{}`.
+    ```css
+    form {
+        /* Estilos para el formulario */
+    }
+    ```
+
+2. Dentro de las llaves, agregamos las propiedades y valores CSS para darle estilo al formulario. En este caso, agregaremos un color de fondo.
+
+    ```css
+    form {
+        background-color: red;
+    }
+    ```
+3. Guardamos los cambios y recargamos la página para ver el efecto de los estilos.
+
+4. Modificamos el color a uno mas atractivo usando el valor hexadecimal `#RRGGBB` o el nombre del color.
+
+    ```css
+    form {
+        background-color: #f0f0f0;
+    }
+    ```
+
+</Steps>
