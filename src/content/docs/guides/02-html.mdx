@@ -1,6 +1,8 @@
 ---
 title: HTML5
 ---
+import {Steps} from '@astrojs/starlight/components'
+
 
 ## ¿Qué es HTML5?
 Html5 es la última versión de HTML (HyperText Markup Language), el lenguaje de marcado estándar para documentos diseñados para ser mostrados en un navegador web. Es una tecnología clave en la web y es fundamental para cualquier desarrollador web.
@@ -42,7 +44,7 @@ Existen muchas etiquetas HTML, cada una con un propósito diferente. Puedes enco
 ## Propiedades de las etiquetas
 Las etiquetas HTML pueden tener propiedades o atributos, que se definen dentro de la etiqueta de apertura. se escriben como `nombre="valor"` o simplemente la propiedad.
 
-- `ìd` Identificador único de la etiqueta. Es como asignar un nombre a la etiqueta.
+- `id` Identificador único de la etiqueta. Es como asignar un nombre a la etiqueta.
 - `src` Especifica la URL de la imagen a mostrar.
 - `alt` Texto alternativo que se muestra si la imagen no se puede cargar.
 - `type` Define el tipo de campo de texto.
@@ -66,3 +68,27 @@ Algunas propiedades comunes que tiene todas las etiquetas son:
 
 
 ## Estructura base de un documento HTML
+
+Ahora que conocemos las etiquetas y sus propiedades, vamos a ver cómo se estructura un documento HTML básico.
+
+
+<Steps>
+
+
+1. Comenzamos con la etiqueta `<!DOCTYPE html>` que indica al navegador que se trata de un documento HTML5.
+
+    ```html 
+    <!DOCTYPE html>
+    ```
+
+2. Usamos la etiqueta `<html>` que envuelve todo el contenido de la página. Esta etiqueta tiene un atributo `lang` que indica el idioma de la página(esto se usa para accesibilidad o SEO).
+
+    ```html {2-4}
+    <!DOCTYPE html>
+    <html lang="es">
+        <!-- Aquí va el contenido de la página -->
+    </html>
+    ```
+
+</Steps>
+
