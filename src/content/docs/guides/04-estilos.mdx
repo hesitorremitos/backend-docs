@@ -78,26 +78,37 @@ Agregaremos un fondo a nuestro formulario, siguiendo los siquintes pasos:
 
 1. Identificamos la etiqueta a estilizar, en este caso `<form>`. y despues abrimos y cerramos las llaves `{}`.
     ```css
-    form {
-        /* Estilos para el formulario */
+    fieldset {
+        /* Estilos para el fieldset */
     }
     ```
 
-2. Dentro de las llaves, agregamos las propiedades y valores CSS para darle estilo al formulario. En este caso, agregaremos un color de fondo.
+2. Dentro de las llaves, agregamos las propiedades y valores CSS para darle estilo al fieldsetulario. En este caso, agregaremos un color de fondo.
 
     ```css
-    form {
+    fieldset {
         background-color: red;
     }
     ```
 3. Guardamos los cambios y recargamos la página para ver el efecto de los estilos.
 
 4. Modificamos el color a uno mas atractivo usando el valor hexadecimal `#RRGGBB` o el nombre del color.
+    :::note
+    Tambien puede usar los diferentes tipos de colores como: 
+    - `rgb(255, 0, 0)` para rojo.(Red, Green, Blue)
+    - `rgba(255, 0, 0, 0.5)` para rojo con transparencia.(Red, Green, Blue, Alpha)
+    - `hsl(0, 100%, 50%)` para rojo.(Hue, Saturation, Lightness)
+    - `hsla(0, 100%, 50%, 0.5)` para rojo con transparencia.(Hue, Saturation, Lightness, Alpha)
+
+    Estos son otros tipos de colores que puede usar en CSS.
+    :::
 
     ```css
-    form {
+    fieldset {
         background-color: #f0f0f0;
     }
     ```
-
 </Steps>
+
+## Agregando estilos a clases y IDs
+Además de agregar estilos a las etiquetas HTML, también podemos agregar estilos a clases y IDs. En nuestro formulario de inicio de sesión, agregaremos estilos a la clase `.formulario` y al ID `#title`.

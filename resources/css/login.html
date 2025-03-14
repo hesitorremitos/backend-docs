@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>Mi primer login</title>
+        <link rel="icon" href="favicon.ico">
+        <style>
+            fieldset{
+                background-color: #f0f0f0;
+            }
+            .login{
+                width: 30%;
+                margin: auto;
+            }
+            /* Hacer que los inputs ocupen todo el ancho restante con los labels en la misma linea*/
+
+            #username, #password{
+                width: 100%;
+            }
+
+            label{
+                font-family: sans-serif;
+            }
+            
+            .boton{
+                width: 100%;
+                background-color: darkblue;
+                color: white;
+            }
+        </style>
+    </head>
+
+    <body>
+        <form class="login">
+            <fieldset>
+                <legend>Inicio de sesión</legend>
+                <div>
+                    <!-- Campo usuario -->
+                    <label for="username">Usuario:</label>
+                    <input  type="text" id="username" placeholder="Ingrese su usuario">
+                </div>
+                <br>
+                <div>
+                    <!-- Campo contraseña -->
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" placeholder="Ingrese su contraseña">
+                </div>
+                <br>
+                <button type="submit" class="boton">Iniciar sesión</button>
+            </fieldset>
+        </form>
+    </body>
+</html>
