@@ -3,6 +3,7 @@ title: Estilos CSS
 ---
 
 import { Steps } from '@astrojs/starlight/components';
+import { Card } from '@astrojs/starlight/components';
 
 Ya que hemos creado la estructura básica de nuestro documento HTML, es hora de agregar estilos para que se vea más atractivo. En este tutorial, nos enfocaremos en los estilos CSS básicos para darle un aspecto más agradable a nuestro formulario de inicio de sesión.
 Usaremos el anterior documento HTML(Login) como base para agregar estilos.
@@ -111,4 +112,87 @@ Agregaremos un fondo a nuestro formulario, siguiendo los siquintes pasos:
 </Steps>
 
 ## Agregando estilos a clases y IDs
-Además de agregar estilos a las etiquetas HTML, también podemos agregar estilos a clases y IDs. En nuestro formulario de inicio de sesión, agregaremos estilos a la clase `.formulario` y al ID `#title`.
+Además de agregar estilos a las etiquetas HTML, también podemos agregar estilos a clases y IDs. En nuestro formulario de inicio de sesión, para lo cual añadiremos algunas clases y IDs a las etiquetas HTML.
+
+```html "class="form""  "class="contenedor"" "class="campo"" "id="username"" "id="password"" ins={8-12}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>Mi primer login</title>
+        <link rel="icon" href="favicon.ico">
+    </head>
+    <!--Estilos -->
+    <style>
+        fieldset {
+            color: #f0f0f0;
+        }
+    </style>
+
+    <body>
+        <form clase="login">
+            <fieldset>
+                <legend>Inicio de sesión</legend>
+                <div class="campo"> 
+                    <!-- Campo usuario -->
+                    <label for="username">Usuario:</label>
+                    <input type="text" id="username" placeholder="Ingrese su usuario">
+                </div>
+                <br>
+                <div>
+                    <!-- Campo contraseña -->
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" placeholder="Ingrese su contraseña">
+                </div>
+                <br>
+                <button class="boton"  type="submit">Iniciar sesión</button>
+            </fieldset>
+        </form>
+    </body>
+</html>
+```
+
+Continuamos con la etiqueta de estilo `<style>` y agregamos estilos para las clases y los IDs que hemos agregado a las etiquetas HTML.
+
+```html
+<style>
+    fieldset{
+        background-color: #f0f0f0;
+    }
+    .login{
+        width: 30%;
+        margin: auto;
+    }
+
+    /*Estilos para los campos de texto */
+    #username, #password{
+        width: 100%;
+    }
+
+    /*Estilos para las etiquetas */
+    label{
+        font-family: sans-serif;
+    }
+    
+    /*Estilos para el botón */
+    .boton{
+        width: 100%;
+        background-color: darkblue;
+        color: white;
+    }
+</style>
+```
+
+Ahora tenemos un login mucho mas atractivo y con estilos CSS básicos.
+![Login con estilos CSS](../../../assets/css/1.login+css.png)
+
+
+:::caution
+Cabe mencionar que estos estilos no afectan en el funcionamiento del formulario, solo son para darle un aspecto más atractivo.
+:::
+
+## Trabajo en clase 2
+<Card title="Hazlo tu mismo">
+    Con el formulario de registro [anteriormente creado](/guides/03-htmlexample/#trabajo-en-clase-1) como base, agrega estilos CSS básicos para darle un aspecto más atractivo, el resultado final debe ser similar a la siguiente imagen.
+    ![Registro con estilos CSS](../../../assets/css/2.registro+css.png)
+
+ </Card>
