@@ -52,7 +52,7 @@ jobs:
       - name: "show Files"
         run: ls -la
       - name: "Deploying to FTP($${{ env.platform }})"
-        if: ${{ env.ftp_server = 'ftp.serviciowebinf.site'}}
+        if: ${{ env.ftp_server == 'ftp.serviciowebinf.site'}}
         uses: SamKirkland/FTP-Deploy-Action@4.3.5
         with:
           server: ${{ env.ftp_server }}
