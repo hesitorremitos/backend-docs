@@ -25,8 +25,8 @@ export default defineConfig({
 					autogenerate: { directory: 'guides' },
 				},
 				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					label: 'Solucionario',
+					autogenerate: { directory: 'solutions' },
 				},
 			],
 		}),
