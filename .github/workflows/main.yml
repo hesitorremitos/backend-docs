@@ -30,7 +30,13 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+
+      - name: "Building the project"
+        run: bun run build --frozen-lockfile
       - name: "Ejecutando accion"
         run: echo "Hola mundo"
       - name: "Mostrando variables de entorno"
