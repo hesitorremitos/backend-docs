@@ -43,3 +43,6 @@ jobs:
           echo "FTP Username: ${{ secrets.FTP_USERNAME }}"
           echo "FTP Password: ${{ secrets.FTP_PASSWORD }}"
           echo "FTP Server: ${{ secrets.FTP_SERVER }}"
+
+      - name: "show Files"
+        run: ls -la
