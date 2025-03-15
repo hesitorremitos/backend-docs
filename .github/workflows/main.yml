@@ -36,7 +36,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
 
       - name: "Building the project"
-        run: bun run build --frozen-lockfile
+        run: |
+          bun install --frozen-lockfile
+          bun run build
       - name: "Ejecutando accion"
         run: echo "Hola mundo"
       - name: "Mostrando variables de entorno"
