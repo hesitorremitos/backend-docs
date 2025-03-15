@@ -58,8 +58,6 @@ jobs:
           server: ${{ env.ftp_server }}
           username: ${{ env.ftp_username }}
           password: ${{ env.ftp_password }}
-          local-dir: dist
-          remote-dir: /
-          exclude: .gitignore
-          fail-on-error: true
-          debug: true
+          local-dir: dist/
+          server-dir: /
+          log-level: standard
