@@ -21,6 +21,9 @@ jobs:
       platform: ifastnet
       region: Bolivia
       account: hesitorremitos
+      ftp_username: ${{ secrets.FTP_USERNAME }}
+      ftp_password: ${{secrets.FTP_PASSWORD}}
+      ftp_server: ${{secrets.FTP_SERVER}}
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -30,7 +33,13 @@ jobs:
       - name: "Ejecutando accion"
         run: echo "Hola mundo"
       - name: "Mostrando variables de entorno"
+        if: ${{ env.platform == 'ifastnet' }}
         run: |
           echo "Plataforma: ${{ env.platform}}"
           echo "Region: ${{env.region}}"
           echo "Cuenta: ${{env.account}}"
+      - name: "Printing secrets"
+        run: |
+          echo "FTP Username: ${{ secrets.FTP_USERNAME }}"
+          echo "FTP Password: ${{ secrets.FTP_PASSWORD }}"
+          echo "FTP Server: ${{ secrets.FTP_SERVER }}"
