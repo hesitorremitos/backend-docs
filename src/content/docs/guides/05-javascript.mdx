@@ -1,0 +1,62 @@
+---
+title: Javascript Basico
+description: Aprende los fundamentos de Javascript
+draft: true
+---
+
+Javascript es un lenguaje de programacion que se utiliza para crear sitios web interactivos, sus caracteristicas:
+- **Lenguaje de programacion interpretado**: significa que el codigo se ejecuta linea por linea, no se compila en ningun momento.
+- **Se ejecuta solamente en el navegador**: es decir, que el codigo Javascript se ejecuta en el navegador del usuario, pero no afecta directamente a los archivos del cliente, solamnente se ejecuta en el navegador.
+- Se ejecuta ni bien es cargado en el arachivo HTML.
+
+:::tip
+Piensa en javascript como el cerebro de tu sitio web, que se encarga de la interaccion con el usuario. Añadiendo dinamismo y vida a tu sitio web.
+Es importante entender que javascript no puede interactuar directamente con nuestro equipo.
+:::
+
+## Comenzando a escribir Javascript `<script>`
+
+Para escribir y ejecutar codigo Javascript en un archivo HTML, se utiliza la etiqueta `<script>`, que se coloca en el `<head>` o en el `<body>` del archivo HTML.
+La etiqueta `<script>` es una etiqueta con contenido(Codigo), ahora escribe tu primer *Hola Mundo* en Javascript.
+- La funcion `alert()` muestra un mensaje en una ventana emergente.
+```html
+<script>
+    alert("Hola Mundo");
+</script>
+```
+
+:::tip
+Nota que el mensaje `Hola Mundo` se muestra una vez la pagina es cargada, esto se debe a que el codigo Javascript se ejecuta ni bien es cargado en el archivo HTML.
+:::
+
+
+## Variables
+Javascript es un lenguaje de **tipado dinamico**, lo que significa que no es necesario especificar el tipo de dato que se almacenara en una variable, ya que el lenguaje lo hace por nosotros.
+
+Existen tres formas de declarar variables en javascript:
+- `var`: es la forma antigua de declarar variables, pero aun se utiliza en algunos casos.
+- `let`: es la forma moderna de declarar variables, y es la mas recomendada.
+
+```javascript
+// Declaracion de variables en javascript
+var edad = 10;
+let nombre = "Juan";
+
+// La concatenacion de variables se realiza con el signo +
+alert("Hola, mi nombre es "+nombre+" y tengo "+edad+" años");
+```
+
+## Consola de Javascript
+Usar la funcion `alert()` puede llegar a ser molesto, lo mas recomendable es usar la **consola** de Javascript para ver los mensajes de depuracion de nuestro codigo.
+
+La consola de Javascript es una herramienta que nos permite ver los mensajes de error, advertencias y mensajes de depuracion de nuestro codigo Javascript.
+Para abrir la consola de Javascript en tu navegador, presiona `F12` y selecciona la pestaña `Consola`.
+
+```javascript
+// Imprimir un mensaje en la consola
+var edad =10;
+let nombre = "Juan";
+// Asignacion de variables
+edad = 15
+console.log("Hola, mi nombre es "+nombre+" y tengo "+edad+" años");
+```
