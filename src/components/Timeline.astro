@@ -1,0 +1,163 @@
+---
+// src/components/VerticalTimeline.astro
+const { items = [] } = Astro.props;
+---
+
+<style>
+  /* Estilos base */
+  .timeline-container {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 4rem 1rem;
+  }
+
+  .timeline {
+    position: relative;
+    padding: 2rem 0;
+  }
+
+  /* Línea vertical */
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 1.5rem;
+    height: 100%;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      #cbd5e1 15%,
+      #cbd5e1 85%,
+      transparent 100%
+    );
+  }
+
+  /* Items */
+  .timeline-item {
+    position: relative;
+    margin-left: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  /* Icono */
+  .timeline-icon {
+    position: absolute;
+    left: -2.5rem;
+    top: 3.25rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .timeline-item.active .timeline-icon {
+    background: #10b981;
+    color: white;
+  }
+
+  /* Tarjeta */
+  .timeline-card {
+    background: var(--sl-color-black);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  .timeline-date {
+    font-size: 0.875rem;
+    color: var(--sl-color-white);
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-title {
+    font-weight: 600;
+    color: var(--sl-color-white);
+    margin-bottom: 0.5rem;
+  }
+
+  .timeline-content {
+    color: #64748b;
+    line-height: 1.5;
+    font-size: 0.875rem;
+  }
+
+  /* Responsive desktop */
+  @media (min-width: 768px) {
+    .timeline::before {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      width: 50%;
+      margin-left: 0;
+      padding: 0 2rem;
+    }
+
+    .timeline-item:nth-child(odd) {
+      margin-left: 50%;
+      text-align: left;
+    }
+
+    .timeline-item:nth-child(even) {
+      text-align: right;
+    }
+
+    .timeline-icon {
+      left: auto;
+      right: -2rem;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-icon {
+      left: -1rem;
+      right: auto;
+    }
+  }
+
+</style>
+
+<p>
+    Timeline component to display a list of events in chronological order.
+</p>
+<div class="timeline-container">
+  <div class="timeline">
+    <!-- Ejemplo de items (puedes iterar con .map() en Astro) -->
+    <article class="timeline-item active">
+      <div class="timeline-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+          <path fill="currentColor" d="M13.78 3.28a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/>
+        </svg>
+      </div>
+      <div class="timeline-card">
+        <time class="timeline-date">08/06/2023</time>
+        <p class="timeline-title">Order Placed</p>
+        <p class="timeline-content">
+          Pretium lectus quam id leo. Urna et pharetra aliquam vestibulum morbi blandit.
+        </p>
+      </div>
+    </article>
+
+    <article class="timeline-item">
+      <div class="timeline-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+          <path fill="currentColor" d="M13.78 3.28a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 1 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"/>
+        </svg>
+      </div>
+      <div class="timeline-card">
+        <time class="timeline-date">09/06/2023</time>
+        <h3 class="timeline-title">Order Shipped</h3>
+        <p class="timeline-content">
+          Pretium lectus quam id leo. Urna et pharetra aliquam vestibulum morbi blandit.
+        </p>
+      </div>
+    </article>
+  </div>
+</div>
