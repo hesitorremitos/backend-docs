@@ -2,10 +2,15 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightLinksValidatorPlugin from 'starlight-links-validator';
-
+import icon from 'astro-icon';
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
+		icon({
+			svgoOptions: {
+				
+			}
+		}),
 		starlight({
 			plugins: [starlightLinksValidatorPlugin()],
 			title: 'Backend',
