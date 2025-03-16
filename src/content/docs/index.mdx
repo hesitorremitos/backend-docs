@@ -21,28 +21,31 @@ hero:
 
 import {  CardGrid } from '@astrojs/starlight/components';
 import Card from '@components/Card.astro';
+import { Icon } from 'astro-icon/components';
 
 ## Siguientes pasos
 
 <CardGrid stagger>
-	<Card title="Fundamentos del desarollo web" icon="pencil">
+	<Card title="Fundamentos del desarollo web" icon="mdi:xml">
 		Creacion de paginas web y formularios como **Login** o interfaces de usuario.
 	</Card>
-	<Card title="Programacion en el servidor" icon="add-document">
+	<Card title="Programacion en el servidor" icon="mdi:server">
     Extendiendo nuestra pagina web para que trabaje con una base de datos(Backend).
 	</Card>
-	<Card title="Versionando y documentacion" icon="github">
+	<Card title="Versionando y documentacion" icon="mdi:github">
 		Usa Github para versionar tu proyecto y colaborar con otros desarrolladores, ademas de documentar tu proyecto.
 	</Card>
-	<Card title="Creando Aplicaciones web" icon="laravel">
+	<Card title="Creando Aplicaciones web" icon="mdi:laravel" icon_color='red'>
     Desarolla aplicaciones mas complejas usando frameworks como **Laravel**.
 	</Card>
 
-  <Card title="Desarrollo de API" icon="api">
+  <Card title="Desarrollo de API" icon="mdi:code-json">
     Creacion de API para que otras aplicaciones puedan consumir tus servicios.
   </Card>
 
-  <Card title="Despliega tu aplicacion" icon="deploy">
+  <Card title="Despliega tu aplicacion" icon="mdi:rocket-launch" >
     Muestra tu aplicacion al mundo, desplegando tu aplicacion en un servidor.
   </Card>
 </CardGrid>
+
+<Icon name="mdi:home" size="3em"  />

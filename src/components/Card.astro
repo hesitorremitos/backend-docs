@@ -1,18 +1,22 @@
 ---
-import {Icon} from '@astrojs/starlight/components';
+//import {Icon} from '@astrojs/starlight/components';
+import {Icon} from 'astro-icon/components'
 import type { StarlightIcon } from '@astrojs/starlight/types';
-
+import type { IconifyInfo } from '@iconify-json/mdi'
 interface Props {
-	icon?: StarlightIcon;
+    icon_color?: string;
+	icon?: IconifyInfo[];
 	title: string;
 }
 
-const { icon, title } = Astro.props;
+const { icon, title, icon_color } = Astro.props;
 ---
 
 <article class="card sl-flex">
 	<p class="title sl-flex">
-		{icon && <Icon name={icon} class="icon" size="1.333em" />}
+		{icon && <Icon name={icon} size="2em"   class="icon"  
+        color={icon_color|| "white"}
+         />}
 		<span set:html={title} />
 	</p>
 	<div class="body"><slot /></div>

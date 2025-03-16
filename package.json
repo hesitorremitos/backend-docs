@@ -17,7 +17,8 @@
     "starlight-links-validator": "^0.14.3"
   },
   "devDependencies": {
-    "astro-icon": "^1.1.5",
-    "@iconify-json/mdi": "^1.2.3"
+    "@iconify-json/mdi": "^1.2.3",
+    "@iconify/types": "^2.0.0",
+    "astro-icon": "^1.1.5"
   }
 }
