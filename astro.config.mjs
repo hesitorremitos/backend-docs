@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightLinksValidatorPlugin from 'starlight-links-validator';
+import tailwind from "@astrojs/tailwind";
 import icon from 'astro-icon';
 // https://astro.build/config
 export default defineConfig({
@@ -12,6 +13,9 @@ export default defineConfig({
 			}
 		}),
 		starlight({
+            customCss: [
+                './src/styles/global.css',
+            ],
 			lastUpdated:  true,
 			editLink: {
 				baseUrl: "https://github.com/hesitorremitos/backend-docs/edit/master/",
@@ -42,5 +46,8 @@ export default defineConfig({
 				},
 			],
 		}),
+        tailwind({
+            applyBaseStyles: false,
+        }),
 	],
 });
