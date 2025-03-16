@@ -2,15 +2,25 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightLinksValidatorPlugin from 'starlight-links-validator';
-
+import icon from 'astro-icon';
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
+		icon({
+			svgoOptions: {
+
+			}
+		}),
 		starlight({
+			lastUpdated:  true,
+			editLink: {
+				baseUrl: "https://github.com/hesitorremitos/backend-docs/edit/master/",
+
+			},
 			plugins: [starlightLinksValidatorPlugin()],
 			title: 'Backend',
 			social: {
-				github: 'https://github.com/withastro/starlight',
+				github: 'https://github.com/hesitorremitos/backend-docs',
 			},
 			pagination: true,
 			tagline: 'A simple documentation theme for Astro',
