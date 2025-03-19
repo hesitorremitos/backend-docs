@@ -201,11 +201,11 @@ else{
 ```
 
 
-## Trabajo en Clase 3
+### Hazlo tu mismo
 
 import {Card} from '@astrojs/starlight/components';
 
-<Card>
+<Card title='Trabajo en clase 3'>
 
 1. Dado las siguientes variables
 ```js
@@ -215,7 +215,7 @@ let b = 5;
 2. Realiza el codigo que indique si los datos son del mismo tipo o no.
     - Si son del mismo tipo se hara la suma de las variables.
     - Si no son del mismo tipo, se debera indicar que los datos no son del mismo tipo.
-
+3. Para la **revision** se debera probar con distintos valores de las variables.
 
 </Card>
 
@@ -246,8 +246,29 @@ function saludar(nombre){
 saludar("Juan");
 saludar("Maria");
 ```
+### Hazlo tu mismo
+Del anterior [Trabajo en clase](#trabajo-en-clase-3) notara que repitio el codigo para cada comparacion. Mejoremos el codigo anterior.
 
-### Funciones con retorno
+<Card title="Trabajo en clase 3.1">
+Crear una funcion que reciba dos parametros y realice la comparacion de los datos.
+- Si los datos son del mismo tipo, se hara la suma de los datos.
+- Si los datos no son del mismo tipo, se debera indicar que los datos no son del mismo tipo.
+
+Para la **revision** se debera probar con distintos valores de las variables.
+
+```js
+// Pruebas
+comparar("Hola",5);
+comparar(10,5);// Se hace la suma
+comparar("Hola","Mundo"); // Se hace la union
+comparar(1.4,5);
+```
+</Card>
+
+
+
+
+### Funciones con retorno [Pendiente]
 Las funciones pueden retornar un valor, que es el resultado de la operacion que se realiza en la funcion.
 
 ```js
@@ -261,4 +282,82 @@ let resultado = sumar(5,10);
 console.log(resultado);
 ```
 
-## Trabajo en Clase 4
+## Uso de funciones en la pagina web
+Las funciones de Javascript se pueden utilizar en la pagina web para realizar operaciones y mostrar resultados en la pagina web. 
+Las funciones pueden ejecutarse cuando ocurre un **evento** en la pagina web, com ser:
+- Click en un boton
+- Envio de un formulario
+- Carga de la pagina, etc
+
+### El evento `onclick`
+Las etiquetas o elementos HTML pueden tener una propiedad llamada `onclick`, que permite ejecutar una funcion de Javascript cuando se hace click en el elemento.
+
+```html
+<button onclick="saludar()">Saludar</button>
+```
+- El anterior codigo ejecutara la funcion `saludar()` cuando se haga click en el boton.
+
+
+## Scripts externos, la propiedad `src`
+Los scripts de Javascript pueden ser escritos en un archivo aparte y ser incluidos en el archivo HTML con la propiedad `src` de la etiqueta `<script>`.
+
+```html "src="scripts/hola.js""
+<!-- Incluyendo un script externo -->
+<script src="scripts/hola.js"></script>
+```
+:::nota
+Los scripts tiene la terminacion `.js`, y se recomienda que se encuentren en la carpeta `scripts` de tu proyecto.
+:::
+
+### Hazlo tu mismo
+<Card title="Trabajo en clase 3.2">
+Usando el formulario de login que se encuentra en la siguiente [pagina](/guides/03-htmlexample/#trabajo-en-clase-1), crea una funcion que se ejecute cuando se haga click en el boton `Iniciar Sesion`.
+- Se mostrara un `alert` con el mensaje `Enviando datos al servidor`.
+- Deberan existir la *hoja de estilos* y el *script* en archivos separados.
+
+```html
+<!--login.html -->
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <title>Mi primer login</title>
+        <link rel="icon" href="favicon.ico">
+    </head>
+
+    <body>
+        <form>
+            <fieldset>
+                <legend>Inicio de sesión</legend>
+                <div>
+                    <!-- Campo usuario -->
+                    <label for="username">Usuario:</label>
+                    <input type="text" id="username" placeholder="Ingrese su usuario">
+                </div>
+                <br>
+                <div>
+                    <!-- Campo contraseña -->
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" placeholder="Ingrese su contraseña">
+                </div>
+                <br>
+                <button type="submit">Iniciar sesión</button>
+            </fieldset>
+        </form>
+    </body>
+</html>
+```
+</Card>
+
+
+## Buenas practicas en Javascript
+En el anterior codigo vimos como ejecutar una funcion cuando se hace click en un boton, pero no es recomendable usar la propiedad `onclick` en los elementos HTML, ya que puede llegar a ser confuso y dificil de mantener el codigo.
+:::caution
+En los proyectos modernos no es comun ver la propiedad `onclick` en los elementos HTML, ya que se recomienda separar el codigo Javascript del archivo HTML.
+:::
+
+### Seleccionar elementos del DOM
+El **DOM** es la representacion de la estructura de la pagina web, y se puede acceder a los elementos del DOM con Javascript para realizar operaciones y mostrar resultados en la pagina web.
+
+:::tip
+Imaguna que el **DOM** hace referencia a todos los elementos HTML ya cargados o que se pueden **ver** en la pagina web.
+:::
