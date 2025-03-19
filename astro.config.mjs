@@ -40,13 +40,18 @@ export default defineConfig({
 					autogenerate: { directory: 'guides' },
 				},
 				{
+					label: 'Programacion del lado del servidor',
+					autogenerate: { directory: 'server-programming' },
+				},
+
+
+
+				
+				{
 					label: 'Solucionario',
 					autogenerate: { directory: 'solutions' },
 				},
-				{
-					label: 'Programacion del lado del servidor',
-					autogenerate: { directory: 'server-programming' },
-				}
+				
 			],
 		}),
 	],
