@@ -1,0 +1,93 @@
+---
+title: Fundamentos del diseño web
+description: Solucionario de los ejercicios propuestos
+draft: true
+---
+
+Aqui se presentan las soluciones a los ejercicios propuestos en cada seccion
+
+## Mi primer Formulario
+La solucion del [Laboratorio 1](/guides/03-htmlexample/#trabajo-en-clase-1)
+![Formulario de registro](../../../assets/html-register.png)
+
+### Codigo
+```html
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+</head>
+
+<body>
+    <h1>Mi primer formulario</h1>
+    <!-- autor -->
+    <p> Author: <strong>Hector Josue Condori Chambi</strong> </p>
+    <form>
+        <fieldset>
+            <legend>Datos Personales</legend>
+            <div>
+                <label for="name">Nombres:</label>
+                <input type="text" id="name" placeholder="Ingrese su nombre">
+            </div>
+            <br>
+            <div>
+                <label for="lastname">Apellido:</label>
+                <input type="text" id="lastname" placeholder="Ingrese su apellido">
+            </div>
+            <br>
+            <div>
+                <label for="birthdate">Fecha de nacimiento:</label>
+                <input type="date" id="birthdate" <label for="years">Edad:</label>
+                <input type="number" id="years" placeholder="Ingrese su edad">
+            </div>
+            <br>
+            <div>
+                <label for="color">Color Favorito:</label>
+                <input type="color">
+            </div>
+            </fieldset>
+            <br>
+            <fieldset>
+                <legend>
+                    Datos de Acceso
+                </legend>
+            <div>
+                <label for="email">Correo:</label>
+                <input type="email" id="email" placeholder="Ingrese su correo">
+            </div>
+            
+            <br>
+            <div>
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" placeholder="Ingrese su contraseña">
+            </div>
+            <br>
+            <div>
+                <label for="password">Confirmar Contraseña:</label>
+                <input type="password" id="password" placeholder="Ingrese su contraseña">
+            </div>
+            
+
+        </fieldset>
+        <input type="submit" value="Enviar al Servidor">
+    </form>
+    <ul>
+        <li>
+            <strong>Fecha Nacimiento</strong> Solo se puede ingresar fechas
+        </li>
+        <li>
+            <strong>Edad</strong> Solo se puede ingresar números
+        </li>
+        <li>
+            <strong>Color Favorito</strong> Debe permitir seleccionar un color
+        </li>
+        <li>
+            <strong>Contraseña</strong> Las contraseñas no deben ser visibles
+    </ul>
+</body>
+
+</html>
+```
