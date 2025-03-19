@@ -55,6 +55,12 @@ Con esto deberiamos visualizar el icono en la pestaña del navegador.
 
 
 ## Errores en los caracteres especiales.
+En ocaciones los caracteres especiales pueden causar errores en la pagina web,como ser `á`, `é`, `í`, `ó`, `ú`, `ñ`, etc.ara evitar estos errores se recomienda usar la codificacion `UTF-8` en el documento HTML. Para esto usamos la etiqueta `<meta>` con el atributo `charset="UTF-8"` dentro de la etiqueta `<head>`.
+```html ins={2}
+<head>
+    <meta charset="UTF-8">
+</head>
+```
 
 ## La etiqueta `<form>`
 [Con contenido](/guides/02-html/#etiquetas-con-contenido)(con cierre)
@@ -83,7 +89,7 @@ Las etiqueta `input` se usa para crear campos de entrada en un formulario(Texto 
 La etiqueta `label` usualmente se usan en conjunto con la etiqueta `input` para proporcionar una descripción del campo de entrada. Usaremos los siguientes atributos:
 - `for` que indica el `id` del campo de entrada al que se refiere.
 
-```html ins={2-6}
+```html ins={2-4, 6-8}
 <form>
     <!-- Campo usuario -->
     <label for="username">Usuario:</label>
