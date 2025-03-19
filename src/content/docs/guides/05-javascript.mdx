@@ -313,7 +313,22 @@ Los scripts tiene la terminacion `.js`, y se recomienda que se encuentren en la 
 <Card title="Trabajo en clase 3.2">
 Usando el formulario de login que se encuentra en la siguiente [pagina](/guides/03-htmlexample/#trabajo-en-clase-1), crea una funcion que se ejecute cuando se haga click en el boton `Iniciar Sesion`.
 - Se mostrara un `alert` con el mensaje `Enviando datos al servidor`.
-- Deberan existir la *hoja de estilos* y el *script* en archivos separados.
+- Deberan existir la *hoja de estilos* y el *script* en archivos separados. con la siguiente estructura:
+
+import {FileTree} from '@astrojs/starlight/components'
+
+<FileTree>
+- styles
+    - login.css
+- scripts
+    - login.js
+- index.html
+
+</FileTree>
+
+:::note
+Comunmente a las paginas principales se les llama `index.html`.
+:::
 
 ```html
 <!--login.html -->
