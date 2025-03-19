@@ -43,6 +43,10 @@ export default defineConfig({
 					label: 'Solucionario',
 					autogenerate: { directory: 'solutions' },
 				},
+				{
+					label: 'Programacion del lado del servidor',
+					autogenerate: { directory: 'server-programming' },
+				}
 			],
 		}),
 	],
