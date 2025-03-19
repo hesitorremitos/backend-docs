@@ -22,13 +22,35 @@ La etiqueta `<script>` es una etiqueta con contenido(Codigo), ahora escribe tu p
 ```html
 <script>
     alert("Hola Mundo");
+    // alert recibe un String como parametro
+    alert("Bienvenido a mi sitio web");
 </script>
 ```
 
-:::tip
+:::caution
 Nota que el mensaje `Hola Mundo` se muestra una vez la pagina es cargada, esto se debe a que el codigo Javascript se ejecuta ni bien es cargado en el archivo HTML.
+La funcion `alert()` no es recomendada para mostrar mensajes en un sitio web, ya que puede llegar a ser molesto para el usuario.
 :::
 
+
+
+## Consola de Javascript
+Usar la funcion `alert()` puede llegar a ser molesto, lo mas recomendable es usar la **consola** de Javascript para ver los mensajes de depuracion de nuestro codigo.
+
+La consola de Javascript es una herramienta que nos permite ver los mensajes de error, advertencias y mensajes de depuracion de nuestro codigo Javascript.
+
+```javascript
+// Imprimir un mensaje en la consola
+var edad =10;
+let nombre = "Juan";
+// Asignacion de variables
+edad = 15
+console.log("Hola, mi nombre es "+nombre+" y tengo "+edad+" años");
+```
+
+:::tip
+Para abrir la consola de Javascript en tu navegador, presiona `F12` y selecciona la pestaña `Consola`.
+:::
 
 ## Variables
 Javascript es un lenguaje de **tipado dinamico**, lo que significa que no es necesario especificar el tipo de dato que se almacenara en una variable, ya que el lenguaje lo hace por nosotros.
@@ -42,21 +64,201 @@ Existen tres formas de declarar variables en javascript:
 var edad = 10;
 let nombre = "Juan";
 
-// La concatenacion de variables se realiza con el signo +
-alert("Hola, mi nombre es "+nombre+" y tengo "+edad+" años");
+alert(nombre);
+alert(edad);
 ```
 
-## Consola de Javascript
-Usar la funcion `alert()` puede llegar a ser molesto, lo mas recomendable es usar la **consola** de Javascript para ver los mensajes de depuracion de nuestro codigo.
+## Operadores
+Los operadores son simbolos que se utilizan para realizar operaciones matematicas, logicas y de comparacion.
 
-La consola de Javascript es una herramienta que nos permite ver los mensajes de error, advertencias y mensajes de depuracion de nuestro codigo Javascript.
-Para abrir la consola de Javascript en tu navegador, presiona `F12` y selecciona la pestaña `Consola`.
+Javascript usa los mismos operadores que otros lenguajes de programacion, como:
+| Operador | Descripcion |
+|----------|-------------|
+| `+`      | Suma        |
+| `-`      | Resta       |
+| `*`      | Multiplicacion |
+| `/`      | Division    |
+| `%`      | Modulo      |
+| `++`     | Incremento  |
+| `--`     | Decremento  |
+| `=`      | Asignacion  |
+| `==`     | Igualdad    |
+| `!=`     | Diferente   |
+| `>`      | Mayor que   |
+| `<`      | Menor que   |
+| `>=`     | Mayor o igual que |
+| `<=`     | Menor o igual que |
+| `&&`     | Y logico    |
+| `||`     | O logico    |
+| `!`      | Negacion    |
 
 ```javascript
-// Imprimir un mensaje en la consola
-var edad =10;
-let nombre = "Juan";
-// Asignacion de variables
-edad = 15
-console.log("Hola, mi nombre es "+nombre+" y tengo "+edad+" años");
+// Declaracion de variables
+let a = 10;
+let b = 5;
+
+// Operaciones matematicas
+let suma = a + b;
+let resta = a - b;
+let multiplicacion = a * b;
+let division = a / b;
+let modulo = a % b;
+console.log("suma: "+suma);
+console.log("resta: "+resta);
+console.log("multiplicacion: "+multiplicacion);
+console.log("division: "+division);
+
+// Incremento y decremento
+a++;
+b--;
+console.log("a+1: "+a);
+console.log("b-1: "+b);
+
+// Operadores de comparacion
+let mayor = a > b;
+let menor = a < b;
+let igual = a == b;
+let diferente = a != b;
+console.log("a > b: "+mayor);
+console.log("a < b: "+menor);
+console.log("a == b: "+igual);
+console.log("a != b: "+diferente);
+
+// Operadores logicos
+console.log("V o F: "+(true || false));
+console.log("V y F: "+(true && false));
+console.log("No V: "+(!true));
+
 ```
+
+## Constantes
+Las constantes son variables que no pueden cambiar su valor una vez que han sido declaradas, se declaran con la palabra reservada `const`.
+
+```javascript
+// Declaracion de constantes
+const PI = 3.1416;
+const GRAVEDAD = 9.8;
+
+PI = 3; // Error, no se puede reasignar una constante
+consola.log(PI);
+```
+
+## Tipos de datos
+Javascript es un lenguaje de tipado dinamico, lo que significa que no es necesario especificar el tipo de dato que se almacenara en una variable, ya que el lenguaje lo hace por nosotros.
+
+Esto llega a ser una ventaja y desventaja:
+- Ventaja: no es necesario especificar el tipo de dato.
+- Desventaja: puede llegar a ser confuso el tipo de dato que se esta almacenando en una variable.
+
+
+Note que en el siguiente ejemplo, la variable `a` es un numero, pero al sumarla con la variable `b` que es un string, el resultado es un string, y el resultado de la **suma** no es el esperado.
+```js
+// Declaracion de variables
+let a = '1'
+let b = 7
+let suma = a + b
+console.log(suma) // 17
+```
+
+### La funcion `typeof`
+La funcion `typeof` nos permite saber el tipo de dato que se esta almacenando en una variable.
+
+```js
+// Declaracion de variables
+let a = 10;
+let b = "Hola Mundo";
+let c = true;
+
+console.log(typeof a); // number
+console.log(typeof b); // string
+console.log(typeof c); // boolean
+```
+:::tip
+`tipeof` retorna un string con el tipo de dato que se esta almacenando en una variable, esto nos permite hacer comparaciones y validaciones en nuestro codigo.
+:::
+
+## Condicionales `if` y `else`
+Los condicionales son estructuras de control que que en base a una condicion, ejecutan un bloque de codigo u otro.
+
+Al igual que otros lenguajes se tiene las palabras reservadas:
+- `if`: si la condicion es verdadera, se ejecuta el bloque de codigo.
+- `else`: si la condicion es falsa, se ejecuta el bloque de codigo.
+
+```js
+// Declaracion de variables
+let a = 10;
+let b = 5;
+
+// Condicional
+if(a > b){
+    // Si la condicion es verdadera
+    console.log("a es mayor que b");
+}
+else{
+    // Si la condicion es falsa
+    console.log("a es menor que b");
+}
+```
+
+
+## Trabajo en Clase 3
+
+import {Card} from '@astrojs/starlight/components';
+
+<Card>
+
+1. Dado las siguientes variables
+```js
+let a = "Hola";
+let b = 5;
+```
+2. Realiza el codigo que indique si los datos son del mismo tipo o no.
+    - Si son del mismo tipo se hara la suma de las variables.
+    - Si no son del mismo tipo, se debera indicar que los datos no son del mismo tipo.
+
+
+</Card>
+
+## Funciones
+Las funciones son bloques de codigo que se pueden reutilizar en nuestro programa, se declaran con la palabra reservada `function`.
+
+
+```js
+// Declaracion de una funcion
+function saludar(){
+    console.log("Hola Mundo");
+}
+
+// Llamada a la funcion
+saludar();
+```
+
+### Funciones con parametros
+Las funciones pueden recibir parametros, que son valores que se pasan a la funcion para ser procesados.
+
+```js
+// Declaracion de una funcion con parametros
+function saludar(nombre){
+    console.log("Hola "+nombre);
+}
+
+// Llamada a la funcion
+saludar("Juan");
+saludar("Maria");
+```
+
+### Funciones con retorno
+Las funciones pueden retornar un valor, que es el resultado de la operacion que se realiza en la funcion.
+
+```js
+// Declaracion de una funcion con retorno
+function sumar(a,b){
+    return a + b;
+}
+
+// Llamada a la funcion
+let resultado = sumar(5,10);
+console.log(resultado);
+```
+
+## Trabajo en Clase 4
