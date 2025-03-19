@@ -16,6 +16,16 @@ Tambien conocida como **sintaxis** de CSS. Se componente principalmente de 2 par
 
 Los selectores son la parte de la regla CSS que indica a qué elementos se aplicarán los estilos. Pueden ser de diferentes tipos, como selectores de etiqueta, selectores de clase, selectores de ID, etc.
 
+Para escribir la hoja de estilos CSS, usaremos la etiqueta `<style>` dentro de la etiqueta `<head>` de nuestro documento HTML. Dentro de la etiqueta `<style>`, agregaremos los **selectores** y las **declaraciones** CSS para darle estilo a nuestro formulario de inicio de sesión.
+
+```html
+<head>
+    <style>
+        /* Estilos CSS */
+    </style>
+</head>
+```
+
 ### Selectores de etiqueta
 Selecciona todas las etiquetas con el nombre especificado como  `h1`, `div`,`br`, `p`, etc.
 
@@ -25,18 +35,22 @@ Selecciona todas las etiquetas con el nombre especificado como  `h1`, `div`,`br`
 <br>
 <p>Párrafo</p>
 ```
-
-
-### Selector de clase
-Selecciona todas las etiquetas con la clase especificada como `.[clase]`. del atributo `class` de las etiquetas HTML.
-
-```html "contenedor" "formulario"
-<div class="contenedor formulario">
-    <h1>Titulo</h1>
-</div>
+```html "h1" "div" "br" "p"
+<style>
+    h1 {
+        /* Declaraciones */
+    }
+    div {
+        /* Declaraciones */
+    }
+    br {
+        /* Declaraciones  */
+    }
+    p {
+        /* Declaraciones  */
+    }
+</style>
 ```
-De lo anterior se dice que el contenedor tiene la clase `.formulario` y `.contenedor`.
-El `.`(punto) indica que es una clase.
 
 ### Selector de ID
 Selecciona una etiqueta con el ID especificado como `#[id]`. del atributo `id` de las etiquetas HTML.
@@ -46,8 +60,51 @@ Selecciona una etiqueta con el ID especificado como `#[id]`. del atributo `id` d
     <h1 id="title">Titulo</h1>
 </div>
 ```
+```html "formulario" "title"
+<style>
+    #formulario {
+        /* Declaraciones */
+    }
+    #title {
+        /* Declaraciones */
+    }
+```
+
 De lo anterior se dice que el contenedor tiene el id `#formulario`, y el titulo tiene el id `#title`.
 El `#`(numeral) indica que es un ID.
+
+
+### Selector de clase
+Todas las etiquetas tienen la propiedad `class` que se usa para asignar una clase a la etiqueta.
+:::tip
+Una clase es un nombre que se le da a un grupo de elementos HTML para aplicar estilos a todos los elementos del grupo.
+Imaginalo como asignar una categoria a un grupo de elementos.
+```html "class="oracion""
+<p class="oracion"> Esta es una oracion </p>
+<h1> Titulo </h1>
+<p class="oracion"> Esta es otra oracion </p>
+```
+:::
+Selecciona todas las etiquetas con la clase especificada como `.[clase]`. del atributo `class` de las etiquetas HTML.
+
+```html "contenedor" "formulario"
+<div class="contenedor formulario">
+    <h1>Titulo</h1>
+</div>
+```
+```html "contenedor" "formulario"
+<style>
+    .formulario {
+        /* Declaraciones */
+    }
+    .contenedor {
+        /* Declaraciones */
+    }
+</style>
+```
+
+De lo anterior se dice que el contenedor tiene la clase `.formulario` y `.contenedor`.
+El `.`(punto) indica que es una clase.
 
 
 ### Declaraciones
@@ -58,18 +115,6 @@ propiedad : valor;
 }
 ```
 
-## Agregando estilos CSS
-Para agregar estilos a nuestro documento HTML, usaremos la etiqueta `<style>` dentro de la etiqueta `<head>`. Esta etiqueta se usa para definir estilos en línea, que se aplican directamente a las etiquetas HTML.
-
-```html {4-6}
-<head>
-    <title>Mi primer login</title>
-    <link rel="icon" href="favicon.ico">
-    <style>
-        /* Estilos CSS */
-    </style>
-</head>
-```
 
 ## Agregando estilos a etiquetas HTML
 Como mencionamos, usaremos en **login** anteioremente creado como base para agregar estilos.
@@ -240,7 +285,7 @@ label{
 ```
   </TabItem>
   <TabItem label="login.html">
-    ```html ins={7}
+```html ins={7}
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -272,7 +317,7 @@ label{
         </form>
     </body>
 </html>
-    ```
+```
   </TabItem>
  
 </Tabs>
@@ -284,12 +329,11 @@ label{
     Con el formulario de registro [anteriormente creado](/guides/03-htmlexample/#trabajo-en-clase-1) como base, agrega estilos CSS básicos para darle un aspecto más atractivo, el resultado final debe ser similar a la siguiente imagen.
     Requerimientos minimos:
     - Los estilos deben estar en un archivo externo.
-    - Estilos para los campos de texto.
+    - Estilos para los campos de texto `<input>`.
     - Estilos para el botón de registro.
     - Se debe usar los selectores de **clase**, **ID** y **etiqueta**.
     - Usa un selector avanzado como `form > div`.
     ![Registro con estilos CSS](../../../assets/css/2.registro+css.png)
-
  </Card>
 
 ## Resumen
