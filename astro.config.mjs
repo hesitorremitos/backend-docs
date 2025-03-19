@@ -12,6 +12,9 @@ export default defineConfig({
 			}
 		}),
 		starlight({
+			expressiveCode:{
+				themes: ['dracula'],
+			},
 			lastUpdated:  true,
 			editLink: {
 				baseUrl: "https://github.com/hesitorremitos/backend-docs/edit/master/",
