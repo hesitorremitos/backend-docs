@@ -56,7 +56,7 @@ Para abrir la consola de Javascript en tu navegador, presiona `F12` y selecciona
 El codigo Javascript puede ser escrito en un archivo aparte y ser incluido en el archivo HTML con la propiedad `src` de la etiqueta `<script>`.
 
 
-```html
+```html "src="scripts/hola.js""
 <!--scripts/hola.js-->
 <!-- Incluyendo un script externo -->
 <script src="scripts/hola.js"></script>
@@ -68,6 +68,10 @@ Tambien recuerda que el codigo Javascript se ejecuta ni bien es cargado en el ar
 :::
 
 ## Variables
+:::warning
+Debe realizar todo el codigo de esta seccion en un archivo js para su revision
+:::
+
 Javascript es un lenguaje de **tipado dinamico**, lo que significa que no es necesario especificar el tipo de dato que se almacenara en una variable, ya que el lenguaje lo hace por nosotros.
 
 Existen tres formas de declarar variables en javascript:
@@ -118,56 +122,55 @@ let b = 5;
 ### Operaciones matematicas
 Javascript al igual que muchos lenguajes de **alto nivel** soporta operaciones matematicas.
 
-```js
-let suma = a + b;
-let resta = a - b;
-let multiplicacion = a * b;
-let division = a / b;
-let modulo = a % b;
-console.log("suma: "+suma);
-console.log("resta: "+resta);
-console.log("multiplicacion: "+multiplicacion);
-console.log("division: "+division);
+:::info
+Revise la consola para ver los resultados de las operaciones.
+:::
 
+```js
+a + b; // 15
+a - b; // 5
+a * b; // 50
+a / b; // 2
+a % b; // 0
 ```
 ### Operaciones de incremento y decremento.
 Tambien conocidos como **operadores unarios**, se utilizan para incrementar o decrementar el valor de una variable en una unidad.
 ```js
-// Incremento y decremento
+// Incremento y decremento (despues)
 a++;
 b--;
-console.log("a+1: "+a);
-console.log("b-1: "+b);
+console.log(a);
+console.log(b);
+// Incremento y decremento (antes)
+++a;
+--b;
+console.log(a);
+console.log(b);
 ```
 
 ### Operadores de comparacion
 Los operadores de comparacion se utilizan para comparar dos valores y retornar un valor booleano `true` o `false`.
 ```js
 // Operadores de comparacion
-let mayor = a > b;
-let menor = a < b;
-let igual = a == b;
-let diferente = a != b;
-console.log("a > b: "+mayor);
-console.log("a < b: "+menor);
-console.log("a == b: "+igual);
-console.log("a != b: "+diferente);
+a > b; // true
+a < b; // false
+a == b; // false
+a != b; // true
 ```
 
 ### Operadores logicos
 Los operadores logicos se utilizan para realizar operaciones logicas entre dos valores booleanos.
 ```js
 // Operadores logicos
-console.log("V o F: "+(true || false));
-console.log("V y F: "+(true && false));
-console.log("No V: "+(!true));
-
+true || false // true
+true && false // false
+!true // false
 ```
 
 ## Constantes
 Las constantes son variables que no pueden cambiar su valor una vez que han sido declaradas, se declaran con la palabra reservada `const`.
 
-```javascript
+```javascript del={5}
 // Declaracion de constantes
 const PI = 3.1416;
 const GRAVEDAD = 9.8;
@@ -235,7 +238,7 @@ Para llamar a una funcion, se utiliza el nombre de la funcion seguido de parente
 
 Esto ejecutara el bloque de codigo que se encuentra en la funcion.
 
-```js
+```js ins={7}
 function saludar(){
     // Bloque de codigo
     console.log("Hola Mundo");
@@ -318,23 +321,8 @@ const persona = {
 }
 ```
 
-### Acceder o modificar valores de un objeto
+### Acceder valores de un objeto
 Para acceder a los valores de un objeto, se utiliza la notacion de punto `.` o la notacion de corchetes `[]`.
-
-
-```js
-// Acceder a los valores de un objeto
-console.log(persona.nombre); // Juan
-console.log(persona["apellido"]); // Perez
-console.log(persona.edad); // 25
-console.log(persona.casado); // false
-
-// Modificar valores de un objeto
-persona.edad = 30;
-persona.casado = false;
-console.log(persona.edad); // 30
-console.log(persona.casado); // false
-```
 
 :::tip
 El uso de corchetes `[]` es util cuando se quiere acceder a una propiedad de un objeto, pero no se conoce el nombre de la propiedad, o que la clave tenga caracteres especiales como espacios o guiones.
@@ -346,6 +334,24 @@ const persona = {
 console.log(persona["nombre completo"]); // Juan Perez
 ```
 :::
+
+```js
+// Acceder a los valores de un objeto
+console.log(persona.nombre); // Juan
+console.log(persona["apellido"]); // Perez
+console.log(persona.edad); // 25
+console.log(persona.casado); // false
+```
+### Modificar valores de un objeto
+Para modificar los valores de un objeto se las trata como cualquier otra variable, se asigna un nuevo valor a la propiedad del objeto.
+```js
+// Modificar valores de un objeto
+persona.edad = 30;
+persona.casado = false;
+console.log(persona.edad); // 30
+console.log(persona.casado); // false
+```
+
 
 ### Funciones dentro de  Objetos(Metodos)
 Los objetos pueden tener funciones como valores de sus propiedades, a estas funciones se les llama **metodos**.
