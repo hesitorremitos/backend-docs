@@ -290,12 +290,6 @@ miFuncion();
 ### Funciones como referencia
 Las funciones en Javascript son tratadas como cualquier otro tipo de dato, se las puede asignar a una variable como si fuera un numero o un string, per sin el uso de parentesis `()`.
 
-:::note
-Cuando se usa la funcion sin parentesis `()`, se esta asignando la funcion a la variable, y **no se esta ejecutando** la funcion.
-
-Imaginelo como si estuviera guardando la funcion en una caja, y luego la ejecutara cuando lo necesite.
-:::
-
 ```js
 // Declaracion de una funcion
 function miFuncion(){
@@ -307,7 +301,13 @@ const hola = miFuncion;
 hola(); // Ejecucion de la funcion
 ```
 
-## Los Objectos
+:::note
+Cuando se usa la funcion sin parentesis `()`, se esta asignando la funcion a la variable, y **no se esta ejecutando** la funcion.
+
+Imaginelo como si estuviera guardando la funcion en una caja, y luego la ejecutara cuando lo necesite.
+:::
+
+## Los Objetos
 Los objetos son estructuras de datos que nos permiten almacenar multiples valores en una sola variable, se declaran con llaves `{}`.La forma de indicar la clave y el valor es `clave: valor`.
 
 Cada par de clave y valor se separa por una coma `,`.
@@ -324,7 +324,15 @@ const persona = {
 ### Acceder valores de un objeto
 Para acceder a los valores de un objeto, se utiliza la notacion de punto `.` o la notacion de corchetes `[]`.
 
-:::tip
+```js
+// Acceder a los valores de un objeto
+console.log(persona.nombre); // Juan
+console.log(persona["apellido"]); // Perez
+console.log(persona.edad); // 25
+console.log(persona.casado); // false
+```
+
+:::note
 El uso de corchetes `[]` es util cuando se quiere acceder a una propiedad de un objeto, pero no se conoce el nombre de la propiedad, o que la clave tenga caracteres especiales como espacios o guiones.
 ```js
 const persona = {
@@ -335,13 +343,6 @@ console.log(persona["nombre completo"]); // Juan Perez
 ```
 :::
 
-```js
-// Acceder a los valores de un objeto
-console.log(persona.nombre); // Juan
-console.log(persona["apellido"]); // Perez
-console.log(persona.edad); // 25
-console.log(persona.casado); // false
-```
 ### Modificar valores de un objeto
 Para modificar los valores de un objeto se las trata como cualquier otra variable, se asigna un nuevo valor a la propiedad del objeto.
 ```js
@@ -376,6 +377,8 @@ persona.saludar();
 ### Definicino clave `this` en objetos
 La palabra reservada `this` se refiere al objeto que contiene la funcion, es decir, que `this` hace referencia al objeto en el que se encuentra la funcion.
 
+Tambien podemos modificar las propiedades del objeto con la palabra reservada `this`.
+
 ```js
 const persona = {
     nombre: "Juan",
@@ -397,7 +400,33 @@ persona.matrimonio();
 console.log(persona.casado); // Ya esta casado
 ```
 
-Como pudo ver en javascript **casi todo** se trata como un objeto.
+### Objetos anidados
+Los objetos pueden tener otros objetos como valores de sus propiedades, a estos objetos se les llama **objetos anidados**.
+
+```js
+const persona = {
+    nombre: "Juan",
+    apellido: "Perez",
+    edad: 25,
+    casado: false,
+    direccion: {
+        calle: "Av. 6 de Diciembre",
+        numero: 123,
+        ciudad: "Quito"
+    }
+}
+```
+
+Para acceder a los valores de un objeto anidado, se utiliza la notacion de punto `.` o la notacion de corchetes `[]`.
+
+```js
+// Acceder a los valores de un objeto anidado
+console.log(persona.direccion.calle); // Av. 6 de Diciembre
+console.log(persona.direccion.numero); // 123
+console.log(persona["direccion"]["ciudad"]); // Quito
+```
+
+Como pudo ver en javascript **casi todo** se trata como un objeto, es importante entender esto para la siguiente seccion.
 
 ## Interactuando con el documento HTML(DOM)
 El **DOM** es la representacion de la estructura de la pagina web, y se puede acceder a los elementos del DOM con Javascript para realizar operaciones y mostrar resultados en la pagina web.
@@ -422,7 +451,7 @@ console.log(boton); // Revise la consola
 
 <TabItem label="index.html">
 Se sobreentiende la estructura basica de un archivo HTML, por lo que solo se mostrara el formulario.
-```html
+```html ins={17}
 <form>
     <div>
         <!-- Campo usuario -->
@@ -438,10 +467,115 @@ Se sobreentiende la estructura basica de un archivo HTML, por lo que solo se mos
     <br>
     <button type="submit" id="btn-form">Iniciar sesión</button>
 </form>
+<!-- Incluyendo un script externo -->
+<script src="script.js"></script>
+```
+</TabItem>
+</Tabs>
+
+
+
+### Accediendo a los valores de un elemento
+Para acceder a los valores de un elemento del DOM se usa la misma notaion de punto `.` que se usa en los objetos.
+
+Los elements html tienen distintas **propiedades** y **metodos** que se pueden acceder con Javascript. Puede consultar la [documentacion](https://developer.mozilla.org/es/docs/Web/API/Element) para mas informacion.
+
+```js
+const boton = document.querySelector("#btn-form");
+// Acceder a las propiedades de un elemento
+const tipo = boton.type;
+const texto = boton.textContent;
+console.log(tipo); // submit
+console.log(texto); // Iniciar sesion
+```
+
+### Modificar las propiedades de un elemento
+Para modificar las propiedades de un elemento del DOM se usa la misma notaion de punto `.` que se usa en los objetos.
+
+```js
+// Modificar las propiedades de un elemento
+boton.textContent = "Enviar al servidor";
+
+// Objetos anidados
+boton.style.backgroundColor = "blue";
+boton.style.color = "red";
+```
+
+:::caution
+Preguntese ¿Porque cambiar el texto del boton a `Enviar al servidor`, el _color de fondo_ a `azul` y el _color del texto_ a `rojo`?
+:::
+
+
+## Eventos en Javascript
+Los eventos son acciones que ocurren en la pagina web, como hacer **click** en un boton, enviar un formulario, cargar la pagina, etc.
+
+La manera antigua de asignar eventos a los elementos del DOM es con la propiedad `onclick` y asignarle una funcion que se ejecutara cuando ocurra el evento.
+
+<Tabs>
+<TabItem label="index.html">
+```html "onclick="saludar()""
+<button type="submit" id="btn-form" onclick="saludar()">Iniciar sesión</button>
 ```
 </TabItem>
 
+<TabItem label="script.js">
+```js
+function saludar() {
+  alert("Hola Mundo");
+}
+```
+</TabItem>
 </Tabs>
+Ahora cuando se haga click en el boton `Iniciar sesion`, se ejecutara la funcion `saludar()`.
+
+### Manejo de eventos con buenas practicas
+Cuando se realiza una pagina web, es recomendable separar el codigo Javascript del archivo HTML, para que sea mas facil de mantener y de entender. Por lo que no debe evitar usar codigo Javascript en el archivo HTML.
+
+La alternativa a la [seccion anterior](/guides/05-javascript/#eventos-en-javascript) es asignar un evento a un elemento del DOM con la funcion `addEventListener()`, que recibe dos parametros:
+1. El nombre del evento. Ej. `click`, `submit`, `load`, etc.
+2. La funcion que se ejecutara cuando ocurra el evento. 
+    Esta debe ser una referencia o una funcion anonima.
+
+```js
+// Seleccionar un elemento del DOM (boton)
+const boton = document.querySelector("#btn-form");
+
+// Definimos la funcion a usar
+function saludar() {
+  alert("Hola Mundo");
+}
+
+// Asignar un evento a un elemento del DOM
+boton.addEventListener("click", saludar);
+```
+Esto deberia hacer lo mismo que el ejemplo anterior, pero con la diferencia que el codigo Javascript esta separado del archivo HTML.
+
+
+### Otros eventos comunes
+Todos los eventos se definen de la misma manera, solo cambia el nombre del evento que se quiere asignar. Se le puede aplicar a las distintas etiquetas HTML estudiadas.
+
+Ej: El objeto `window` hacer referencia a la ventana del navegador, y se puede asignar eventos a la ventana del navegador.
+```js
+window.addEventListener("load", function(){
+    alert("La pagina ha sido cargada");
+});
+```
+Algunos de los eventos mas comunes son:
+
+| Evento | Descripcion |Etiqutas HTML |
+|--------|-------------|--------------|
+| click  | Se ejecuta cuando se hace click en un elemento | Todos los elementos |
+| submit | Se ejecuta cuando se envia un formulario | Formularios |
+| load   | Se ejecuta cuando la pagina ha sido cargada | Ventana del navegador |
+| keyup  | Se ejecuta cuando se suelta una tecla | Input, textarea |
+| change | Se ejecuta cuando se cambia el valor de un input | Input, select, textarea |
+| focus  | Se ejecuta cuando un elemento recibe el foco | Todos los elementos |
+| blur   | Se ejecuta cuando un elemento pierde el foco | Todos los elementos |
+| scroll | Se ejecuta cuando se hace scroll en la pagina | Ventana del navegador |
+|mouseover| Se ejecuta cuando el cursor pasa por encima de un elemento | Todos los elementos |
+|mouseout | Se ejecuta cuando el cursor sale de un elemento | Todos los elementos |
+
+Puede consultar la [documentacion de eventos](https://developer.mozilla.org/es/docs/Web/Events) para mas informacion sobre los eventos en Javascript.
 
 
 
@@ -467,180 +601,125 @@ else{
     console.log("a es menor que b");
 }
 ```
+## Ejercicio
+Se tiene el siguiente formulario
 
+:::note
+El atributo `action="#"` en el formulario, hace referencia a la misma pagina, por lo que al enviar el formulario, la pagina no se recargara.
+:::
+```html
+<form action="#">
+    <div>
+        <!-- Campo email -->
+        <label for="email">Correo:</label>
+        <input type="text" id="email" placeholder="Ingrese su usuario">
+    </div>
+    <br>
+    <div>
+        <!-- Campo contraseña -->
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" placeholder="Ingrese su contraseña">
+    </div>
+    <br>
+    <button type="submit">Iniciar sesión</button>
+</form>
+```
+Valide los campos del formulario con las siguientes reglas:
+- El campo correo y contraseña no deben estar vacios.
+- El campo correo debe tener una '@'.
+- El campo contraseña debe tener al menos 6 caracteres.
+- Si las reglas se cumplen, mostrar un mensaje de bienvenida.
 
-### Hazlo tu mismo
+import {Steps} from '@astrojs/starlight/components';
+
+<Steps>
+1. Asignamos los ID a los elementos del formulario.
+    ```html "id="email""  
+    <button type="submit" id="btn-form">Iniciar sesion</button>
+    ```
+2. Seleccionamos los elementos del formulario.
+    ```js
+    const email = document.querySelector("#email");
+    const password = document.querySelector("#password");
+    const boton = document.querySelector("#btn-form");
+    ```
+3. Definimos las funciones  de validacion
+    - Validacion de correo electronico
+        ```js
+        // script.js
+        // Validar correo electronico
+        function validateEmail() {
+        email_value = email.value;
+            // No debe estar vacio
+            if (email_value == "") {
+                alert("El campo correo no puede estar vacio");
+            // Debe tener una '@ '
+            } else if (!email_value.includes("@")) {
+                alert("El campo correo debe tener una '@'");
+            } else {
+                console.log("Correo valido");
+            }
+        }
+        ```
+    - Validacion de contraseña
+        ```js
+        // script.js
+        // Validar contraseña
+        function validatePassword() {
+            if (password.value  == "") {
+                alert("El campo contraseña no puede estar vacio");
+            } else if (password_value.length < 6) {
+                alert("El campo contraseña debe tener al menos 6 caracteres");
+            } else {
+                console.log("Contraseña valida");
+            }
+        }
+        ```
+4. Asignamos los eventos a los elementos del formulario usamos una funcion anonima.
+    ```js
+    boton.addEventListener("click", function(){
+        validateEmail();
+        validatePassword();
+    });
+    ```
+
+</Steps>
+
+Como resultado se deberia de tener un formulario que valide los campos del correo y contraseña, y muestre en consola si los campos son validos.
+
+## Hazlo tu mismo
 
 import {Card} from '@astrojs/starlight/components';
 
-<Card title='Trabajo en clase 3'>
+<Card title='Actividad de clase 3' >
 
-1. Dado las siguientes variables
-```js
-let a = "Hola";
-let b = 5;
-```
-2. Realiza el codigo que indique si los datos son del mismo tipo o no.
-    - Si son del mismo tipo se hara la suma de las variables.
-    - Si no son del mismo tipo, se debera indicar que los datos no son del mismo tipo.
-3. Para la **revision** se debera probar con distintos valores de las variables.
+1. Cree un formulario con los siguientes campos:
+    - Nombre Completo
+    - Edad
+    - Correo
+    - Contraseña
+    - Confirmar contraseña
+    - Boton de enviar
+2. La pagina debe tener un icono 
+
+3. Los **scripts** y **estilos** deben estar en archivos separados.
+
+4. Valide los campos del formulario con las siguientes reglas:
+    - Todos los campos deben estar llenos.
+    - El campo correo debe tener una '@'.
+    - El campo contraseña debe tener al menos 6 caracteres.
+    - El campo confirmar contraseña debe ser igual al campo contraseña.
+    - La persona debe ser mayor de edad(mayor a 18 años).
+
+5. Todos los mensajes de validacion se deberan en otros `inputs` de tipo `checkbox`.
+    :::note
+    Los checkboxs tienen la propiedad `checked` que se puede asignar `true` o `false` para marcar o desmarcar el checkbox.
+    ```js
+    const rev_email = document.querySelector("#rev_email");
+    rev_email.checked = true; // or false
+    ```
+    :::
+
+6. En consola se debera mostrar el mensaje de error de validacion si no se cumple con las reglas.
 
 </Card>
-
-## Funciones
-Las funciones son bloques de codigo que se pueden reutilizar en nuestro programa, se declaran con la palabra reservada `function`.
-
-
-```js
-// Declaracion de una funcion
-function saludar(){
-    console.log("Hola Mundo");
-}
-
-// Llamada a la funcion
-saludar();
-```
-
-### Funciones con parametros
-Las funciones pueden recibir parametros, que son valores que se pasan a la funcion para ser procesados.
-
-```js
-// Declaracion de una funcion con parametros
-function saludar(nombre){
-    console.log("Hola "+nombre);
-}
-
-// Llamada a la funcion
-saludar("Juan");
-saludar("Maria");
-```
-### Hazlo tu mismo
-Del anterior [Trabajo en clase](/guides/05-javascript/#hazlo-tu-mismo) notara que repitio el codigo para cada comparacion. Mejoremos el codigo anterior.
-
-<Card title="Trabajo en clase 3.1">
-Crear una funcion que reciba dos parametros y realice la comparacion de los datos.
-- Si los datos son del mismo tipo, se hara la suma de los datos.
-- Si los datos no son del mismo tipo, se debera indicar que los datos no son del mismo tipo.
-
-Para la **revision** se debera probar con distintos valores de las variables.
-
-```js
-// Pruebas
-comparar("Hola",5);
-comparar(10,5);// Se hace la suma
-comparar("Hola","Mundo"); // Se hace la union
-comparar(1.4,5);
-```
-</Card>
-
-
-
-
-### Funciones con retorno [Pendiente]
-Las funciones pueden retornar un valor, que es el resultado de la operacion que se realiza en la funcion.
-
-```js
-// Declaracion de una funcion con retorno
-function sumar(a,b){
-    return a + b;
-}
-
-// Llamada a la funcion
-let resultado = sumar(5,10);
-console.log(resultado);
-```
-
-## Uso de funciones en la pagina web
-Las funciones de Javascript se pueden utilizar en la pagina web para realizar operaciones y mostrar resultados en la pagina web. 
-Las funciones pueden ejecutarse cuando ocurre un **evento** en la pagina web, com ser:
-- Click en un boton
-- Envio de un formulario
-- Carga de la pagina, etc
-
-### El evento `onclick`
-Las etiquetas o elementos HTML pueden tener una propiedad llamada `onclick`, que permite ejecutar una funcion de Javascript cuando se hace click en el elemento.
-
-```html
-<button onclick="saludar()">Saludar</button>
-```
-- El anterior codigo ejecutara la funcion `saludar()` cuando se haga click en el boton.
-
-
-## Scripts externos, la propiedad `src`
-Los scripts de Javascript pueden ser escritos en un archivo aparte y ser incluidos en el archivo HTML con la propiedad `src` de la etiqueta `<script>`.
-
-```html "src="scripts/hola.js""
-<!-- Incluyendo un script externo -->
-<script src="scripts/hola.js"></script>
-```
-:::nota
-Los scripts tiene la terminacion `.js`, y se recomienda que se encuentren en la carpeta `scripts` de tu proyecto.
-:::
-
-### Hazlo tu mismo
-<Card title="Trabajo en clase 3.2">
-Usando el formulario de login que se encuentra en la siguiente [pagina](/guides/03-htmlexample/#trabajo-en-clase-1), crea una funcion que se ejecute cuando se haga click en el boton `Iniciar Sesion`.
-- Se mostrara un `alert` con el mensaje `Enviando datos al servidor`.
-- Deberan existir la *hoja de estilos* y el *script* en archivos separados. con la siguiente estructura:
-
-import {FileTree} from '@astrojs/starlight/components'
-
-<FileTree>
-- styles
-    - login.css
-- scripts
-    - login.js
-- index.html
-
-</FileTree>
-
-:::note
-Comunmente a las paginas principales se les llama `index.html`. Recuerde bien la palabra `index`, ya que lo usaremos mas adelante.
-:::
-
-```html
-<!--login.html -->
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <title>Mi primer login</title>
-        <link rel="icon" href="favicon.ico">
-    </head>
-
-    <body>
-        <form>
-            <fieldset>
-                <legend>Inicio de sesión</legend>
-                <div>
-                    <!-- Campo usuario -->
-                    <label for="username">Usuario:</label>
-                    <input type="text" id="username" placeholder="Ingrese su usuario">
-                </div>
-                <br>
-                <div>
-                    <!-- Campo contraseña -->
-                    <label for="password">Contraseña:</label>
-                    <input type="password" id="password" placeholder="Ingrese su contraseña">
-                </div>
-                <br>
-                <button type="submit">Iniciar sesión</button>
-            </fieldset>
-        </form>
-    </body>
-</html>
-```
-</Card>
-
-
-## Buenas practicas en Javascript
-En el anterior codigo vimos como ejecutar una funcion cuando se hace click en un boton, pero no es recomendable usar la propiedad `onclick` en los elementos HTML, ya que puede llegar a ser confuso y dificil de mantener el codigo.
-:::caution
-En los proyectos modernos no es comun ver la propiedad `onclick` en los elementos HTML, ya que se recomienda separar el codigo Javascript del archivo HTML.
-:::
-
-### Seleccionar elementos del DOM
-El **DOM** es la representacion de la estructura de la pagina web, y se puede acceder a los elementos del DOM con Javascript para realizar operaciones y mostrar resultados en la pagina web.
-
-:::tip
-Imaguna que el **DOM** hace referencia a todos los elementos HTML ya cargados o que se pueden **ver** en la pagina web.
-:::

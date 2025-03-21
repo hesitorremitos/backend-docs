@@ -5,14 +5,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Javascript</title>
+
+    <style>
+        form{
+            width: 300px;
+            margin: 0 auto;
+            background-color: blanchedalmond;
+            padding: 20px;
+        }
+        input{
+            width: 100%;
+        }
+        button{
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+        }
+
+        .container{
+            width: 300px;
+            margin: 10px auto;
+            background-color: blanchedalmond;
+            padding: 5px 20px;  
+        }
+
+        #check-email, #check-password{
+            width: 20px;
+        }
+
+    </style>
 </head>
 
 <body>
-    <form>
+    <form action="#">
+        <h1>
+            Iniciar sesión
+        </h1>
         <div>
-            <!-- Campo usuario -->
-            <label for="username">Usuario:</label>
-            <input type="text" id="username" placeholder="Ingrese su usuario">
+            <!-- Campo email -->
+            <label for="email">Correo:</label>
+            <input type="text" id="email" placeholder="Ingrese su usuario">
         </div>
         <br>
         <div>
@@ -23,6 +55,15 @@
         <br>
         <button type="submit" id="btn-form">Iniciar sesión</button>
     </form>
+
+    <div class="container">
+        <h2>Validando campos</h2>
+        <label for="check_email">Email</label>
+        <input type="checkbox" id="check-email">
+        <br>
+        <label for="check_password">Contraseña</label>
+        <input type="checkbox" id="check-password" >
+    </div>
 
     <script src="main.js"></script>
 </body>
