@@ -724,17 +724,17 @@ import {Card} from '@astrojs/starlight/components';
     - El campo confirmar contraseña debe ser igual al campo contraseña.
     - La persona debe ser mayor de edad(mayor a 18 años).
 
-5. Todos los mensajes de validacion se deberan en otros `inputs` de tipo `checkbox`.
+5. Todos los mensajes de validacion se deberan en otros `inputs` de tipo `checkbox`, Solamente los **ERRORES** se deberan mostrar en consola.
     :::note
-    Los checkboxs tienen la propiedad `checked` que se puede asignar `true` o `false` para marcar o desmarcar el checkbox.
+    Los checkboxs tienen la propiedad `checked` que se puede asignar `true` o `false` para marcar o desmarcar el checkbox. 
+    Tambien los elementos html tienen la propiedad `style` que se puede asignar un objeto con las propiedades de **css**.
     ```js
     const rev_email = document.querySelector("#rev_email");
     rev_email.checked = true; // or false
+    // Cambiar color de fondo del contenedor
+    rev_email.parentElement.style.backgroundColor = "red";
     ```
     :::
-
-6. En consola se debera mostrar el mensaje de error de validacion si no se cumple con las reglas.
-
 
 ![Actividad 3](@assets/javascript/practica1.png)
 </Card>
