@@ -19,6 +19,7 @@ const check_nombre = document.querySelector('#check-name');
 const check_edad = document.querySelector('#check-edad');
 const check_email = document.querySelector('#check-email');
 const check_password = document.querySelector('#check-password');
+const check_password2 = document.querySelector('#check-password2');
 
 
 // Funciones para validar
@@ -62,12 +63,17 @@ function validarEmail() {
 function validarPassword() {
     if(password.value.length < 6) {
         alert('La contraseña debe tener al menos 6 caracteres');
-    }else if(password.value !== password2.value) {
-        alert('Las contraseñas no coinciden');
     }else{
         console.log('Contraseña:  validado');
         check_password.checked = true;
         check_password.parentElement.style.backgroundColor = '#90feb9';
+    }
+    if(password.value !== password2.value) {
+        alert('Las contraseñas no coinciden');
+    }else if(password2.value !== '' && password.value !== ''){
+        console.log('Contraseña2:  validado');
+        check_password2.checked = true;
+        check_password2.parentElement.style.backgroundColor = '#90feb9';
     }
 }
 
