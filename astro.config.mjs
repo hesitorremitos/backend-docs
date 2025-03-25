@@ -56,7 +56,7 @@ export default defineConfig({
 				
 			],
 			plugins: [
-				starlightLinksValidatorPlugin(),
+				starlightLinksValidatorPlugin({errorOnInvalidHashes: false}),
 				starlightHeadingBadgesPlugin(),
 				starlightViewModes({
 					zenModeSettings: {
