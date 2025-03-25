@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightLinksValidatorPlugin from 'starlight-links-validator';
 import starlightHeadingBadgesPlugin from 'starlight-heading-badges';
+import starlightViewModes from 'starlight-view-modes';
 import icon from 'astro-icon';
 // https://astro.build/config
 export default defineConfig({
@@ -54,7 +55,20 @@ export default defineConfig({
 				},
 				
 			],
-			plugins: [starlightLinksValidatorPlugin(), starlightHeadingBadgesPlugin()],
+			plugins: [
+				starlightLinksValidatorPlugin(),
+				starlightHeadingBadgesPlugin(),
+				starlightViewModes({
+					zenModeSettings: {
+						displayOptions:{
+							showTableOfContents: false,
+							showHeader: false,
+							showFooter: false,
+							showSidebar: false,
+						}
+					}
+				}),
+			],
 		}),
 	],
 });
