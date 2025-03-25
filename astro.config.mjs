@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightLinksValidatorPlugin from 'starlight-links-validator';
+import starlightHeadingBadgesPlugin from 'starlight-heading-badges';
 import icon from 'astro-icon';
 // https://astro.build/config
 export default defineConfig({
@@ -21,7 +22,6 @@ export default defineConfig({
 				baseUrl: "https://github.com/hesitorremitos/backend-docs/edit/master/",
 
 			},
-			plugins: [starlightLinksValidatorPlugin()],
 			title: 'Backend',
 			social: {
 				github: 'https://github.com/hesitorremitos/backend-docs',
@@ -54,6 +54,7 @@ export default defineConfig({
 				},
 				
 			],
+			plugins: [starlightLinksValidatorPlugin(), starlightHeadingBadgesPlugin()],
 		}),
 	],
 });
