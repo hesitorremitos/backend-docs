@@ -6,14 +6,6 @@ draft: true
 
 La programación del lado del servidor es el proceso de crear sitios o aplicaciones web que se ejecutan en un servidor y que son entregados al navegador del usuario.
 
-Para hacer esto posible se requiere de un **servidor web**, que es un programa que se ejecuta en un servidor y que se encarga de recibir las solicitudes de los navegadores de los usuarios y de enviarles el contenido HTML de las páginas web.
-
-Los programas mas comunes para crear un servidor web son:
-- **Apache2**, es el mas usado en el mundo.
-- **Nginx**, es el segundo mas usado en el mundo.
-- **IIS**, es el servidor web de Microsoft, funciona solo en Windows.
-- Otros que se apoyan a un lenguaje de programación como Node.js, Python, Ruby, etc.
-
 ```d2 pad=30
 shape: sequence_diagram
 client: CLIENTE
@@ -24,6 +16,16 @@ client->server: Peticion de recursos
 server->client: Respuesta
 
 ```
+
+Para hacer esto posible se requiere de un **servidor web**, que es un programa que se ejecuta en un servidor y que se encarga de recibir las solicitudes de los navegadores de los usuarios y de enviarles el contenido HTML de las páginas web.
+
+Los programas mas comunes para crear un servidor web son:
+- **Apache2**, es el mas usado en el mundo.
+- **Nginx**, es el segundo mas usado en el mundo.
+- **IIS**, es el servidor web de Microsoft, funciona solo en Windows.
+- Otros que se apoyan a un lenguaje de programación como Node.js, Python, Ruby, etc.
+
+
 
 ## Servidor web(Apache2)
 En el curso de programación del lado del servidor, se utilizara Apache2 como servidor web, ya que es el mas usado en el mundo y es muy facil de configurar.

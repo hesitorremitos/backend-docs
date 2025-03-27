@@ -17,6 +17,9 @@ export default defineConfig({
 			}
 		}),
 		starlight({
+			customCss:[
+				"./src/styles/main.css",
+			],
 			expressiveCode:{
 				themes: ['dracula'],
 			},
