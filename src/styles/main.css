@@ -1,3 +1,5 @@
-.sl-markdown-content > img {
+.starlight-view-modes-zen-mode > img {
   margin: auto;
+  min-width: 70%;
+  max-height: 90vh;
 }
