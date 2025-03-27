@@ -10,7 +10,7 @@ import astroD2 from 'astro-d2';
 export default defineConfig({
 	devToolbar:{ enabled: false },
 	integrations: [
-		astroD2(),
+		astroD2({pad: 30}),
 		icon({
 			svgoOptions: {
 

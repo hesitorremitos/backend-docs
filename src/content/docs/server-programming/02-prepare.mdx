@@ -1,0 +1,254 @@
+---
+title: Preparacion de entorno
+description: Preparacion de entorno de desarrollo
+---
+
+import { Steps,Card,FileTree } from '@astrojs/starlight/components';
+
+
+La anterior sección nos dio una idea de lo que es la programación del lado del servidor y de las herramientas que se necesitan para poder llevarla a cabo. En esta seccion veremos las herramientas que nos permitiran **emular** dichas herramientas de manera mas facil y rapida.
+
+## Entorno de desarollo
+En el desarollo de aplicaciones existen escencialmente dos entornos, el de **producción** y el de **desarrollo**. El entorno de producción es el entorno en el que se ejecuta la aplicación en un servidor real, mientras que el entorno de desarrollo es el entorno en el que se desarrolla la aplicación.
+
+```d2 pad=20
+laragon:{
+    direction: left
+    label: Laragon
+    icon.near: top-left
+    icon: https://miro.medium.com/v2/resize:fit:800/1*SNA3tR3GPoiPNTH8ZR_fVA.png
+    grid-rows: 1
+    Apache2:{
+        shape: image
+        icon: https://icons.terrastruct.com/dev%2Fapache.svg
+    }
+    MySQL:{
+        shape: image
+        icon: https://icons.terrastruct.com/dev%2Fmysql.svg
+    }
+    PHP:{
+        shape: image
+        icon: https://icons.terrastruct.com/dev%2Fphp.svg
+    }
+    Git:{
+        shape: image
+        icon: https://icons.terrastruct.com/dev%2Fgit.svg
+    } 
+}
+```
+
+El entorno de desarrollo es un entorno en el que se pueden realizar pruebas y depuración de la aplicación antes de que se ejecute en un servidor real. En este entorno se pueden realizar cambios en el código de la aplicación y ver los resultados de esos cambios en tiempo real, se puede tratar con datos ficticios y esto permite probar la aplicación en diferentes escenarios.
+
+## Laragon
+Laragon es un paquete de desarrollo web que incluye todo lo necesario para desarrollar aplicaciones web en un solo lugar. Laragon incluye un servidor web, una base de datos, un lenguaje de programación, un framework y herramientas de desarrollo.
+
+
+
+:::note
+Se escogio Laragon por ser un paquete de desarrollo web **mas facil** de manejar segun nuestra experiencia.
+Si desea utilizar otro paquete de desarrollo web, puede hacerlo.
+:::
+
+![Laragon](https://lavalamplab.b-cdn.net/wp-content/uploads/2022/10/laragon-1536x960.jpg)
+
+## Estructura de carpetas de Laragon
+Despues de instalar Laragon, en su ubicacion por defecto, se creara una carpeta llamada `laragon` en el disco `C:`. A contuniacion se muestra explica la estructura de carpetas.
+
+:::caution
+No se mencionaran todas las carpetas, solo las mas importantes.
+Para entender mejor la estructura de carpetas de Laragon, imaginelo como la estructura de una **distribucion de linux**, ya que se asemeja mucho a esta.
+:::
+
+### `bin`
+Contiene los ejecutables de los programas que vienen con Laragon(`.exe`). En cada carpeta tambien es posible encontrar diferentes **versiones** de los programas, y en algunos casos tambien veremos los **archivos de configuracion** de los programas.
+
+:::tip
+Laragon no se limita a las versiones de los programas que vienen con el, es posible instalar **otras versiones** de los programas. y ejecutarlas desde Laragon.
+:::
+
+Por mencionar algunos programas que vienen con Laragon:
+- `apache` : El ejecutable que permitira a laragon ejecutar un servidor web.
+- `mysql` : El ejecutable que permitira a laragon ejecutar un servidor de base de datos.
+- `php` : El ejecutable que permitira a laragon ejecutar un servidor de lenguaje de programación.
+- `git` : El ejecutable que permitira a laragon ejecutar un cliente de control de versiones.
+- `nginx` : Parecido a apache, pero mas rapido, la configuracion es diferente.
+
+### `data`
+Almacena principalmente los datos generados por los **gestores de base de datos**, como ser mysql, mariadb, postgresql, etc.
+
+### `etc`
+Almacena los archivos de configuracion de los programas que vienen con Laragon.
+
+Por ejemplo, apache tiene archivos de configuracion, puede que en esta carpeta se encuentren.
+
+### `www`
+Es la carpeta mas **importante** para nuestro proposito, ya que es la carpeta donde se almacenan los archivos de nuestra aplicacion web.
+
+Si hecha in vistazo tendra algunos archivos de ejemplo, como ser `index.php`, `index.html`, etc.
+
+
+## Configuraciones de Laragon
+
+En la sección anterior vimos que Apache2 es un servidor web muy popular y fácil de configurar. Ahora veremos como iniciar y configurar Apache2 en Laragon.
+
+A continuación se muestra como iniciar Apache2 y sus diferentes opciones de configuración.
+
+### Iniciando un Servicio(Apache2)
+Para iniciar Apache2 en Laragon, siga los siguientes pasos una vez que haya instalado Laragon:
+<Steps>
+1. Click derecho en un area vacia de la ventana de Laragon.
+    - Aqui veremos un menu con las diferentes aplicacion y opciones que vienen con Laragon.
+2. Mantener el cursor sobre la opcion **Apache**, aqui veremos las diferentes opciones de configuracion de Apache2.
+    - **Start Apache** : Inicia apache, este boton cambia a **Stop Apache** cuando apache esta corriendo.
+    - **Reload** : Recarga la configuracion de Apache2.
+    - **httpd.conf** : Abre el archivo de configuracion de Apache2.
+    - **sites-enabled** : Aqui podremos abrir el archivo de configuracion para los diferentes sitios web que tengamos.
+    - **SSL** : Aqui podremos configurar el certificado SSL para nuestro sitio web.
+    - **error.log y access.log** : Abre la carpeta donde se almacenan los logs de Apache2
+    - **dir: conf** : Abre la carpeta donde se almacenan los archivos de configuracion de Apache2.
+    - **dir: alias** : Abre la carpeta donde se almacenan los alias de Apache2.
+3. Click en **Start Apache** para iniciar Apache2.
+    - Si Apache2 se inicia correctamente, veremos un mensaje en la parte inferior de la ventana de Laragon que dice **Apache started**.
+
+4. En la ventana de laragon veremos un elemento que nos indica la version de Apache2 que estamso usando y el puerto en el que esta corriendo.
+    ![Laragon-Apache](@assets/server-programming/laragon-apache80.png)
+
+5. Para verificar que Apache2 esta corriendo, abra un navegador web y vaya a `http://localhost`. Se sobre entiende que el servidor web esta corriendo en el puerto 80.
+</Steps>
+
+:::note
+Como se indico en la [seccion anterior](/server-programming/02-prepare/#www), la carpeta `www` posee un archivo de ejemplo llamado `index.php`, puede revisar el archivo con un editor de codigo y ver el contenido.
+:::
+
+### Cambiar el puertos de Servicios
+Laragon nos proporciona la facilidad de cambiar el puerto en el que corre Apache2, para hacer esto siga los siguientes pasos:
+<Steps>
+1. Click derecho en un area vacia de la ventana de Laragon.
+2. Click en **preferences**.
+3. En la ventana que se abre, click en **Services & Ports**.
+4. Aqui podremos cambiar el puerto en el que corre Apache2.
+    - **HTTP**: Cambia el puerto en el que corre Apache2.
+    - **HTTPS**: Cambia el puerto en el que corre Apache2 con SSL.
+
+5. Cerrar la ventana de preferencias y reiniciar Apache2.
+</Steps>
+
+### Otros Servicios
+Al igual que Apache2, Laragon nos permite iniciar otros servicios como MySQL, PHP, Nginx, etc. Para iniciar estos servicios, los pasos para configurar estos servicios son similares a los de Apache2, se espera a que el estudiante pueda explorarlos por si mismo.
+
+
+
+### Botones inferiores
+En la parte inferior de la ventana de Laragon, encontraremos una serie de botones que nos permiten realizar diferentes acciones.
+![Laragon Buttons](@assets/server-programming/laragon-button.png)
+
+- **Start All** : Inicia todos los servicios habilitados en la seccion de configuracion.
+- **Stop All** : Se muestra cuando todos los servicios estan corriendo, detiene todos los servicios.
+- **Web** : Abre la raiz del servidor web en el navegador predeterminado.
+- **Database** : Abre el cliente de base de datos, este puede ser:
+    - **HeidiSQL** : Cliente de base de datos en Windows.
+    - **phpMyAdmin** : Cliente de base de datos que se ejecuta en el navegador.
+
+- **Terminal** : Abre una terminal en la carpeta raiz del servidor web
+    - Una caracteristica importante de esta terminal, es que posee sus propias **variables de entorno**, lo que significa que podemos ejecutar comandos y binarios que esten en Laragon.
+- **Root** : Abre una terminal en la carpeta raiz donde se alojan los sitios web.
+
+
+
+## Variables de entorno
+Si bien en Laragon podemos configurar diferentes binarios, estos binarios y herramientas solo estaran disponibles en la **terminal de Laragon**. Para hacer que estos binarios esten disponibles en la terminal de Windows, debemos configurar las **variables de entorno** de Windows.
+
+## Hazlo tu mismo :badge[Actividad 4.1]{variant=caution}
+
+<Card title='Configurar PHP'>
+- Añade PHP a las variables de entorno de Windows para que esten disponibles en cualquier terminal de Windows.
+    - Para comprobar ejecutar los siguientes comandos en diferentes rutas y terminales de Windows.
+    ```cmd title="Windows terminal" {1}
+    php --version
+
+    PHP 8.3.7 (cli) (built: May  8 2024 08:56:34) (NTS Visual C++ 2019 x64)
+    ...
+    ```
+- Debera mostrar la version de PHP que esta corriendo en Laragon(verifique).
+
+</Card>
+
+<Card title='Usando y configurando MySQL'>
+- Añade MySQL a las variables de entorno de Windows
+- Ejecutar y conectarse a la base de datos de MySQL desde cualquier terminal de Windows.
+    - La opcion `-h` indica el host al que se conectara, en este caso `localhost`.
+    - La opcion `-u` indica el usuario con el que se conectara, en este caso `root`.
+    - La opcion `-p` indica que se le pedira la contraseña(opcional).
+    ```cmd title="Windows terminal"
+    mysql -h localhost -u root
+    ```
+
+- Cree una base de datos y una tabla en la base de datos con su nombre.
+- Use la aplicaion con interfaz grafica `HeidiSQL` para conectarse a la base de datos y verificar que la tabla se haya creado correctamente.
+    - Para acceder a ella Click derecho en laragon y `MySQL>HeidiSQL`.
+    - Configure los parametros de conexion y conectese a la base de datos.
+- Use la aplicacion con interfaz web `phpMyAdmin` para conectarse a la base de datos y verificar que la tabla se haya creado correctamente.
+    - Para acceder a ella Click derecho en laragon y `MySQL>phpMyAdmin`.
+    - Configure los parametros de conexion y conectese a la base de datos.
+</Card>
+
+
+## Apache2: Enrutamiento basado en archivos
+Apache2 nos permite acceder a las diferentes paginas web que tengamos en la carpeta `www` de Laragon, para hacer esto se utiliza el **enrutamiento basado en archivos**.
+
+Esto quiere decir que si tenemos un archivo llamado `pagina1.html` en la carpeta `www`, podremos acceder a el desde el navegador web con la ruta `http://localhost/pagina1.html`. Si tenemos una carpeta llamada `ruta1` con un archivo `pagina2.html`, podremos acceder a el con la ruta `http://localhost/ruta1/pagina2.html`.
+
+<FileTree>
+- www
+    - pagina1.html `http://localhost/pagina1.html`
+    - pagina2.html `http://localhost/pagina2.html`
+    - ruta1
+        - pagina2.html `http://localhost/ruta1/pagina2.html`
+</FileTree>
+
+### Los archivos `index.html` y `index.php`
+Apache2 nos permite acceder a los archivos `index.html` y `index.php` sin necesidad de especificar el nombre del archivo en la ruta. Esto quiere decir que si tenemos un archivo `index.html` en la carpeta `www`, podremos acceder a el con la ruta `http://localhost`. Esto tambien aplica a las subcarpetas.
+
+<FileTree>
+- www
+    - index.php `http://localhost`
+    - ruta1
+        - index.php `http://localhost/ruta1`
+
+</FileTree>
+
+### La etiqueta `<a>`
+En html existe la etiqueta con contenido `<a>` que nos permite navegar entre paginas web. Tiene el atributo `href` que nos permite indicar la ruta de la pagina a la que queremos navegar, esta ruta es **relativa** o **absoluta** a la ruta actual, siendo la ruta raiz `/` la carpeta `www`.
+
+:::waning
+Es importante recordar que la ruta relativa funciona de la misma forma que en las terminales de Windows y linux, que usan como referencia la carpeta actual, en este caso la **Ubicacion del archivo html**.
+
+Las rutas absolutas siempre empiezan con `/` y son relativas a la carpeta raiz del servidor web(`www`).
+:::
+```html title="Rutas relativas"
+<a href="ruta1/pagina2.html">Esta es una ruta relativa</a>
+```
+    
+```html title="Rutas absolutas"
+<a href="/ruta1/pagina2.html">Esta es una ruta absoluta</a>
+```
+
+## Hazlo tu mismo :badge[Actividad 4.2]{variant=caution}
+Ahora que ya conocen el funcionamiento de enrutamiento basado en archivos, realiza las siguientes actividades
+
+<Card title='Carga tu proyecto en Apache'>
+    - Carga tu pagina web en la carpeta correspondiente de Apache.
+    - El proyecto se debera mostrar en la ruta raiz de Apache(`http://localhost`).
+    - Cambia el puerto en el que corre Apache2 a `8080` y verifica que el proyecto se muestre en el puerto correspondiente.
+</Card>
+<Card title='Paginas web multiples'>
+    - Selecciona 2 proyectos mas una de ellas estara  dentro de la carpeta `ruta2`, y la otra estara con el nombre de `pagina2.html`. En la ubicacion de las paginas web de Apache.
+    - Añade las etiquetas necesarias para navegar entre tus 3 paginas web, dentro de Apache2(3 etiquetas `<a>` en cada pagina).
+    <FileTree>
+        - index.html `http://localhost:8080`
+        - pagina2.html `http://localhost:8080/pagina2.html`
+        - ruta2
+            - register.html `http://localhost:8080/ruta2/register.html`
+    </FileTree>
+</Card>
+
