@@ -14,7 +14,16 @@ Los programas mas comunes para crear un servidor web son:
 - **IIS**, es el servidor web de Microsoft, funciona solo en Windows.
 - Otros que se apoyan a un lenguaje de programación como Node.js, Python, Ruby, etc.
 
-![Server-Client](@assets/server-programming/client-server.svg)
+```d2 pad=30
+shape: sequence_diagram
+client: CLIENTE
+server: SERVER
+
+# (*->*).style.animated: true
+client->server: Peticion de recursos
+server->client: Respuesta
+
+```
 
 ## Servidor web(Apache2)
 En el curso de programación del lado del servidor, se utilizara Apache2 como servidor web, ya que es el mas usado en el mundo y es muy facil de configurar.

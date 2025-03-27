@@ -5,10 +5,12 @@ import starlightLinksValidatorPlugin from 'starlight-links-validator';
 import starlightHeadingBadgesPlugin from 'starlight-heading-badges';
 import starlightViewModes from 'starlight-view-modes';
 import icon from 'astro-icon';
+import astroD2 from 'astro-d2';
 // https://astro.build/config
 export default defineConfig({
 	devToolbar:{ enabled: false },
 	integrations: [
+		astroD2(),
 		icon({
 			svgoOptions: {
 
