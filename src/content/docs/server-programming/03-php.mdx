@@ -1,31 +1,366 @@
 ---
-title: Programacion en  PHP
-description: Programacion en el lenguaje de programacion PHP
-draft: false
+title: Programación en PHP
+description: Guía completa de programación en PHP
+sidebar:
+  label: Programación en PHP
 ---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Steps } from '@astrojs/starlight/components';
+
 
 PHP es un lenguaje de programación que fue creado principalmente para añadir funcionalidades a las páginas web. Es un lenguaje de programación de propósito general, que se puede utilizar para crear aplicaciones web, aplicaciones de escritorio, aplicaciones móviles, etc.
 
-Algunas de sus características son:
-- **Codigo abierto**, lo que significa que es gratuito y que cualquiera puede utilizarlo.
-- **Amplio soporte**, lo que significa que hay una gran cantidad de documentación y tutoriales disponibles.
-- **Recursos de la comunidad**, lo que significa que hay una gran cantidad de bibliotecas y frameworks disponibles.
-- **Multiparadigma**, lo que significa que significa que puedes programar en PHP de diferentes maneras, como ser **orientado a objetos**, **procedural**, **funcional**, etc.
+<CardGrid>
+  <Card title="Código Abierto" icon="open-book">
+    Gratuito y accesible para todos los desarrolladores.
+  </Card>
+  <Card title="Amplio Soporte" icon="document">
+    Extensa documentación y recursos de aprendizaje.
+  </Card>
+  <Card title="Comunidad Activa" icon="random">
+    Gran cantidad de bibliotecas y frameworks disponibles.
+  </Card>
+  <Card title="Multiparadigma" icon="setting">
+    Soporta programación orientada a objetos, procedural y funcional.
+  </Card>
+</CardGrid>
 
+## Introducción a PHP
+PHP es un lenguaje que usa la **Programacion procedural** principalmente, ya que la mayoria de sus funciones son de este tipo. Sin embargo, también soporta la **Programación orientada a objetos** (OOP) y la **Programación funcional**.
+:::nota
+La programacion procedural es un paradigma de programación que se basa en la idea de dividir un programa en procedimientos o funciones.  Entonces los datos primitivos no poseen metodos ni propiedades, y para tratar con ellos debemos usar funciones integradas del lenguaje.
 
-## Formas de impresion en PHP
-En PHP hay varias formas de imprimir texto en la pantalla
+## Configuración Inicial
+<Steps>
+1. Instalar PHP en tu sistema
+2. Configurar un servidor web (Apache/Nginx)
+3. Configurar un editor de código
+4. Crear tu primer archivo PHP
+</Steps>
 
-La mas comun es con la funcion `echo`
-
-:::note
-- Para escribir codigo php, el archivo debe tener la extension `.php`
-- Al inicio de un archivo php se debe abrir con `<?php` y al final se debe cerrar con `?>`
-  - Si el archivo solo contiene codigo php se recomienda no cerrar el archivo con `?>`
+:::note[Estructura Básica]
+- Los archivos PHP deben tener la extensión `.php`
+- El código PHP se delimita con `<?php` y `?>`
+- Si el archivo solo contiene código PHP, se recomienda omitir el cierre `?>`
 :::
+
+## Fundamentos
+
+### Sintaxis Básica
+`echo` y `print` son constructores del lenguaje que permiten mostrar una o más cadenas de texto. La principal diferencia es que `print` solo puede tomar un argumento y siempre devuelve 1.
+
+:::tip
+Tambien es posible usar las secuencias de escape `\n` y `\t` para crear saltos de línea y tabulaciones respectivamente.
+:::
+
 
 ```php
 <?php
 echo "Hola Mundo";
+echo "Hola Mundo\n"; // con salto de línea
+```
+```php
+<?php
+print("Hola Mundo");
+print "Hola Mundo"; // También válido
 ```
 
+### Variables
+Las variables en PHP son contenedores para almacenar información. Se identifican siempre con el símbolo `$` seguido del nombre de la variable.
+
+```php
+// Variables y ejemplos de uso
+$nombre = "Juan" // String
+echo $nombre; // Salida: Hola Juan
+
+$edad = 25; // Integer
+echo $edad; // Salida: 30
+
+$precio = 19.99; // Float 
+echo $precio; // Salida: 39.98
+
+$activo = true; // Boolean 
+echo $activo; // Salida: 1
+
+$datos = null; // Null - Sin valor
+echo $datos; // Salida: (nada)
+```
+
+#### Obtener el Tipo de Dato
+Para poder obtener el tipo de dato de una variable, se puede usar la función `gettype()`. También se pueden usar funciones como `is_string()`, `is_int()`, `is_float()`, para verificar el tipo.
+
+```php
+// Ejemplo de tipos de datos
+$nombre = "Juan";
+$edad = 25;
+$precio = 19.99;
+$activo = true;
+$datos = null;
+echo gettype($nombre); // string
+echo gettype($edad); // integer
+echo gettype($precio); // double
+echo gettype($activo); // boolean
+echo gettype($datos); // NULL
+```
+
+### Concatenación
+La concatenación en PHP se realiza con el operador `.` (punto). 
+
+```php
+// Concatenación de cadenas
+$nombre = "Juan";
+$apellido = "Pérez";
+echo $nombre . " " . $apellido; //Nombre completo
+print("Hola " . $nombre . "\n"); // Hola Juan
+```
+También se puede usar la interpolación de variables dentro de comillas dobles.
+
+```php
+echo "Hola, $nombre $apellido\n"; // Hola, Juan Pérez
+print("Hola, $nombre $apellido\n"); // Hola, Juan Pérez
+```
+
+Otra forma de concatenar es usando las comillas simples, pero en este caso no se interpretan las variables.
+
+:::caution
+Las comillas simples no interpretan variables, por lo que se deben usar comillas dobles para la interpolación.
+```php
+echo 'Hola, $nombre $apellido\n'; // Esto no interpreta las variables
+```
+:::
+
+### Operadores
+Los operadores son iguales a muchos otros lenguajes de programación.
+
+#### Operadores Aritméticos
+Los operadores aritméticos son los que se utilizan para realizar operaciones matemáticas.
+
+```php	
+// Ejemplo de operadores aritméticos
+$suma = 5 + 3;      // Suma
+$resta = 10 - 2;    // Resta
+$multiplicacion = 4 * 2; // Multiplicación
+$division = 10 / 2; // División
+```
+#### Operadores de Comparación
+Los operadores de comparación se utilizan para comparar dos valores y devuelven un valor booleano (true o false).
+
+| Operador | Descripción |
+|----------|-------------|
+| `==`     | Igual a    |
+| `<`    | Menor que  |
+| `>`    | Mayor que  |
+| `<=`   | Menor o igual que |
+| `>=`   | Mayor o igual que |
+| `!=`   | Diferente de |
+| `===`  | Igual y del mismo tipo |
+| NULL | Se intepreta como falso |
+| 1 | Se intepreta como verdadero |
+| 0 | Se intepreta como falso |
+
+```php	
+1 == 1 // true
+1 > 2 // false
+1 < 2 // true
+1 != 2 // true
+/ etc...
+```
+
+#### Operadores Lógicos
+Los operadores lógicos se utilizan para combinar expresiones booleanas.
+| Operador | Descripción |
+|----------|-------------|
+| `&&`     | Y lógico    |
+| `||`     | O lógico    |
+| `!`      | No lógico   |
+
+```php
+// Ejemplo de operadores lógicos
+1 == 1 && 2 == 2 // true AND true = true
+1 == 1 || 2 == 3 // true OR false = true
+1 == 1 && 2 == 3 // true AND false = false
+! (1 == 1) // false
+```
+
+#### Operadores de Asignación
+Los operadores de asignación se utilizan para asignar valores a variables.
+
+```php
+// Ejemplo de operadores de asignación
+$numero = 5; // Asignación simple
+$numero += 2; // Asignación con suma
+$numero -= 3; // Asignación con resta
+$numero *= 2; // Asignación con multiplicación
+$numero /= 2; // Asignación con división
+$numero %= 2; // Asignación con módulo
+```
+
+### Estructuras de Control
+:::tip[Buena Práctica]
+Siempre usa llaves `{}` en tus estructuras de control, incluso para bloques de una sola línea, para mejorar la legibilidad.
+:::
+
+<Tabs>
+  <TabItem label="If/Else">
+    ```php
+    $edad = 20;
+    $mensaje = '';
+    
+    if ($edad < 18) {
+        $mensaje = "Eres menor de edad";
+    } elseif ($edad >= 18 && $edad < 65) {
+        $mensaje = "Eres adulto";
+    } else {
+        $mensaje = "Eres adulto mayor";
+    }
+    ```
+  </TabItem>
+  <TabItem label="Switch">
+    ```php
+    $diaSemana = "Lunes";
+    
+    switch ($diaSemana) {
+        case 'Lunes':
+            echo "Inicio de semana";
+            break;
+        case 'Viernes':
+            echo "¡Fin de semana!";
+            break;
+        default:
+            echo "Día normal";
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+### Bucles
+:::note[Definición]
+Los bucles permiten ejecutar un bloque de código repetidamente mientras se cumpla una condición determinada.
+:::
+
+<Tabs>
+  <TabItem label="For">
+    ```php
+    // Tabla de multiplicar
+    $numero = 5;
+    for ($i = 1; $i <= 10; $i++) {
+        echo "$numero x $i = " . ($numero * $i) . "\n";
+    }
+    ```
+  </TabItem>
+  <TabItem label="While">
+    ```php
+    // Contador regresivo
+    $countdown = 5;
+    while ($countdown > 0) {
+        echo $countdown . "...\n";
+        $countdown--;
+    }
+    echo "¡Despegue!";
+    ```
+  </TabItem>
+  <TabItem label="Foreach">
+    ```php
+    $frutas = ['manzana', 'pera', 'uva'];
+    foreach ($frutas as $indice => $fruta) {
+        echo "$indice: $fruta\n";
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+## Funciones
+:::tip[Definición]
+Las funciones son bloques de código reutilizables que realizan una tarea específica y pueden recibir parámetros y devolver valores.
+:::
+
+```php
+// Ejemplo de función con tipos y valor por defecto
+function calcularPrecioTotal(float $precio, float $impuesto = 0.21): float {
+    return $precio * (1 + $impuesto);
+}
+
+// Uso de la función
+echo calcularPrecioTotal(100);      // 121
+echo calcularPrecioTotal(100, 0.1); // 110
+```
+
+## Programación Orientada a Objetos
+```php
+class Usuario {
+    private $nombre;
+    
+    public function __construct($nombre) {
+        $this->nombre = $nombre;
+    }
+    
+    public function getNombre() {
+        return $this->nombre;
+    }
+}
+```
+
+## Manejo de Datos
+
+### Arrays
+```php
+$frutas = ['manzana', 'pera', 'uva'];
+$datos = [
+    'nombre' => 'Juan',
+    'edad' => 25
+];
+```
+
+### Formularios y POST/GET
+```php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nombre = $_POST['nombre'];
+}
+```
+
+## Base de Datos
+<Steps>
+1. Conexión a MySQL
+2. Consultas básicas (CRUD)
+3. Prepared Statements
+4. Manejo de errores
+</Steps>
+
+## Seguridad
+- Validación de datos
+- Sanitización de entradas
+- Prevención de SQL Injection
+- Manejo de sesiones
+- CSRF Protection
+
+## Buenas Prácticas
+<CardGrid>
+  <Card title="Código Limpio" icon="approve-check">
+    Mantener un estilo de código consistente
+  </Card>
+  <Card title="Seguridad" icon="warning">
+    Implementar medidas de seguridad básicas
+  </Card>
+  <Card title="Optimización" icon="rocket">
+    Optimizar el rendimiento del código
+  </Card>
+  <Card title="Documentación" icon="document">
+    Documentar el código adecuadamente
+  </Card>
+</CardGrid>
+
+## Frameworks y Herramientas
+- Laravel
+- Symfony
+- CodeIgniter
+- Composer
+- PHPUnit
+
+## Recursos Adicionales
+:::tip[Enlaces Útiles]
+- [Documentación oficial de PHP](https://www.php.net/docs.php)
+- [PHP The Right Way](https://phptherightway.com/)
+- [PHP Standards Recommendations (PSR)](https://www.php-fig.org/psr/)
+:::
