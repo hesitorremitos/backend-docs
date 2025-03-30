@@ -4,7 +4,7 @@ description: Uso de librerias externas como BOOTSTRAP
 ---
 
 import { Steps } from '@astrojs/starlight/components';
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem,LinkCard,CardGrid } from '@astrojs/starlight/components';
 import { Card } from '@astrojs/starlight/components';
 import { FileTree } from '@astrojs/starlight/components';
 
@@ -47,11 +47,13 @@ Existen principalmente dos tipos de librerías externas:
 ## Bootstrap como ejemplo
 
 Bootstrap es un framework CSS y JavaScript que facilita el desarrollo de sitios web responsivos y atractivos visualmente.
+Se basa en el uso de clases CSS para aplicar estilos y funcionalidades a los elementos HTML.
+Bootstrap es ampliamente utilizado por su facilidad de uso y la gran cantidad de componentes que ofrece.
 
 ### Características principales
 
 - Sistema de rejilla (grid) responsivo
-- Componentes prediseñados (botones, formularios, navegación, etc.)
+- **Componentes** prediseñados (botones, formularios, navegación, etc.)
 - Utilidades CSS para espaciado, color, tipografía, etc.
 - Plugins JavaScript para interactividad
 - Compatibilidad con múltiples navegadores
@@ -170,28 +172,17 @@ Siempre incluye la metaetiqueta viewport para asegurar que el diseño responsivo
 
 Bootstrap ofrece numerosos componentes que puedes usar directamente en tu HTML:
 
-### Sistema de rejilla (Grid)
+<CardGrid>
+<LinkCard title="Ejemplo de un botón" href="https://getbootstrap.com/docs/5.3/components/buttons/"/>
 
-El sistema de rejilla de Bootstrap permite crear layouts responsivos fácilmente:
 
-```html
-<div class="container">
-  <div class="row">
-    <div class="col-md-6">
-      <h2>Columna 1</h2>
-      <p>Esta columna ocupa la mitad en pantallas medianas y grandes.</p>
-    </div>
-    <div class="col-md-6">
-      <h2>Columna 2</h2>
-      <p>Esta columna ocupa la otra mitad en pantallas medianas y grandes.</p>
-    </div>
-  </div>
-</div>
-```
 
-:::note
-En pantallas pequeñas (móviles), las columnas ocuparán el 100% del ancho automáticamente, apilándose una sobre otra.
-:::
+<LinkCard title="Ejemplo de una alerta" href="https://getbootstrap.com/docs/5.3/components/alerts/"/>
+
+<LinkCard title="Ejemplo de un formulario" href="https://getbootstrap.com/docs/5.3/forms/overview/"/>
+
+<LinkCard title="Navbar" href="https://getbootstrap.com/docs/5.3/components/navbar/"/>
+</CardGrid>
 
 ### Formularios
 
@@ -277,33 +268,7 @@ Algunos componentes de Bootstrap requieren JavaScript para funcionar:
   </TabItem>
 </Tabs>
 
-## Utilizando jQuery con Bootstrap
 
-Aunque las versiones recientes de Bootstrap no requieren jQuery, muchos plugins y proyectos web aún lo utilizan. Para añadir jQuery:
-
-```html
-<!-- Primero jQuery, luego Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-```
-
-Una vez incluido jQuery, puedes utilizarlo para manipular elementos de Bootstrap:
-
-```html
-<script>
-  $(document).ready(function() {
-    // Mostrar un modal con jQuery
-    $("#miBoton").click(function() {
-      $("#miModal").modal('show');
-    });
-    
-    // Cambiar el texto de un botón después de hacer clic
-    $(".btn-primary").click(function() {
-      $(this).text("¡Hecho!");
-    });
-  });
-</script>
-```
 
 ## Otras librerías populares
 
@@ -329,17 +294,9 @@ Al utilizar librerías externas, sigue estas recomendaciones:
 ## Actividad: Creando una página con Bootstrap :badge[Actividad]{variant=caution}
 
 <Card title="Implementa Bootstrap y crea un sitio web básico">
-Para practicar lo aprendido, crea una página web que incluya:
-
-1. Un menú de navegación responsivo
-2. Un carrusel con al menos 3 imágenes
-3. Un formulario de contacto estilizado
-4. Una sección de tarjetas (cards) con información
-5. Un footer con enlaces y copyright
-
-Utiliza las clases de Bootstrap para hacer el diseño responsivo y atractivo. No es necesario escribir CSS personalizado, pero puedes hacerlo si deseas ampliar la funcionalidad.
-
-**Entregable**: El archivo HTML con Bootstrap implementado correctamente.
+  Realiza un ToDO list utilizando Bootstrap. Debe incluir:
+  - Un formulario para añadir tareas(input y botón)
+  - Una lista de tareas
 </Card>
 
 ## Recursos adicionales
