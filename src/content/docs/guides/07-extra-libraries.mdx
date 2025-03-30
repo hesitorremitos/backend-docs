@@ -1,0 +1,351 @@
+---
+title: Uso de librerías externas
+description: Uso de librerias externas como BOOTSTRAP
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Card } from '@astrojs/starlight/components';
+import { FileTree } from '@astrojs/starlight/components';
+
+# Librerías externas
+
+Las librerías externas permiten añadir funcionalidades y estilos predefinidos a tus proyectos web sin tener que escribir código desde cero. En esta guía, aprenderás a implementar librerías externas en tus proyectos web, usando Bootstrap como ejemplo principal.
+
+## ¿Qué son las librerías externas?
+
+Las librerías externas son conjuntos de código (CSS y/o JavaScript) desarrollados por terceros que puedes incorporar en tus proyectos para:
+
+- Acelerar el desarrollo
+- Conseguir diseños profesionales
+- Añadir componentes interactivos
+- Utilizar funcionalidades complejas ya programadas
+- Mantener consistencia en el diseño
+
+## Tipos de librerías
+
+Existen principalmente dos tipos de librerías externas:
+
+<Tabs>
+  <TabItem label="Librerías CSS">
+    Proporcionan estilos predefinidos para elementos HTML:
+    - **Bootstrap**: Probablemente el framework CSS más popular
+    - **Tailwind CSS**: Framework de utilidades CSS
+    - **Bulma**: Framework CSS basado en Flexbox
+    - **Foundation**: Framework responsivo avanzado
+  </TabItem>
+  <TabItem label="Librerías JavaScript">
+    Añaden funcionalidades interactivas:
+    - **jQuery**: Simplifica manipulación del DOM y eventos
+    - **Chart.js**: Creación de gráficos
+    - **React**: Biblioteca para crear interfaces de usuario
+    - **Vue.js**: Framework progresivo para interfaces
+    - **Lodash**: Utilidades para manipulación de datos
+  </TabItem>
+</Tabs>
+
+## Bootstrap como ejemplo
+
+Bootstrap es un framework CSS y JavaScript que facilita el desarrollo de sitios web responsivos y atractivos visualmente.
+
+### Características principales
+
+- Sistema de rejilla (grid) responsivo
+- Componentes prediseñados (botones, formularios, navegación, etc.)
+- Utilidades CSS para espaciado, color, tipografía, etc.
+- Plugins JavaScript para interactividad
+- Compatibilidad con múltiples navegadores
+
+## Métodos de integración
+
+Existen varias formas de integrar librerías externas en tu proyecto:
+
+<Steps>
+1. **Mediante CDN (Content Delivery Network)**
+   - La forma más rápida y sencilla
+   - No requiere descargar archivos
+   - Depende de conexión a internet
+   
+2. **Descargando y almacenando localmente**
+   - Mayor control sobre las versiones
+   - Funciona sin conexión a internet
+   - Requiere gestión manual de actualizaciones
+   
+3. **Usando gestores de paquetes (npm, yarn)**
+   - Recomendado para proyectos profesionales
+   - Facilita la gestión de dependencias y actualizaciones
+   - Requiere configuración adicional
+</Steps>
+
+## Implementando Bootstrap en tu proyecto
+
+Vamos a ver cómo integrar Bootstrap en un proyecto web utilizando diferentes métodos:
+
+### Usando CDN
+
+<Tabs>
+  <TabItem label="HTML">
+  ```html ins={9,22}
+  <!DOCTYPE html>
+  <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Proyecto con Bootstrap</title>
+      
+      <!-- CSS de Bootstrap -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+      <!-- Contenido de tu página -->
+      <div class="container">
+        <h1 class="mt-4">Mi Proyecto con Bootstrap</h1>
+        <div class="alert alert-primary" role="alert">
+          ¡Bootstrap está funcionando correctamente!
+        </div>
+        <button class="btn btn-primary">Botón de Bootstrap</button>
+      </div>
+      
+      <!-- JavaScript de Bootstrap (con Popper.js incluido) -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+  </html>
+  ```
+  </TabItem>
+</Tabs>
+
+:::tip
+Siempre incluye la metaetiqueta viewport para asegurar que el diseño responsivo funcione correctamente:
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+```
+:::
+
+### Descarga local
+
+<Steps>
+1. Descarga los archivos CSS y JavaScript desde [la página oficial de Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/download/).
+
+2. Crea la siguiente estructura de carpetas en tu proyecto:
+
+   <FileTree>
+   - mi-proyecto/
+     - css/
+       - bootstrap.min.css
+     - js/
+       - bootstrap.bundle.min.js
+     - index.html
+   </FileTree>
+
+3. Vincula los archivos locales en tu HTML:
+
+   ```html ins={9,21}
+   <!DOCTYPE html>
+   <html lang="es">
+     <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Proyecto con Bootstrap Local</title>
+       
+       <!-- CSS de Bootstrap (local) -->
+       <link href="css/bootstrap.min.css" rel="stylesheet">
+     </head>
+     <body>
+       <!-- Contenido de tu página -->
+       <div class="container">
+         <h1 class="mt-4">Mi Proyecto con Bootstrap Local</h1>
+         <div class="alert alert-success" role="alert">
+           ¡Bootstrap local está funcionando correctamente!
+         </div>
+       </div>
+       
+       <!-- JavaScript de Bootstrap (local) -->
+       <script src="js/bootstrap.bundle.min.js"></script>
+     </body>
+   </html>
+   ```
+</Steps>
+
+## Componentes básicos de Bootstrap
+
+Bootstrap ofrece numerosos componentes que puedes usar directamente en tu HTML:
+
+### Sistema de rejilla (Grid)
+
+El sistema de rejilla de Bootstrap permite crear layouts responsivos fácilmente:
+
+```html
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h2>Columna 1</h2>
+      <p>Esta columna ocupa la mitad en pantallas medianas y grandes.</p>
+    </div>
+    <div class="col-md-6">
+      <h2>Columna 2</h2>
+      <p>Esta columna ocupa la otra mitad en pantallas medianas y grandes.</p>
+    </div>
+  </div>
+</div>
+```
+
+:::note
+En pantallas pequeñas (móviles), las columnas ocuparán el 100% del ancho automáticamente, apilándose una sobre otra.
+:::
+
+### Formularios
+
+Bootstrap estiliza automáticamente los formularios:
+
+```html
+<div class="container mt-4">
+  <form>
+    <div class="mb-3">
+      <label for="email" class="form-label">Correo electrónico</label>
+      <input type="email" class="form-control" id="email" placeholder="nombre@ejemplo.com">
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Contraseña</label>
+      <input type="password" class="form-control" id="password">
+    </div>
+    <div class="mb-3 form-check">
+      <input type="checkbox" class="form-check-input" id="remember">
+      <label class="form-check-label" for="remember">Recordarme</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+  </form>
+</div>
+```
+
+### Componentes interactivos
+
+Algunos componentes de Bootstrap requieren JavaScript para funcionar:
+
+<Tabs>
+  <TabItem label="Modal (Ventana emergente)">
+  ```html
+  <!-- Botón para abrir el modal -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Abrir modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Título del modal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ¡Contenido del modal! Puedes colocar aquí cualquier contenido HTML.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary">Guardar cambios</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  ```
+  </TabItem>
+  
+  <TabItem label="Carrusel">
+  ```html
+  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="https://via.placeholder.com/800x400?text=Slide+1" class="d-block w-100" alt="Slide 1">
+      </div>
+      <div class="carousel-item">
+        <img src="https://via.placeholder.com/800x400?text=Slide+2" class="d-block w-100" alt="Slide 2">
+      </div>
+      <div class="carousel-item">
+        <img src="https://via.placeholder.com/800x400?text=Slide+3" class="d-block w-100" alt="Slide 3">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
+  </div>
+  ```
+  </TabItem>
+</Tabs>
+
+## Utilizando jQuery con Bootstrap
+
+Aunque las versiones recientes de Bootstrap no requieren jQuery, muchos plugins y proyectos web aún lo utilizan. Para añadir jQuery:
+
+```html
+<!-- Primero jQuery, luego Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+```
+
+Una vez incluido jQuery, puedes utilizarlo para manipular elementos de Bootstrap:
+
+```html
+<script>
+  $(document).ready(function() {
+    // Mostrar un modal con jQuery
+    $("#miBoton").click(function() {
+      $("#miModal").modal('show');
+    });
+    
+    // Cambiar el texto de un botón después de hacer clic
+    $(".btn-primary").click(function() {
+      $(this).text("¡Hecho!");
+    });
+  });
+</script>
+```
+
+## Otras librerías populares
+
+<Card title="Alternativas a Bootstrap">
+  Además de Bootstrap, existen otras librerías populares:
+  
+  - **Tailwind CSS**: Un framework de utilidades que permite crear diseños personalizados sin salir de tu HTML.
+  - **Materialize**: Implementa el diseño Material Design de Google.
+  - **Bulma**: Un framework moderno basado en Flexbox, sin JavaScript.
+  - **Foundation**: Framework completo con opciones avanzadas para proyectos empresariales.
+</Card>
+
+## Mejores prácticas
+
+Al utilizar librerías externas, sigue estas recomendaciones:
+
+1. **Carga solo lo que necesitas**: Evita cargar toda la librería si solo utilizas algunos componentes.
+2. **Usar versiones minificadas**: Las versiones `.min.css` y `.min.js` son más pequeñas y cargan más rápido.
+3. **Implementa versiones específicas**: Usa una versión específica (ej. `bootstrap@5.3.2`) para evitar cambios inesperados.
+4. **Considera el rendimiento**: Las librerías añaden peso a tu página. Monitorea los tiempos de carga.
+5. **Mantén las librerías actualizadas**: Actualiza periódicamente para obtener mejoras y correcciones de seguridad.
+
+## Actividad: Creando una página con Bootstrap :badge[Actividad]{variant=caution}
+
+<Card title="Implementa Bootstrap y crea un sitio web básico">
+Para practicar lo aprendido, crea una página web que incluya:
+
+1. Un menú de navegación responsivo
+2. Un carrusel con al menos 3 imágenes
+3. Un formulario de contacto estilizado
+4. Una sección de tarjetas (cards) con información
+5. Un footer con enlaces y copyright
+
+Utiliza las clases de Bootstrap para hacer el diseño responsivo y atractivo. No es necesario escribir CSS personalizado, pero puedes hacerlo si deseas ampliar la funcionalidad.
+
+**Entregable**: El archivo HTML con Bootstrap implementado correctamente.
+</Card>
+
+## Recursos adicionales
+
+- [Documentación oficial de Bootstrap](https://getbootstrap.com/docs/)
+- [Bootstrap Icons](https://icons.getbootstrap.com/)
+- [Ejemplos y plantillas de Bootstrap](https://getbootstrap.com/docs/5.3/examples/)
+- [W3Schools - Tutorial de Bootstrap](https://www.w3schools.com/bootstrap5/)
+
