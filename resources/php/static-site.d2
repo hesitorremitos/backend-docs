@@ -1,0 +1,37 @@
+direction: right
+Server:Servidor{
+    direction: right
+    apache:{
+        label: Apache
+        style:{
+            font-size: 30
+        }
+    }
+
+    static:Recursos Estaticos{
+        direction: down
+        grid-columns: 1
+        js:Javascript
+        
+        html: HTML
+        
+        css: CSS
+    }
+    apache->static: Respuesta
+}
+
+client:Cliente{
+    browser: Navegador{
+        style:{
+            font-size: 30
+        }
+    }
+}
+Server.static->client.browser: Respuesta
+
+
+
+
+
+
+

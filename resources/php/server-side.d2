@@ -1,0 +1,41 @@
+Server:Servidor{
+    apache:{
+        label: Apache
+        style:{
+            font-size: 30
+        }
+    }
+
+    static:Recursos Dinamicos{
+        grid-columns: 1
+        js:Javascript
+        
+        html: HTML
+        
+        css: CSS
+    }
+    Lenguaje: Lenguaje \nde programacion\n(PHP)
+    Lenguaje->static: Genera
+    apache->Lenguaje: PHP
+    Lenguaje--MySQL
+    Lenguaje--Otros Servicios
+
+}
+client <- Server.static: Respuesta
+
+client:Cliente{
+    browser: Navegador{
+        style:{
+            font-size: 30
+        }
+    }
+}
+
+client -> Server.apache: Peticion
+
+
+
+
+
+
+
