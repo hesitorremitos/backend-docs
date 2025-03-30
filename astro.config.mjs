@@ -63,16 +63,6 @@ export default defineConfig({
 			plugins: [
 				starlightLinksValidatorPlugin({errorOnInvalidHashes: false}),
 				starlightHeadingBadgesPlugin(),
-				starlightViewModes({
-					zenModeSettings: {
-						displayOptions:{
-							showTableOfContents: false,
-							showHeader: false,
-							showFooter: false,
-							showSidebar: false,
-						}
-					}
-				}),
 			],
 		}),
 	],
