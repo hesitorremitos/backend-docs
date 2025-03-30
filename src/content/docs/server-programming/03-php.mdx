@@ -272,6 +272,64 @@ Los bucles permiten ejecutar un bloque de código repetidamente mientras se cump
   </TabItem>
 </Tabs>
 
+
+
+
+
+## Arrays
+Los arrays son estructuras de datos que permiten almacenar múltiples valores en una sola variable. PHP soporta arrays indexados y asociativos.
+
+### Arrays Indexados
+Podriamos decir que son los arrays normales, donde cada elemento tiene un índice numérico. Para acceder a un elemento, se usa el índice entre corchetes `[]`.
+
+```php
+// Ejemplo de array indexado
+$frutas = ['manzana', 'pera', 'uva'];
+echo $frutas[0]; // Salida: manzana
+echo $frutas[1]; // Salida: pera
+echo $frutas[2]; // Salida: uva
+```
+
+:::note
+A diferente de otros lenguajes, PHP no requiere declarar el tipo de array. Un array puede contener diferentes tipos de datos.
+```php
+// Array con diferentes tipos de datos
+$datos = ['Juan', 25, 19.99, true];
+echo $datos[0]; // Salida: Juan
+echo $datos[1]; // Salida: 25
+echo $datos[2]; // Salida: 19.99
+echo $datos[3]; // Salida: 1 (true)
+```
+:::
+
+### Arrays Asociativos
+Los arrays asociativos son similares a los **dictcionarios** en otros lenguajes, donde cada elemento tiene una clave asociada. Para acceder a un elemento, se usa la clave entre comillas.
+
+```php
+// Ejemplo de array asociativo
+$persona = [
+    'nombre' => 'Juan',
+    'edad' => 25,
+    'ciudad' => 'Madrid'
+    'activo' => true
+];
+echo $persona['nombre']; // Salida: Juan
+echo $persona['edad']; // Salida: 25
+echo $persona['ciudad']; // Salida: Madrid
+```
+
+### Funciones de Arrays
+```php
+// Funciones útiles para arrays
+$frutas = ['manzana', 'pera', 'uva'];
+$frutas[] = 'naranja'; // Agregar elemento al final
+array_push($frutas, 'kiwi'); // Hace lo mismo
+array_pop($frutas); // Elimina el último elemento
+array_shift($frutas); // Elimina el primer elemento
+``` 
+
+
+
 ## Funciones
 :::tip[Definición]
 Las funciones son bloques de código reutilizables que realizan una tarea específica y pueden recibir parámetros y devolver valores.
