@@ -117,26 +117,89 @@ La verdadera potencia de PHP está en su capacidad para combinarse con HTML. Pue
     <main>
         <?php
         // Código PHP para generar contenido dinámico
-        $hora = date("H");
-        
-        if ($hora < 12) {
-            echo "<p>¡Buenos días!</p>";
-        } else if ($hora < 18) {
-            echo "<p>¡Buenas tardes!</p>";
-        } else {
-            echo "<p>¡Buenas noches!</p>";
-        }
+        echo "<h2>Hola, mundo!</h2>";
         ?>
-        
-        <p>Esta página fue generada por PHP en el servidor.</p>
         <p>La fecha es: <?php echo date("d/m/Y"); ?></p>
     </main>
-    
-    <footer>
-        <p>© <?php echo date("Y"); ?> Mi sitio web</p>
-    </footer>
+
 </body>
 </html>
 ```
 
 En este ejemplo, PHP genera diferentes saludos según la hora del día y también inserta la fecha actual en dos lugares.
+
+
+### Formularios HTML y PHP
+
+Los formularios HTML son una forma común de interactuar con los usuarios. Puedes enviar datos a un script PHP para procesarlos.
+
+
+
+### El atributo `action` y `method`
+- El atributo `action` del formulario indica a dónde se enviarán los datos.
+- El atributo `method` especifica cómo se enviarán los datos (GET o POST).
+
+```html "action="procesar.php"" "method="POST"""
+<form action="procesar.php" method="GET">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email"required>
+    
+    <input type="submit" value="Enviar">
+</form>
+```
+
+#### El atributo `name` de los inputs
+Cada campo de entrada debe tener un atributo `name` único. Este nombre se utilizara para enviar los datos al servidor y se convertirá en una clave para acceder a los valores en PHP.
+
+```html "name="nombre"" "name="email""
+<form action="procesar.php" method="POST">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <input type="submit" value="Enviar">
+</form>
+```
+## El método GET
+El metodo GET comunmente se usa para **pedir** datos al servidor. Tambien puede tener datos en la URL.
+:::caution
+[Seguridad]
+El método GET no es seguro para enviar datos sensibles, ya que los datos se envían como parte de la URL y pueden ser visibles en el historial del navegador o en los registros del servidor.
+:::
+
+### GET en PHP
+El método GET envía los datos del formulario como parte de la URL. Esto es útil para búsquedas o filtros, pero no es seguro para datos sensibles.
+
+```html "method="GET""
+<form action="procesar.php" method="GET">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <input type="submit" value="Enviar">
+</form>
+```
+
+Aqui se entiendo que se hara una **peticion** GET a la direccion `procesar.php` como ruta relativa. Para leer los datos en PHP, se utiliza la variable superglobal `$_GET`.
+- `$_GET['nombre']`: Contiene el valor del campo `nombre` enviado por el formulario.
+- `$_GET['email']`: Contiene el valor del campo `email` enviado por el formulario.
+:::tip
+Note que `$_GET` es un arreglo asociativo que contiene los datos enviados por el formulario. Puedes acceder a los valores utilizando las claves definidas en el atributo `name` de cada campo.
+:::
+```php
+<?php
+// procesar.php
+$nombre = $_GET['nombre'];
+$email = $_GET['email'];
+echo "<h1>Hola, $nombre</h1>";
+echo "<p>Tu email es: $email</p>";
+?>
+```
+
