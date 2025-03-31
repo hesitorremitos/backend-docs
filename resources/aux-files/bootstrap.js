@@ -1,10 +1,15 @@
 /**@type{HTMLFormElement} */
 const form = document.querySelector('#form-todo')
 const todoList = document.querySelector('#todo-list')
+
+const message = document.querySelector('#message')
+
 // Definir el tipo del evento
 /**@type{HTMLInputElement} */
 form.addEventListener('submit', function (event) {
     event.preventDefault()
+
+    const bootstrapMessage = bootstrap.Toast.getOrCreateInstance(message)
     // Select the input field with name='todo'
     /**@type{HTMLInputElement} */
     console.log(event.target.elements.todo.value)
@@ -33,6 +38,9 @@ form.addEventListener('submit', function (event) {
     todo.append(checkbox, label)
     // Agregar el todo a la lista
     todoList.append(todo)
+
+    // Mostrar el mensaje de éxito
+    bootstrapMessage.show()
 
     event.target.elements.todo.value = ''
 });
