@@ -228,3 +228,92 @@ echo "<p>Tu email es: $email</p>";
 ?>
 ```
 
+## Conexion a bases de datos
+:::danger
+Para esta seccion debera conocer los siguientes elementos del lenguaje PHP:
+- Variables
+- Tipos de datos
+- Estructuras de control
+- Funciones
+- Arrays
+- Objetos
+:::
+PHP tiene extensiones para conectarse a diferentes tipos de bases de datos. La más común es MySQL, que se utiliza junto con el sistema de gestión de bases de datos MySQL o MariaDB.
+### Conexión a MySQL con PHP
+Para conectarse a una base de datos MySQL, se utiliza la extensión `mysqli` o `PDO`. Aquí hay un ejemplo básico de cómo conectarse a una base de datos usando `mysqli`:
+
+```php
+<?php
+// Conectar a la base de datos
+$conexion = mysqli_connect("localhost", "usuario", "contraseña", "nombre_base_datos", 3306);
+if (!$conexion) {
+    die("Error de conexión: " . mysqli_connect_error());
+}
+
+echo "Conexión exitosa a la base de datos.";
+```
+Lo recomendable es usar variables que guarden los datos de conexión a la base de datos.
+```php
+<?php
+// Datos de conexión
+$host = "localhost";
+$user = "root";
+$password = "";
+$database = "mi_base_datos";
+$port = 3306;
+
+// Conectar a la base de datos
+$conexion = mysqli_connect($host, $user, $password, $database, $port);
+```
+### Consultas a la base de datos
+Una vez tengamos el objeto de conexión, podemos realizar consultas a la base de datos. Aquí hay un ejemplo de cómo seleccionar datos de una tabla llamada `usuarios`:
+
+```php
+<?php
+// Consulta a la base de datos
+$query = "SELECT * FROM usuarios";
+$resultado = mysqli_query($conexion, $query);
+if (!$resultado) {
+    die("Error en la consulta: " . mysqli_error($conexion));
+}
+```
+
+#### La funcion `mysqli_fetch_assoc()`
+Para recorrer los resultados de la consulta usamos el metodo `mysqli_fetch_assoc()` que devuelve un array asociativo con los resultados de la consulta.
+```php
+<?php
+// Recorrer los resultados
+$fila = mysqli_fetch_assoc($resultado);
+print_r($fila);
+$fila = mysqli_fetch_assoc($resultado);
+print_r($fila);
+```
+Como puede ver obtenemos un array asociativo con una fila de la tabla `usuarios`. Podemos usar un bucle `while` para recorrer todos los resultados de la consulta:
+```php
+<?php
+// Recorrer todos los resultados
+while ($fila = mysqli_fetch_assoc($resultado)) {
+    echo "ID: " . $fila['id'] . "<br>";
+    echo "Nombre: " . $fila['nombre'] . "<br>";
+    echo "Email: " . $fila['email'] . "<br>";
+    echo "<hr>";
+}
+```
+El bucle se detendra cuando no haya mas filas que recorrer. En este caso, el bucle se detendra cuando `mysqli_fetch_assoc()` devuelva `false`.
+
+#### Cerrar la conexión
+
+Es importante cerrar la conexión a la base de datos una vez que hayas terminado de usarla. Puedes hacerlo con la función `mysqli_close()`:
+
+```php
+<?php
+// Cerrar la conexión
+mysqli_close($conexion);
+```
+### Insertar datos en la base de datos
+Para insertar datos en la base de datos, se utiliza la sentencia `INSERT INTO`. Aquí hay un ejemplo de cómo insertar un nuevo usuario en la tabla `usuarios`:
+
+```php
+<?php
+// Datos a insertar
+$nombre = "Juan Pérez";
