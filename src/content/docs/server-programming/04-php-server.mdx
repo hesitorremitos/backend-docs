@@ -3,12 +3,140 @@ title: PHP en el Servidor
 description: Aprende a usar PHP en el servidor y cómo funciona el ciclo de vida de una petición HTTP.
 ---
 
-## Uso de PHP en el Navegador
-Apache tiene un módulo llamado `mod_php` que permite ejecutar código PHP directamente en el servidor. Para usar PHP en el navegador, debes tener un servidor web instalado y configurado.
+import { FileTree, Card, Steps } from '@astrojs/starlight/components';
 
-:::nota
-Por defecto Laragon viene con Apache y PHP preinstalados. Solo necesitas crear un nuevo proyecto y abrirlo en el navegador.
+# PHP en el Servidor
+
+PHP es un lenguaje de programación especialmente diseñado para el desarrollo web del lado del servidor. Cuando se ejecuta en Apache, permite crear páginas web dinámicas que pueden interactuar con bases de datos y generar contenido HTML en tiempo real.
+
+## ¿Cómo funciona PHP en Apache?
+
+Apache utiliza un módulo llamado `mod_php` que permite ejecutar código PHP directamente en el servidor. El proceso es el siguiente:
+
+<Card title="Ciclo de vida de una petición PHP" icon="information">
+  1. El navegador solicita una página PHP al servidor
+  2. Apache recibe la solicitud y reconoce la extensión `.php`
+  3. Apache pasa el archivo al intérprete PHP
+  4. PHP procesa el código y genera HTML como resultado
+  5. Apache envía el HTML generado al navegador
+  6. El navegador muestra la página al usuario
+</Card>
+
+:::note
+Por defecto, Laragon viene con Apache y PHP preinstalados. Esto facilita enormemente el desarrollo, ya que solo necesitas crear un nuevo proyecto y abrirlo en el navegador.
 :::
-Al igual que los archivos HTML, los archivos PHP deben estar en la carpeta raíz del servidor web. Por defecto, esta carpeta es `www` o `htdocs` dependiendo del servidor que uses.
+
+## Ubicación de archivos PHP
+
+Al igual que los archivos HTML, los archivos PHP deben estar en la carpeta raíz del servidor web:
+
+- En Laragon, generalmente es la carpeta `www`
+- En XAMPP o WampServer, suele ser la carpeta `htdocs`
+
+<FileTree>
+- www/ (o htdocs/)
+  - index.php
+  - contacto.php
+  - proyectos/
+    - index.php
+    - detalles.php
+</FileTree>
+
+## Enrutamiento de Archivos PHP
+
+:::caution[Convención de URLs]
+Para facilitar la lectura, usaremos una notación abreviada para las URLs:
+- `/` se refiere a `http://localhost/`
+- `/index.php` se refiere a `http://localhost/index.php`
+- `/contacto.php` se refiere a `http://localhost/contacto.php`
+:::
+
+PHP utiliza un **enrutamiento basado en archivos**. Esto significa que el nombre del archivo PHP se convierte directamente en la URL de la página. Por ejemplo:
+
+| Archivo | URL |
+|---------|-----|
+| `index.php` | `/` o `/index.php` |
+| `contacto.php` | `/contacto.php` |
+| `proyectos/detalles.php` | `/proyectos/detalles.php` |
+
+:::tip[Archivos de índice]
+Apache tiene una jerarquía predefinida cuando se accede a una carpeta:
+1. **index.php**: Es el archivo por defecto con primera prioridad
+2. **index.html**: Se carga si no existe index.php
+
+Por ejemplo, si accedes a `/proyectos/`, Apache buscará primero `proyectos/index.php` y luego `proyectos/index.html`.
+:::
+
+Veamos un ejemplo de estructura de archivos y sus correspondientes URLs:
+
+<FileTree>
+- index.php → `/` o `/index.php`
+- contacto.php → `/contacto.php`
+- operaciones/
+  - añadir.php → `/operaciones/anadir.php`
+  - eliminar.php → `/operaciones/eliminar.php`
+  - index.php → `/operaciones/` o `/operaciones/index.php`
+</FileTree>
+
+## Tu primer script PHP
+
+<Steps>
+1. Crea un archivo llamado `hola.php` en tu directorio raíz.
+
+2. Escribe el siguiente código PHP:
+   ```php
+   <?php
+   // Esto es un comentario en PHP
+   echo "<h1>¡Hola, mundo!</h1>";
+   echo "<p>Esta es mi primera página PHP.</p>";
+   echo "<p>La fecha actual del servidor es: " . date("Y-m-d H:i:s") . "</p>";
+   ?>
+   ```
+
+3. Abre un navegador y visita `http://localhost/hola.php`.
+
+4. Verás el texto formateado como HTML y la fecha actual del servidor.
+</Steps>
+
+## PHP y HTML trabajando juntos
+
+La verdadera potencia de PHP está en su capacidad para combinarse con HTML. Puedes alternar entre código PHP y HTML en un mismo archivo:
 
 ```php
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi primera página PHP</title>
+</head>
+<body>
+    <header>
+        <h1>Bienvenido a mi sitio</h1>
+    </header>
+    
+    <main>
+        <?php
+        // Código PHP para generar contenido dinámico
+        $hora = date("H");
+        
+        if ($hora < 12) {
+            echo "<p>¡Buenos días!</p>";
+        } else if ($hora < 18) {
+            echo "<p>¡Buenas tardes!</p>";
+        } else {
+            echo "<p>¡Buenas noches!</p>";
+        }
+        ?>
+        
+        <p>Esta página fue generada por PHP en el servidor.</p>
+        <p>La fecha es: <?php echo date("d/m/Y"); ?></p>
+    </main>
+    
+    <footer>
+        <p>© <?php echo date("Y"); ?> Mi sitio web</p>
+    </footer>
+</body>
+</html>
+```
+
+En este ejemplo, PHP genera diferentes saludos según la hora del día y también inserta la fecha actual en dos lugares.
