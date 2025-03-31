@@ -3,15 +3,15 @@ title: PHP en el Servidor
 description: Aprende a usar PHP en el servidor y cómo funciona el ciclo de vida de una petición HTTP.
 ---
 
-import { FileTree, Card, Steps } from '@astrojs/starlight/components';
+import { FileTree, Card, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
 
 # PHP en el Servidor
 
 PHP es un lenguaje de programación especialmente diseñado para el desarrollo web del lado del servidor. Cuando se ejecuta en Apache, permite crear páginas web dinámicas que pueden interactuar con bases de datos y generar contenido HTML en tiempo real.
 
-## ¿Cómo funciona PHP en Apache?
+## Fundamentos del servidor PHP
 
-Apache utiliza un módulo llamado `mod_php` que permite ejecutar código PHP directamente en el servidor. El proceso es el siguiente:
+### ¿Cómo funciona PHP en Apache?
 
 <Card title="Ciclo de vida de una petición PHP" icon="information">
   1. El navegador solicita una página PHP al servidor
@@ -26,12 +26,9 @@ Apache utiliza un módulo llamado `mod_php` que permite ejecutar código PHP dir
 Por defecto, Laragon viene con Apache y PHP preinstalados. Esto facilita enormemente el desarrollo, ya que solo necesitas crear un nuevo proyecto y abrirlo en el navegador.
 :::
 
-## Ubicación de archivos PHP
+### Ubicación de archivos PHP
 
 Al igual que los archivos HTML, los archivos PHP deben estar en la carpeta raíz del servidor web:
-
-- En Laragon, generalmente es la carpeta `www`
-- En XAMPP o WampServer, suele ser la carpeta `htdocs`
 
 <FileTree>
 - www/ (o htdocs/)
@@ -42,7 +39,12 @@ Al igual que los archivos HTML, los archivos PHP deben estar en la carpeta raíz
     - detalles.php
 </FileTree>
 
-## Enrutamiento de Archivos PHP
+:::tip[Entornos de desarrollo comunes]
+- **Laragon**: Carpeta `www`
+- **XAMPP/WampServer**: Carpeta `htdocs`
+:::
+
+## Enrutamiento en PHP
 
 :::caution[Convención de URLs]
 Para facilitar la lectura, usaremos una notación abreviada para las URLs:
@@ -51,7 +53,7 @@ Para facilitar la lectura, usaremos una notación abreviada para las URLs:
 - `/contacto.php` se refiere a `http://localhost/contacto.php`
 :::
 
-PHP utiliza un **enrutamiento basado en archivos**. Esto significa que el nombre del archivo PHP se convierte directamente en la URL de la página. Por ejemplo:
+PHP utiliza un **enrutamiento basado en archivos**. Esto significa que el nombre del archivo PHP se convierte directamente en la URL de la página:
 
 | Archivo | URL |
 |---------|-----|
@@ -63,8 +65,6 @@ PHP utiliza un **enrutamiento basado en archivos**. Esto significa que el nombre
 Apache tiene una jerarquía predefinida cuando se accede a una carpeta:
 1. **index.php**: Es el archivo por defecto con primera prioridad
 2. **index.html**: Se carga si no existe index.php
-
-Por ejemplo, si accedes a `/proyectos/`, Apache buscará primero `proyectos/index.php` y luego `proyectos/index.html`.
 :::
 
 Veamos un ejemplo de estructura de archivos y sus correspondientes URLs:
@@ -78,7 +78,9 @@ Veamos un ejemplo de estructura de archivos y sus correspondientes URLs:
   - index.php → `/operaciones/` o `/operaciones/index.php`
 </FileTree>
 
-## Tu primer script PHP
+## Primeros pasos con PHP
+
+### Tu primer script PHP
 
 <Steps>
 1. Crea un archivo llamado `hola.php` en tu directorio raíz.
@@ -98,7 +100,7 @@ Veamos un ejemplo de estructura de archivos y sus correspondientes URLs:
 4. Verás el texto formateado como HTML y la fecha actual del servidor.
 </Steps>
 
-## PHP y HTML trabajando juntos
+### PHP y HTML trabajando juntos
 
 La verdadera potencia de PHP está en su capacidad para combinarse con HTML. Puedes alternar entre código PHP y HTML en un mismo archivo:
 
@@ -126,35 +128,83 @@ La verdadera potencia de PHP está en su capacidad para combinarse con HTML. Pue
 </html>
 ```
 
-En este ejemplo, PHP genera diferentes saludos según la hora del día y también inserta la fecha actual en dos lugares.
+## Formularios en PHP
 
+Los formularios HTML son una forma común de interactuar con los usuarios. PHP proporciona mecanismos para procesar los datos enviados.
 
-### Formularios HTML y PHP
+### Atributos importantes
 
-Los formularios HTML son una forma común de interactuar con los usuarios. Puedes enviar datos a un script PHP para procesarlos.
+<Tabs>
+  <TabItem label="action">
+    El atributo `action` del formulario indica a dónde se enviarán los datos:
+    
+    ```html
+    <form action="procesar.php">
+    ```
+  </TabItem>
+  <TabItem label="method">
+    El atributo `method` especifica cómo se enviarán los datos:
+    
+    ```html
+    <form method="POST">
+    <!-- o -->
+    <form method="GET">
+    ```
+  </TabItem>
+  <TabItem label="name">
+    El atributo `name` de cada campo define la clave para acceder a su valor en PHP:
+    
+    ```html
+    <input type="text" name="username">
+    <!-- En PHP: $_POST['username'] o $_GET['username'] -->
+    ```
+  </TabItem>
+</Tabs>
 
+### Métodos de envío
 
+#### El método GET
 
-### El atributo `action` y `method`
-- El atributo `action` del formulario indica a dónde se enviarán los datos.
-- El atributo `method` especifica cómo se enviarán los datos (GET o POST).
+<Card title="Método GET" icon="warning">
+El método GET comunmente se usa para **pedir** datos al servidor. Los datos se envían como parte de la URL.
 
-```html "action="procesar.php"" "method="POST"""
+**Importante**: No es seguro para enviar datos sensibles ya que son visibles en la URL y pueden ser vistos en el historial del navegador.
+</Card>
+
+```html
 <form action="procesar.php" method="GET">
     <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" required>
+    <input type="text" id="nombre" name="nombre" required>
     
     <label for="email">Email:</label>
-    <input type="email" id="email"required>
+    <input type="email" id="email" name="email" required>
     
     <input type="submit" value="Enviar">
 </form>
 ```
 
-#### El atributo `name` de los inputs
-Cada campo de entrada debe tener un atributo `name` único. Este nombre se utilizara para enviar los datos al servidor y se convertirá en una clave para acceder a los valores en PHP.
+Para procesar los datos enviados por GET, se utiliza la variable superglobal `$_GET`:
 
-```html "name="nombre"" "name="email""
+```php
+<?php
+// procesar.php
+$nombre = $_GET['nombre'];
+$email = $_GET['email'];
+echo "<h1>Hola, $nombre</h1>";
+echo "<p>Tu email es: $email</p>";
+?>
+```
+
+#### El método POST
+
+<Card title="Método POST" icon="approve">
+Método recomendado para enviar datos al servidor, especialmente cuando:
+- Se envían datos sensibles
+- La cantidad de datos es grande
+- Se modificarán datos en el servidor
+</Card>
+
+```html
 <form action="procesar.php" method="POST">
     <label for="nombre">Nombre:</label>
     <input type="text" id="nombre" name="nombre" required>
@@ -165,39 +215,14 @@ Cada campo de entrada debe tener un atributo `name` único. Este nombre se utili
     <input type="submit" value="Enviar">
 </form>
 ```
-## El método GET
-El metodo GET comunmente se usa para **pedir** datos al servidor. Tambien puede tener datos en la URL.
-:::caution
-[Seguridad]
-El método GET no es seguro para enviar datos sensibles, ya que los datos se envían como parte de la URL y pueden ser visibles en el historial del navegador o en los registros del servidor.
-:::
 
-### GET en PHP
-El método GET envía los datos del formulario como parte de la URL. Esto es útil para búsquedas o filtros, pero no es seguro para datos sensibles.
+Para procesar los datos enviados por POST, se utiliza la variable superglobal `$_POST`:
 
-```html "method="GET""
-<form action="procesar.php" method="GET">
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
-    
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    
-    <input type="submit" value="Enviar">
-</form>
-```
-
-Aqui se entiendo que se hara una **peticion** GET a la direccion `procesar.php` como ruta relativa. Para leer los datos en PHP, se utiliza la variable superglobal `$_GET`.
-- `$_GET['nombre']`: Contiene el valor del campo `nombre` enviado por el formulario.
-- `$_GET['email']`: Contiene el valor del campo `email` enviado por el formulario.
-:::tip
-Note que `$_GET` es un arreglo asociativo que contiene los datos enviados por el formulario. Puedes acceder a los valores utilizando las claves definidas en el atributo `name` de cada campo.
-:::
 ```php
 <?php
 // procesar.php
-$nombre = $_GET['nombre'];
-$email = $_GET['email'];
+$nombre = $_POST['nombre'];
+$email = $_POST['email'];
 echo "<h1>Hola, $nombre</h1>";
 echo "<p>Tu email es: $email</p>";
 ?>
