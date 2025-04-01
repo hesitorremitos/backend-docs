@@ -104,7 +104,7 @@ Veamos un ejemplo de estructura de archivos y sus correspondientes URLs:
 
 La verdadera potencia de PHP está en su capacidad para combinarse con HTML. Puedes alternar entre código PHP y HTML en un mismo archivo:
 
-```php
+```html ins={13-16}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -227,6 +227,53 @@ echo "<h1>Hola, $nombre</h1>";
 echo "<p>Tu email es: $email</p>";
 ?>
 ```
+## Escribir codigo PHP dentro de HTML
+Los archivos `.php` por defecto son interpretados como HTML. Y para poder escribir bloques de PHP dentro de HTML, se utilizan las etiquetas `<?php //Aqui va el codigo ?>` para abrir y cerrar el bloque de código PHP. Dentro de estas etiquetas, puedes escribir cualquier código PHP que desees.
+- `<?php` abre un bloque de código PHP
+- `?>` cierra el bloque de código PHP
+:::note
+Un archivo PHP puede contener tanto código PHP como HTML. El servidor interpretará el código PHP y enviará el resultado al navegador como HTML.
+
+Un archivo PHP puede contener múltiples bloques de código PHP y HTML. El servidor interpretará el código PHP y enviará el resultado al navegador como HTML.
+:::
+
+```html ins={4-6}
+<!--COdigo HTML...-->
+<body>
+    <h1>Bienvenido a mi sitio web</h1>
+    <p>Hoy es <?php echo date("d/m/Y"); ?></p>
+    <p>La hora actual es <?php echo date("H:i:s"); ?></p>
+    <p>El nombre de la pagina es <?php echo $_SERVER['PHP_SELF']; ?></p>
+</body>
+<!--Codigo HTML...-->
+```
+
+### Dividir el código en archivos
+Para mantener el código organizado, es recomendable dividirlo en archivos separados. Por ejemplo, puedes tener un archivo `header.php` para el encabezado y otro `footer.php` para el pie de página. Luego, puedes incluir estos archivos en tu archivo principal usando `include` o `require`:
+
+<Tabs>
+  <TabItem label='index.php'>
+    ```html {2}
+    <section>
+      <?php include 'datos.php'; ?>
+    </section>
+    ```
+  </TabItem>
+  <TabItem label="datos.php">
+    ```html {6-9}
+    <h1>Lista de Estudiantes</h1>
+    <ul>
+      <li>Juan Pérez registrado 20/02</li>
+      <li>María López registrado 21/02</li>
+      <li>Carlos García registrado 21/02</li>
+      <?php
+      // Aquí puedes agregar más estudiantes dinámicamente
+      echo "<li>Pedro Martínez registrado".date("d/m"/Y")."</li>";
+      ?>
+    </ul>
+    ```
+  </TabItem>
+</Tabs>
 
 ## Conexion a bases de datos
 :::danger
@@ -240,7 +287,12 @@ Para esta seccion debera conocer los siguientes elementos del lenguaje PHP:
 :::
 PHP tiene extensiones para conectarse a diferentes tipos de bases de datos. La más común es MySQL, que se utiliza junto con el sistema de gestión de bases de datos MySQL o MariaDB.
 ### Conexión a MySQL con PHP
-Para conectarse a una base de datos MySQL, se utiliza la extensión `mysqli` o `PDO`. Aquí hay un ejemplo básico de cómo conectarse a una base de datos usando `mysqli`:
+Para conectarse a una base de datos MySQL, se utiliza la extensión `mysqli` o `PDO`. Aquí hay un ejemplo básico de cómo conectarse a una base de datos usando `mysqli` con los parámetros en el siguiente orden:
+1. `'localhost'`: El nombre del servidor de la base de datos.
+2. `'usuario'`: El nombre de usuario para conectarse a la base de datos. Comunmente es `root`.
+3. `'contraseña'`: La contraseña del usuario de la base de datos. Si no tienes contraseña `""`.
+4. `'nombre_base_datos'`: El nombre de la base de datos a la que deseas conectarte.
+5. `3306`: El puerto de conexión a la base de datos. Por defecto es `3306`. Es opcional, si no se especifica, se usara el puerto por defecto.
 
 ```php
 <?php
@@ -266,7 +318,15 @@ $port = 3306;
 $conexion = mysqli_connect($host, $user, $password, $database, $port);
 ```
 ### Consultas a la base de datos
-Una vez tengamos el objeto de conexión, podemos realizar consultas a la base de datos. Aquí hay un ejemplo de cómo seleccionar datos de una tabla llamada `usuarios`:
+Una vez tengamos el objeto de conexión, podemos realizar consultas a la base de datos. Aquí hay un ejemplo de cómo seleccionar datos de una tabla llamada `usuarios`, la function que nos permite hacer consultas a la base de datos es `mysqli_query()`, recibe 2 parametros:
+1. `$conexion`: El objeto de conexión a la base de datos. Resultado de la función `mysqli_connect()`.
+2. `$query`: La consulta SQL que deseas ejecutar. En este caso debe ser un `string` que contenga la consulta SQL.
+
+La funcion `mysqli_query()` devuelve un objeto de resultado que contiene los datos devueltos por la consulta. Si la consulta falla, devuelve `false`, usamos este ultimo para verificar si la consulta fue exitosa o no.
+
+:::note
+Para obtener el error de la consulta, usamos la función `mysqli_error($conexion)` que devuelve un string con el error de la consulta. Si no hay error, devuelve `""`.
+:::
 
 ```php
 <?php
@@ -280,14 +340,25 @@ if (!$resultado) {
 
 #### La funcion `mysqli_fetch_assoc()`
 Para recorrer los resultados de la consulta usamos el metodo `mysqli_fetch_assoc()` que devuelve un array asociativo con los resultados de la consulta.
+
+:::caution
+La función `mysqli_fetch_assoc()` devuelve un array asociativo con los nombres de las columnas como claves, la funcion solo devuelve **una fila** de la consulta.
+
+:::
 ```php
 <?php
-// Recorrer los resultados
+// Obteniendo la fila 1
 $fila = mysqli_fetch_assoc($resultado);
 print_r($fila);
+// Obteniendo la fila 2
 $fila = mysqli_fetch_assoc($resultado);
 print_r($fila);
 ```
+:::tip
+Con `print` o `echo` solamente podemos imprimir el contenido de una variables primitivas.
+La funcion `print_r()` imprime el contenido de una variable de forma legible. Es útil para depurar y ver el contenido de arrays y objetos.
+:::
+
 Como puede ver obtenemos un array asociativo con una fila de la tabla `usuarios`. Podemos usar un bucle `while` para recorrer todos los resultados de la consulta:
 ```php
 <?php
@@ -311,9 +382,107 @@ Es importante cerrar la conexión a la base de datos una vez que hayas terminado
 mysqli_close($conexion);
 ```
 ### Insertar datos en la base de datos
-Para insertar datos en la base de datos, se utiliza la sentencia `INSERT INTO`. Aquí hay un ejemplo de cómo insertar un nuevo usuario en la tabla `usuarios`:
+Para insertar datos en la base de datos, utilizamos la misma tecnica anterior
+ se utiliza la sentencia `INSERT INTO`. Aquí hay un ejemplo de cómo insertar un nuevo usuario en la tabla `usuarios`:
 
 ```php
 <?php
 // Datos a insertar
 $nombre = "Juan Pérez";
+$email = "example@gmail.com";
+
+$consulta = "INSERT INTO usuarios (nombre, email) VALUES ('$nombre', '$email')";
+$resultado = mysqli_query($conexion, $consulta);
+if (!$resultado) {
+    die("Error al insertar datos: " . mysqli_error($conexion));
+} else {
+    echo "Datos insertados correctamente.";
+}
+```
+
+### Eliminar datos de la base de datos
+De la misma manera, para eliminar datos de la base de datos, utilizamos la sentencia `DELETE FROM`. Aquí hay un ejemplo de cómo eliminar un usuario de la tabla `usuarios`:
+
+```php
+<?php
+// ID del usuario a eliminar
+$id_usuario = 1;
+$consulta = "DELETE FROM usuarios WHERE id = $id_usuario";
+$resultado = mysqli_query($conexion, $consulta);
+if (!$resultado) {
+    die("Error al eliminar datos: " . mysqli_error($conexion));
+} else {
+    echo "Datos eliminados correctamente.";
+}
+```
+
+### Actualizar datos en la base de datos
+Para actualizar datos en la base de datos, utilizamos la sentencia `UPDATE`. Aquí hay un ejemplo de cómo actualizar el email de un usuario en la tabla `usuarios`:
+
+```php
+<?php
+// ID del usuario a actualizar
+$id_usuario = 1;
+// Nuevos datos
+$nombre = "Juan Pérez";
+$email= "OtherExample@gmail.com";
+$consulta = "UPDATE usuarios SET nombre = '$nombre', email = '$email' WHERE id = $id_usuario";
+$resultado = mysqli_query($conexion, $consulta);
+if (!$resultado) {
+    die("Error al actualizar datos: " . mysqli_error($conexion));
+} else {
+    echo "Datos actualizados correctamente.";
+}
+```
+
+## Usando Formularios para manejar datos
+Como vimos en la [seccion anterior](/server-programming/04-php-server/#formularios-en-php) Es posible enviar datos a un archivo PHP usando formularios. En este caso, usaremos un formulario para insertar datos en la base de datos. Aquí hay un ejemplo de cómo hacerlo:
+
+<Tabs>
+<TabItem label="formulario.php">
+```html
+<form action="insertar.php" method="GET">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <input type="submit" value="Enviar">
+</form>
+```
+</TabItem>
+
+Se supondra que tiene el objeto de conexion `$conexion` a la base de datos en el archivo `insertar.php`.
+<TabItem label="insertar.php">
+```php
+<?php
+// Obteniendo los datos del formulario
+$nombre = $_GET['nombre'];
+$email = $_GET['email'];
+// Insertando los datos en la base de datos
+$consulta = "INSERT INTO usuarios (nombre, email) VALUES ('$nombre', '$email')";
+$resultado = mysqli_query($conexion, $consulta);
+if (!$resultado) {
+    die("Error al insertar datos: " . mysqli_error($conexion));
+} else {
+    echo "Datos insertados correctamente.";
+}
+```
+</TabItem>
+</Tabs>
+
+### Insertando datos usando el metodo POST
+En el ejemplo anterior usamos el metodo `GET` para enviar los datos al servidor. Este metodo no es seguro, si observamos la URL, los datos enviados son visibles. Por lo tanto, es recomendable usar el metodo `POST` para enviar datos sensibles al servidor. El formulario quedaria de la siguiente manera:
+
+```html "method="POST""
+<form action="insertar.php" method="POST">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <input type="submit" value="Enviar">
+</form>
+```
