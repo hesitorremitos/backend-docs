@@ -346,20 +346,7 @@ echo calcularPrecioTotal(100);      // 121
 echo calcularPrecioTotal(100, 0.1); // 110
 ```
 
-## Programación Orientada a Objetos
-```php
-class Usuario {
-    private $nombre;
-    
-    public function __construct($nombre) {
-        $this->nombre = $nombre;
-    }
-    
-    public function getNombre() {
-        return $this->nombre;
-    }
-}
-```
+
 
 ## Manejo de Datos
 
@@ -376,6 +363,22 @@ $datos = [
 ```php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST['nombre'];
+}
+```
+
+
+## Programación Orientada a Objetos
+```php
+class Usuario {
+    private $nombre;
+    
+    public function __construct($nombre) {
+        $this->nombre = $nombre;
+    }
+    
+    public function getNombre() {
+        return $this->nombre;
+    }
 }
 ```
 
