@@ -135,34 +135,34 @@ Los formularios HTML son una forma común de interactuar con los usuarios. PHP p
 
 ### Atributos importantes
 
-<Tabs>
-  <TabItem label="action">
-    El atributo `action` del formulario indica a dónde se enviarán los datos:
-    
-    ```html
-    <form action="procesar.php">
-    ```
-  </TabItem>
-  <TabItem label="method">
-    El atributo `method` especifica cómo se enviarán los datos:
-    
-    ```html
-    <form method="POST">
-    <!-- o -->
-    <form method="GET">
-    ```
-  </TabItem>
-  <TabItem label="name">
-    El atributo `name` de cada campo define la clave para acceder a su valor en PHP:
-    
-    ```html
-    <input type="text" name="username">
-    <!-- En PHP: $_POST['username'] o $_GET['username'] -->
-    ```
-  </TabItem>
-</Tabs>
+Para poder enviar datos a un script PHP, debes usar el elemento `<form>` en HTML. Aquí hay algunos atributos importantes:
+
+#### El atributo `action`
+`action` es un atributo del `<form>`  que especifica la URL a la que se enviarán los datos. Si no se especifica, el formulario se enviará a la misma página:
+
+```html "action"
+<form action="procesar.php">
+```
+
+#### El atributo `method`
+Es un atributo del `<form>` que define el método HTTP que se usará para enviar los datos. Los métodos más comunes son `GET` y `POST`:
+
+```html "method"
+<form method="POST">
+<!-- o -->
+<form method="GET">
+```
+
+#### El atributo `name
+Atributo de los elementos de formulario que permite identificar el campo al enviar los datos. Es importante para procesar los datos en PHP:
+
+```html "name"
+<input type="text" name="username">
+```
+
 
 ### Métodos de envío
+Como se mencionó anteriormente, los métodos que originalmente se usan para enviar datos son `GET` y `POST`. Cada uno tiene sus propias características y usos.
 
 #### El método GET
 
