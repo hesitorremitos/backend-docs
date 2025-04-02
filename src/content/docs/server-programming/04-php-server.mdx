@@ -702,6 +702,37 @@ $conexion->close();
 ## Hazlo tu mismo :badge[Actividad 5]{variant=caution}
 <Card title='Actividad 5'>
   Realiza el sistema con las vistas de **insertar**, **eliminar** y **actualizar**. Usa el sistema de **consultas preparadas** para realizar las consultas a la base de datos.
+  - Cada vista debe tener su respectivo enlace(`<a href="...">`) para navegar entre ellas.
+  - No se debe usar la URL mas que para ingresar a la pagina principal.
+
   Se tiene la siguiente tabla de productos
-  ![Tabla de productos]()
+```d2
+  products: {
+    label: Productos
+    shape: sql_table
+    id: int unsigned {constraint: primary_key, auto_increment}
+    name: varchar(50) {constraint: not_null}
+    description: varchar(255)
+    price: decimal(10,2) {constraint: not_null}
+    stock: int unsigned {constraint: not_null}
+    created_at: timestamp {constraint: not_null, default current_timestamp}
+}
+```
+
+Ejemplo de structura de archivos, puede usar una propia.
+<FileTree>
+- actions Acciones en el servidor
+    - create_product.php
+    - delete_product.php
+    - update_product.php
+- views Pagina a mostrar al usuario
+    - register.php
+    - delete.php
+    - edit.php
+- public Archivos del frontend
+    - styles.css
+    - script.js
+- index.php Listado de productos
+ 
+</FileTree>
 </Card>
