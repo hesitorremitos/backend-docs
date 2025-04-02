@@ -512,3 +512,196 @@ En el ejemplo anterior usamos el metodo `GET` para enviar los datos al servidor.
     <input type="submit" value="Enviar">
 </form>
 ```
+### Eliminando datos
+Comunmente para eliminar un dato de la base de datos, solo se usa la **clave primaria** del registro que se desea eliminar. En este caso, usaremos un formulario para eliminar un usuario de la base de datos. Aquí hay un ejemplo de cómo hacerlo:
+
+<Tabs>
+<TabItem label="vista-eliminar.php">
+```html
+<form action="eliminar.php" method="POST">
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="id" required>
+    
+    <input type="submit" value="Eliminar">
+</form>
+```
+</TabItem>
+
+<TabItem label="eliminar.php">
+```php
+<?php
+// Obteniendo el ID del formulario
+$id_usuario = $_POST['id'];
+// Eliminando el usuario de la base de datos
+$consulta = "DELETE FROM usuarios WHERE id = $id_usuario";
+$resultado = mysqli_query($conexion, $consulta);
+if (!$resultado) {
+    die("Error al eliminar datos: " . mysqli_error($conexion));
+} else {
+    echo "Datos eliminados correctamente.";
+}
+```
+</TabItem>
+</Tabs>
+
+### Actualizacion de datos usando formularios
+Para actualizar datos en la base de datos, utilizamos un formulario, una especie de combinacion entre el formulario de **insertar** y **eliminar**. En este caso, usaremos un formulario para actualizar un usuario en la base de datos. Aquí hay un ejemplo de cómo hacerlo:
+
+<Tabs>
+<TabItem label="vista-actualizar.php">
+```html
+<form action="actualizar.php" method="POST">
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="id" required>
+    
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <input type="submit" value="Actualizar">
+</form>
+```
+</TabItem>
+<TabItem label="actualizar.php">
+```php
+<?php
+// Obteniendo los datos del formulario
+$id_usuario = $_POST['id'];
+$nombre = $_POST['nombre'];
+$email = $_POST['email'];
+// Actualizando los datos en la base de datos
+$consulta = "UPDATE usuarios SET nombre = '$nombre', email = '$email' WHERE id = $id_usuario";
+$resultado = mysqli_query($conexion, $consulta);
+if (!$resultado) {
+    die("Error al actualizar datos: " . mysqli_error($conexion));
+} else {
+    echo "Datos actualizados correctamente.";
+}
+```
+</TabItem>
+</Tabs>
+
+## Consultas preparadas `Prepared Statements`
+:::caution
+Para esta seccion debera conocer los siguientes elementos del lenguaje PHP:
+- Objetos en PHP
+- Funciones
+:::
+
+
+El metodo de realizar consultas usado hasta ahora(`mysqli_query()`) es vulnerable a ataques de **inyección SQL**. Comunmente cuando se usa variables($_GET['nombre'], $_POST['nombre']) para realizar consultas SQL. Un atacante puede enviar datos maliciosos a la base de datos y ejecutar consultas no deseadas.
+
+Las consultas preparadas son una forma de separar la lógica de la consulta de los datos. Esto significa que los datos se envían por separado y no se pueden inyectar código SQL malicioso. 
+
+### La función `mysqli_prepare()`
+La función `mysqli_prepare()` se utiliza para preparar una consulta SQL. Esta función toma dos parámetros:
+1. `$conexion`: El objeto de conexión a la base de datos.
+2. `$consulta`: La consulta SQL que deseas preparar. En este caso, la consulta debe contener marcadores de posición (`?`) para los datos que se enviarán más tarde.
+
+
+```php {2,3}
+// Preparar la consulta
+$consulta = "INSERT INTO usuarios (nombre, email) VALUES (?, ?)";
+$stmt = mysqli_prepare($conexion, $consulta);
+```
+<Card title='Usando objetos' icon='information'>
+Cuando se tiene un objeto de conexión a la base de datos, se puede usar el método `prepare()` del objeto para preparar la consulta. Este método toma un solo parámetro: la consulta SQL que deseas preparar.
+```php {3}
+$conexion = new mysqli("localhost", "usuario", "contraseña", "nombre_base_datos");
+$consulta = "INSERT INTO usuarios (nombre, email) VALUES (?, ?)";
+$stmt = $conexion->prepare($consulta);
+```
+</Card>
+
+
+### La función `mysqli_stmt_bind_param()`
+Una vez que la consulta está preparada, se deben vincular los parámetros a la consulta. Esto se hace con la función `mysqli_stmt_bind_param()`. Esta función toma tres parámetros:
+1. `$stmt`: El objeto de declaración preparado.
+2. `$tipos`: Una cadena que indica el tipo de datos de los parámetros:
+  - `s` para `string`
+  - `i` para `integer`
+  - `d` para `double`
+  - `b` para `blob`
+
+3. `$parametros`: Los parámetros que se vincularán a la consulta. Estos deben ser variables.
+```php {7}
+// Cargando datos
+$nombre = $_POST['nombre'];
+$email = $_POST['email'];
+$consulta = "INSERT INTO usuarios (nombre, email) VALUES (?, ?)";
+$stmt = mysqli_prepare($conexion, $consulta);
+// Vinculando los parámetros
+mysqli_stmt_bind_param($stmt, "ss", $nombre, $email);
+```
+<Card title='Usando objetos' icon='information'>
+Cuando se tiene un objeto de declaración preparado, se puede usar el método `bind_param()` del objeto para vincular los parámetros. Este método toma dos parámetros: una cadena que indica el tipo de datos de los parámetros y los parámetros que se vincularán a la consulta.
+```php
+$consulta = "INSERT INTO usuarios (nombre, email) VALUES (?, ?)";
+$stmt = $conexion->prepare($consulta);
+$stmt->bind_param("ss", $nombre, $email);
+```
+</Card>
+
+### La funcion `mysqli_stmt_execute()`
+Una vez que los parámetros están vinculados, se puede ejecutar la consulta con la función `mysqli_stmt_execute()`. Esta función toma un solo parámetro: el objeto de declaración preparado.
+```php
+$stmt = mysqli_prepare($conexion, $consulta);
+mysqli_stmt_bind_param($stmt, "ss", $nombre, $email);
+// Ejecutar la consulta
+mysqli_stmt_execute($stmt);
+``` 
+<Card title='Usando objetos' icon='information'>
+Cuando se tiene un objeto de declaración preparado, se puede usar el método `execute()` del objeto para ejecutar la consulta. Este método no toma parámetros.
+```php {4}
+$stmt = $conexion->prepare($consulta);
+$stmt->bind_param("ss", $nombre, $email);
+// Ejecutar la consulta
+$stmt->execute();
+```
+</Card>
+
+### Obteniendo resultados
+Para obtener los resultados de una consulta, se puede usar la función `mysqli_stmt_get_result()`. Esta función toma un solo parámetro: el objeto de declaración preparado. Devuelve un objeto de resultado que se puede usar para obtener los resultados de la consulta.
+```php {6}
+$stmt = mysqli_prepare($conexion, $consulta);
+mysqli_stmt_bind_param($stmt, "ss", $nombre, $email);
+// Ejecutar la consulta
+mysqli_stmt_execute($stmt);
+// Obtener los resultados
+$resultado = mysqli_stmt_get_result($stmt);
+```
+
+<Card title='Usando objetos' icon='information'>
+Cuando se tiene un objeto de declaración preparado, se puede usar el método `get_result()` del objeto para obtener los resultados de la consulta. Este método no toma parámetros.
+```php {6}
+$stmt = $conexion->prepare($consulta);
+$stmt->bind_param("ss", $nombre, $email);
+// Ejecutar la consulta
+$stmt->execute();
+// Obtener los resultados
+$resultado = $stmt->get_result();
+```
+</Card>
+
+### Cerrar conexión
+Es importante cerrar la conexión a la base de datos una vez que hayas terminado de usarla. Puedes hacerlo con la función `mysqli_close()`:
+
+```php
+// Cerrar la conexión
+mysqli_close($conexion);
+```
+<Card title='Usando objetos' icon='information'>
+Cuando se tiene un objeto de conexión a la base de datos, se puede usar el método `close()` del objeto para cerrar la conexión. Este método no toma parámetros.
+```php
+$conexion->close();
+```
+</Card>
+
+## Hazlo tu mismo :badge[Actividad 5]{variant=caution}
+<Card title='Actividad 5'>
+  Realiza el sistema con las vistas de **insertar**, **eliminar** y **actualizar**. Usa el sistema de **consultas preparadas** para realizar las consultas a la base de datos.
+  Se tiene la siguiente tabla de productos
+  ![Tabla de productos]()
+</Card>
