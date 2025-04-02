@@ -44,6 +44,7 @@ export default defineConfig({
 				{
 					label: 'Fundamentos del diseño web',
 					autogenerate: { directory: 'guides' },
+					collapsed: true,
 				},
 				{
 					label: 'Programacion del lado del servidor',
@@ -56,6 +57,7 @@ export default defineConfig({
 				{
 					label: 'Solucionario',
 					autogenerate: { directory: 'solutions' },
+					collapsed: false,
 				},
 				
 			],
