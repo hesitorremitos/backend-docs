@@ -318,12 +318,14 @@ $port = 3306;
 // Conectar a la base de datos
 $conexion = mysqli_connect($host, $user, $password, $database, $port);
 ```
+<Card>
+`mysqli_connect()` devuelve un **objeto de conexión** que se puede usar para realizar consultas a la base de datos. Si la conexión falla, se detiene la ejecución del script y se muestra un mensaje de error.
+</Card>
 ### Consultas a la base de datos
 Una vez tengamos el objeto de conexión, podemos realizar consultas a la base de datos. Aquí hay un ejemplo de cómo seleccionar datos de una tabla llamada `usuarios`, la function que nos permite hacer consultas a la base de datos es `mysqli_query()`, recibe 2 parametros:
 1. `$conexion`: El objeto de conexión a la base de datos. Resultado de la función `mysqli_connect()`.
 2. `$query`: La consulta SQL que deseas ejecutar. En este caso debe ser un `string` que contenga la consulta SQL.
 
-La funcion `mysqli_query()` devuelve un objeto de resultado que contiene los datos devueltos por la consulta. Si la consulta falla, devuelve `false`, usamos este ultimo para verificar si la consulta fue exitosa o no.
 
 :::note
 Para obtener el error de la consulta, usamos la función `mysqli_error($conexion)` que devuelve un string con el error de la consulta. Si no hay error, devuelve `""`.
@@ -340,10 +342,10 @@ if (!$resultado) {
 ```
 
 #### La funcion `mysqli_fetch_assoc()`
-Para recorrer los resultados de la consulta usamos el metodo `mysqli_fetch_assoc()` que devuelve un array asociativo con los resultados de la consulta.
+Para recorrer los resultados de la consulta usamos el metodo `mysqli_fetch_assoc()`.
 
 :::caution
-La función `mysqli_fetch_assoc()` devuelve un array asociativo con los nombres de las columnas como claves, la funcion solo devuelve **una fila** de la consulta.
+La función `mysqli_fetch_assoc()` devuelve un array asociativo con los nombres de las columnas como claves, la funcion solo devuelve **una fila** de la consulta. Esto extrae una fila, lo que significa que esa fila ya no estará disponible para futuros `mysqli_fetch_assoc()`.
 
 :::
 ```php
@@ -360,7 +362,24 @@ Con `print` o `echo` solamente podemos imprimir el contenido de una variables pr
 La funcion `print_r()` imprime el contenido de una variable de forma legible. Es útil para depurar y ver el contenido de arrays y objetos.
 :::
 
-Como puede ver obtenemos un array asociativo con una fila de la tabla `usuarios`. Podemos usar un bucle `while` para recorrer todos los resultados de la consulta:
+
+En este caso, si la tabla `usuarios` tiene las columnas `id`, `nombre` y `email`, el array asociativo tendrá las claves `id`, `nombre` y `email`.
+```php
+<?php
+// Obteniendo la fila 1
+$fila = mysqli_fetch_assoc($resultado);
+echo "ID: " . $fila['id'] . "<br>";
+echo "Nombre: " . $fila['nombre'] . "<br>";
+echo "Email: " . $fila['email'] . "<br>";
+
+// Obteniendo la fila 2
+$fila = mysqli_fetch_assoc($resultado);
+echo "ID: " . $fila['id'] . "<br>";
+echo "Nombre: " . $fila['nombre'] . "<br>";
+echo "Email: " . $fila['email'] . "<br>";
+```
+
+Cuando usamos la funcion `mysqli_fetch_assoc()` se obtiene una fila de la tabla y cuando ya no hay filas que recorrer, la funcion devuelve `false`. Por lo tanto, podemos usar un bucle `while` para recorrer todas las filas de la tabla:
 ```php
 <?php
 // Recorrer todos los resultados
@@ -371,7 +390,7 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
     echo "<hr>";
 }
 ```
-El bucle se detendra cuando no haya mas filas que recorrer. En este caso, el bucle se detendra cuando `mysqli_fetch_assoc()` devuelva `false`.
+El bucle se detendra cuando no haya mas filas que recorrer.
 
 #### Cerrar la conexión
 
@@ -416,6 +435,9 @@ if (!$resultado) {
     echo "Datos eliminados correctamente.";
 }
 ```
+:::note
+Si volvemos a ejecutar la consulta, el usuario ya no existirá en la base de datos. Por lo tanto, no se podrá eliminar nuevamente y se mostrará un error.
+:::
 
 ### Actualizar datos en la base de datos
 Para actualizar datos en la base de datos, utilizamos la sentencia `UPDATE`. Aquí hay un ejemplo de cómo actualizar el email de un usuario en la tabla `usuarios`:
@@ -437,6 +459,10 @@ if (!$resultado) {
 ```
 
 ## Usando Formularios para manejar datos
+
+:::caution
+A patir de aqui se supondra que tiene el objeto de conexion (`$conexion`) a la base de datos ya se ha creado previamente.
+:::
 Como vimos en la [seccion anterior](/server-programming/04-php-server/#formularios-en-php) Es posible enviar datos a un archivo PHP usando formularios. En este caso, usaremos un formulario para insertar datos en la base de datos. Aquí hay un ejemplo de cómo hacerlo:
 
 <Tabs>
@@ -454,7 +480,6 @@ Como vimos en la [seccion anterior](/server-programming/04-php-server/#formulari
 ```
 </TabItem>
 
-Se supondra que tiene el objeto de conexion `$conexion` a la base de datos en el archivo `insertar.php`.
 <TabItem label="insertar.php">
 ```php
 <?php
