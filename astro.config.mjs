@@ -57,7 +57,7 @@ export default defineConfig({
 				{
 					label: 'Solucionario',
 					autogenerate: { directory: 'solutions' },
-					collapsed: false,
+					collapsed: true,
 				},
 				
 			],
