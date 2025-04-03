@@ -8,7 +8,7 @@ draft: false
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Card, CardGrid } from '@astrojs/starlight/components';
-import { Steps } from '@astrojs/starlight/components';
+import { Steps,LinkCard } from '@astrojs/starlight/components';
 
 
 PHP es un lenguaje de programación que fue creado principalmente para añadir funcionalidades a las páginas web. Es un lenguaje de programación de propósito general, que se puede utilizar para crear aplicaciones web, aplicaciones de escritorio, aplicaciones móviles, etc.
@@ -272,9 +272,27 @@ Los bucles permiten ejecutar un bloque de código repetidamente mientras se cump
   </TabItem>
 </Tabs>
 
+<LinkCard title='Sintaxis Basica' href="https://www.php.net/manual/es/language.basic-syntax.php" target="_blank" description='Documentacion oficial de PHP, donde se explica la sintaxis basica del lenguaje.'>
+Documentacion oficial de PHP, donde se explica la sintaxis basica del lenguaje.
+</LinkCard>
 
+## Programacion procedural o procedimental
+La programación procedural es un paradigma de programación que se basa en la idea de dividir un programa en procedimientos o funciones. En este paradigma, los datos primitivos no poseen métodos ni propiedades, y para tratar con ellos debemos usar funciones integradas del lenguaje.
 
+A diferencia de otros lenguajes como **javascript**, donde los objetos son la base del lenguaje, en PHP procedural los procedimientos o funciones son la base del lenguaje.
 
+Entonces para transformar datos o realizar operaciones sobre ellos, se utilizan funciones integradas del lenguaje. Por ejemplo, para trabajar con cadenas de texto, se utilizan funciones como `strlen()`, `strtoupper()`, `strtolower()`, etc.
+
+```php
+// Ejemplo de funciones integradas
+$nombre = "Juan Pérez";
+$longitud = strlen($nombre);
+$mayus = strtoupper($nombre);
+$tam = strlen($mayus);
+```
+:::tip
+Por defecto y el php puro es procedural, pero con la incorporacion de extensiones y librerias, se puede usar la programacion orientada a objetos.
+:::
 
 ## Arrays
 Los arrays son estructuras de datos que permiten almacenar múltiples valores en una sola variable. PHP soporta arrays indexados y asociativos.
@@ -289,6 +307,19 @@ echo $frutas[0]; // Salida: manzana
 echo $frutas[1]; // Salida: pera
 echo $frutas[2]; // Salida: uva
 ```
+#### Manipulando Arrays
+Como se dijo, php es procedural, por lo que para manipular arrays se utilizan funciones integradas del lenguaje.
+
+| Funcion | Descripción |
+|---------|-------------|
+| `count()` | Devuelve el número de elementos en un array |
+| `array_push()` | Agrega uno o más elementos al final de un array |
+| `array_pop()` | Elimina el último elemento de un array |
+| `array_shift()` | Elimina el primer elemento de un array |
+| `array_unshift()` | Agrega uno o más elementos al principio de un array |
+| `array_slice()` | Extrae una porción de un array |
+| `array_merge()` | Combina uno o más arrays |
+| etc... | Hay muchas más funciones para manipular arrays en PHP |
 
 :::note
 A diferente de otros lenguajes, PHP no requiere declarar el tipo de array. Un array puede contener diferentes tipos de datos.
@@ -301,6 +332,7 @@ echo $datos[2]; // Salida: 19.99
 echo $datos[3]; // Salida: 1 (true)
 ```
 :::
+
 
 ### Arrays Asociativos
 Los arrays asociativos son similares a los **dictcionarios** en otros lenguajes, donde cada elemento tiene una clave asociada. Para acceder a un elemento, se usa la clave entre comillas.
@@ -317,6 +349,9 @@ echo $persona['nombre']; // Salida: Juan
 echo $persona['edad']; // Salida: 25
 echo $persona['ciudad']; // Salida: Madrid
 ```
+<LinkCard title='Funciones de Arrays' href="https://www.php.net/manual/es/ref.array.php" target="_blank" description='Documentacion oficial de PHP, donde se explica las funciones de arrays.'>
+</LinkCard>
+
 
 ### Funciones de Arrays
 ```php
@@ -331,9 +366,7 @@ array_shift($frutas); // Elimina el primer elemento
 
 
 ## Funciones
-:::tip[Definición]
 Las funciones son bloques de código reutilizables que realizan una tarea específica y pueden recibir parámetros y devolver valores.
-:::
 
 ```php
 // Ejemplo de función con tipos y valor por defecto
@@ -345,26 +378,13 @@ function calcularPrecioTotal(float $precio, float $impuesto = 0.21): float {
 echo calcularPrecioTotal(100);      // 121
 echo calcularPrecioTotal(100, 0.1); // 110
 ```
+### Requerimientos minimos
+Se debe de conocer minimamente los siguientes conceptos:
+- Parámetros y argumentos
+- Valores de retorno(Devolver valores)
+- Funciones anónimas (closures)
 
-
-
-## Manejo de Datos
-
-### Arrays
-```php
-$frutas = ['manzana', 'pera', 'uva'];
-$datos = [
-    'nombre' => 'Juan',
-    'edad' => 25
-];
-```
-
-### Formularios y POST/GET
-```php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = $_POST['nombre'];
-}
-```
+<LinkCard title='Funciones en PHP' href="https://www.php.net/manual/es/language.functions.php" target="_blank" description='Documentacion oficial de PHP, donde se explica las funciones en PHP.'/>
 
 
 ## Programación Orientada a Objetos(Pendiente)
@@ -389,6 +409,14 @@ class Persona {
     }
 }
 ```
+### Requerimientos minimos
+Se debe de conocer minimamente los siguientes conceptos:
+- Propiedades
+- Métodos
+- Definición de clases
+- Visibilidad o encapsulamiento (public, private, protected)
+<LinkCard title='Programacion Orientada a Objetos' href="https://www.php.net/manual/es/language.oop5.php" target="_blank" description='Documentacion oficial de PHP, donde se explica la programacion orientada a objetos.'>
+</LinkCard>
 
 ## Objetos en PHP
 Los objetos son instancias de clases y pueden contener propiedades y métodos.
@@ -404,6 +432,14 @@ echo $persona->getNombre();
 echo $persona->saludar();
 echo $persona->edad;
 ```
+
+### Requerimientos minimos
+Se debe de conocer minimamente los siguientes conceptos:
+- Instanciación de objetos
+- Acceso a propiedades y métodos
+<LinkCard title='Objetos en PHP' href="https://www.php.net/manual/es/language.types.object.php">
+Documentacion oficial de PHP, donde se explica los objetos en PHP.
+</LinkCard>
 
 ## Base de Datos
 <Steps>
