@@ -367,19 +367,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ```
 
 
-## Programación Orientada a Objetos
+## Programación Orientada a Objetos(Pendiente)
+Ejemplo de creación de una clase en PHP:
+
 ```php
-class Usuario {
+class Persona {
     private $nombre;
+    public $edad;
     
-    public function __construct($nombre) {
+    public function __construct($nombre, $edad) {
         $this->nombre = $nombre;
+        $this->edad = $edad;
     }
     
     public function getNombre() {
         return $this->nombre;
     }
+
+    public function saludar() {
+        return "Hola, mi nombre es " . $this->nombre;
+    }
 }
+```
+
+## Objetos en PHP
+Los objetos son instancias de clases y pueden contener propiedades y métodos.
+- Propiedades: Variables que pertenecen a la clase.
+- Métodos: Funciones que pertenecen a la clase.
+
+Para acceder a las propiedades y métodos de un objeto, se utiliza el operador `->`.
+
+```php
+// Crear un objeto de la clase Persona
+$persona = new Persona("Juan", 25);
+echo $persona->getNombre();
+echo $persona->saludar();
+echo $persona->edad;
 ```
 
 ## Base de Datos
