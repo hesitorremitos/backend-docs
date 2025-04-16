@@ -189,9 +189,6 @@ public function delete($id){
 
 El controlador recibe las solicitudes del usuario, procesa la lógica y decide qué vista mostrar.
 
-:::tip
-Para este caso usaremos un controlador por cada acción (crear, listar, actualizar y eliminar usuarios), entonces navegaremos exclusivamente por la carpeta `controllers`, Todas las demas rutas serán redirigidas a la carpeta `controllers`.
-:::
 ### Controlador para registrar usuario
 
 ```php
@@ -313,7 +310,7 @@ Formulario para editar los datos de un usuario existente.
 
 ---
 
-## Resumen visual
+## Resumen visual :badge[Codigo]{variant="success"}
 
 ![Diagrama MVC](https://codingornot.com/wp-content/uploads/2017/10/mvc-modelo-vista-controlador.png)
 
@@ -324,6 +321,12 @@ Formulario para editar los datos de un usuario existente.
 1. El usuario accede a `/controllers/user_store.php` (GET) y ve el formulario de registro.
 2. Al enviar el formulario (POST), el controlador crea el usuario y redirige a la lista.
 3. `/controllers/user_index.php` obtiene los usuarios y muestra la vista de lista.
+
+import {LinkCard} from "@astrojs/starlight/components"
+
+
+<LinkCard title="Codigo completo" description="Codigo completo en el repositorio de github" href="https://github.com/hesitorremitos/backend-github/tree/main/6.arquitectura-mvc" target="_blank"/>
+
 
 ---
 
