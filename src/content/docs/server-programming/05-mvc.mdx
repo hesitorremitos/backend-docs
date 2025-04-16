@@ -1,0 +1,227 @@
+---
+title: La arquitectura MVC
+label: La arquitectura MVC
+---
+
+import { Card, Steps, Tabs, TabItem,FileTree } from '@astrojs/starlight/components'
+
+La arquitectura MVC (Modelo-Vista-Controlador) es un patrón de diseño que separa la lógica de negocio, la interfaz de usuario y el control de flujo en aplicaciones web. Este enfoque facilita la organización del código y mejora la mantenibilidad.
+
+![Arquitectura MVC](https://codingornot.com/wp-content/uploads/2017/10/mvc-modelo-vista-controlador.png)
+
+## ¿Qué es MVC?
+
+<Card title="Definición de MVC" icon="information">
+MVC son las siglas de **Modelo-Vista-Controlador**. Es un patrón de arquitectura de software que divide una aplicación en tres componentes principales, permitiendo separar la lógica de negocio, la presentación y el control de las interacciones del usuario.
+</Card>
+
+## Componentes de MVC
+
+### Modelo (Model)
+Representa los datos y la lógica de negocio de la aplicación. Se encarga de acceder a la base de datos, procesar información y definir las reglas de negocio. El modelo no depende de la interfaz de usuario.
+
+### Vista (View)
+Es la encargada de mostrar la información al usuario. Recibe los datos del modelo y los presenta en un formato adecuado (HTML, JSON, etc). No contiene lógica de negocio.
+
+### Controlador (Controller)
+Actúa como intermediario entre el modelo y la vista. Recibe las solicitudes del usuario, procesa las acciones necesarias (como validar datos o actualizar el modelo) y determina qué vista mostrar como respuesta.
+
+## ¿Por qué usar MVC?
+
+<Tabs>
+  <TabItem label="Ventajas">
+    - **Separación de responsabilidades:** Facilita el desarrollo y mantenimiento al dividir la aplicación en componentes independientes.
+    - **Reutilización de código:** Permite reutilizar modelos y vistas en diferentes partes de la aplicación.
+    - **Trabajo en equipo:** Los desarrolladores pueden trabajar simultáneamente en modelos, vistas o controladores sin interferir entre sí.
+    - **Escalabilidad y mantenimiento:** Es más sencillo modificar o ampliar la funcionalidad de la aplicación.
+    - **Pruebas más sencillas:** La separación de lógica facilita la realización de pruebas unitarias y de integración.
+  </TabItem>
+  <TabItem label="Cuándo usarlo">
+    - Cuando se desarrollan aplicaciones web de tamaño mediano o grande.
+    - Cuando se requiere mantener el código organizado y escalable.
+    - Cuando varios desarrolladores trabajan en el mismo proyecto.
+  </TabItem>
+</Tabs>
+
+<Card title="Resumen" icon="approve">
+MVC es un patrón que promueve la organización y eficiencia en el desarrollo de aplicaciones, especialmente útil para proyectos que requieren mantenimiento y crecimiento a largo plazo.
+</Card>
+
+
+## Ejemplo del uso de MVC con PHP
+Realizaremos un CRUD simple para gestionar una lista de usuarios. La estructura del proyecto será la siguiente:
+
+
+<FileTree>
+- models
+    - User.php
+    - Connection.php Conexion a la base de datos
+- views
+    - user_list.php Lista de usuarios
+    - user_create_form.php Formulario de registro
+    - user_edit_form.php Formulario de edición
+    - user_delete_form.php Confirmacion(opcional)
+    - user_show.php Detalles de un solo usuario
+- controllers
+    - user_index.php Controlador de usuarios
+    - user_create.php Controlador de registro
+    - user_edit.php Controlador de edicion
+    - user_delete.php Controlador de eliminacion
+- index.php  Entrada del proyecto
+- config.php Configuraciones
+</FileTree>
+
+### Modelo (Model)
+Para realizar los **modelos** usaremos la programación orientada a objetos, creando una clase `User` que representará a un usuario. Esta clase contendrá propiedades como `id`, `name`, `email`, y métodos para interactuar con la base de datos.
+
+Pero antes de esto es recomendable **realizar la conexion a la base de datos**, ya que podremos usar la misma conexion en todos los modelos. Para esto crearemos un archivo `
+
+:::tip
+Ya que todos los modelos requiren la conexion es mejor **Abstraer** la conexion a un archivo independiente, para que todos los modelos puedan usarla(Herencia de la POO).
+:::
+
+```php
+//Connection.php
+class Connection{
+    protected $connection;
+    private $host = "localhost";
+    private $user = "root";
+    private $password = "root";
+    private $db = "backend";
+    private $port = 3306;
+
+    protected function connect(){
+        try{
+            $this->connection = new mysqli($this->host, $this->user, $this->password, $this->db, $this->port);
+        } catch (Exception $e){
+            echo "Error: " . $e->getMessage();
+            die("Connection failed");
+        }
+    }
+}
+```
+
+#### Creacion de usuarios 
+Ahora podemos definir nuestro modelo `User` que extiende de la clase `Connection` para poder usar la misma conexion a la base de datos. 
+```php {16-25}
+//models/User.php
+
+include 'Connection.php';
+
+class User extends Connection{
+    // Definimos los atributos del Usuario
+    public $id;
+    public $name;
+    public $age;
+    public $email;
+    public $password;
+    public $created_at;
+    public $updated_at;
+
+
+    public function create(){
+        $this->connect();
+        $stmt = mysqli_prepare(
+            $this->connection,
+            "INSERT INTO users (name, age, email, password) VALUES (?, ?, ?, ?)"
+        );
+        $stmt->bind_param("siss", $this->name, $this->age, $this->email, $this->password);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
+```
+
+#### Listar usuarios
+Para listar los usuarios, crearemos un método `getAll` que devolverá todos los registros de la tabla `users`.
+
+:::note
+Es importante aclarar que este metodo nos retornara una lista de los usuarios en una `array`, por lo que si deseamos mostrarlo en una tabla, debemos recorrer el array y mostrar los datos de cada usuario.
+
+Si desea verificar los datos sin tener que recorrer el array, puede usar la funcion `print_r($array)` para ver los datos de forma mas legible.
+:::
+```php
+//models/User.php
+public function getAll(){
+    $this->connect();
+    $stmt = mysqli_prepare($this->connection, "SELECT * FROM users");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    // Lista de usuarios
+    $users = array();
+
+    // Recorremos el resultado y lo guardamos en un array
+    while ($row = $result->fetch_assoc()) {
+        array_push($users, $row);
+    }
+    return $users;
+}
+```
+
+#### Buscar usuario por id
+Para relizar la busqueda de un usuario por id, crearemos un metodo `getFirst` que nos retornara el primer usuario que coincida con el id pasado como parametro.
+
+:::note
+Se usa `getFirst` ya que el metodo en reliadad retorna el primer usuario de la consulta, y no verifica si hay mas de un usuario con ese id.
+:::
+```php
+//models/User.php
+public function getFirst($id){
+        $this->connect();
+        $stmt = mysqli_prepare($this->connection, "SELECT * FROM users WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
+```
+
+#### Actualizar usuario
+Para actualizar un usuario, crearemos un método `update` que tomará el id del usuario y los nuevos datos a actualizar.
+
+:::note
+Antes de esto se recomienda hacer una validacion del id, para verificar si este usuario existe antes de la moficacion. Para esto nos podemos apoyar en el metodo `getFirst` que ya hemos creado. El ejemplo no lo incluye, pero es recomendable hacerlo.
+:::
+```php
+ public function update($id){
+    $this->connect();
+    $stmt = mysqli_prepare(
+        $this->connection,
+        "UPDATE users SET name = ?, age = ?, email = ?, password = ? WHERE id = ?"
+    );
+    $stmt->bind_param("sissi", $this->name, $this->age, $this->email, $this->password, $id);
+    $stmt->execute();
+    $stmt->close();
+}
+
+```
+
+#### Eliminar usuario
+Para eliminar un usuario, crearemos un método `delete` que tomará el id del usuario a eliminar.
+:::note
+Al igual que en el caso de la actualizacion, se recomienda verificar si el usuario existe antes de eliminarlo. Para esto nos podemos apoyar en el metodo `getFirst` que ya hemos creado. El ejemplo no lo incluye, pero es recomendable hacerlo.
+:::
+```php
+public function delete($id){
+    $this->connect();
+    $stmt = mysqli_prepare($this->connection, "DELETE FROM users WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $stmt->close();
+}
+```
+
+### Vista (View)
+Las **vistas** son los archivos PHP que se encargan de mostrar la información al usuario. Comenzaremos creando la vista `user_create.php`, que contendrá un formulario para registrar un nuevo usuario.
+
+Las vistas que tendresmoos seran:
+<Tabs>
+<TabItem label="user_create.php">
+```php
+
+
+```
+</TabItem>
+
+</Tabs>
