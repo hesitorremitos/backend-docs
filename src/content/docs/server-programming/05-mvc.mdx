@@ -333,3 +333,30 @@ import {LinkCard} from "@astrojs/starlight/components"
 <Card title="Conclusión" icon="approve">
 La arquitectura MVC en PHP permite desarrollar aplicaciones web organizadas, escalables y fáciles de mantener. Separar la lógica de negocio, la presentación y el control de flujo es clave para proyectos profesionales y colaborativos.
 </Card>
+
+## Actividad 7 :badge[Actividad]{variant=caution}
+En base al proyecto existente, que puede descargarlo del repositorio `6.arquitectura-mvc`, realice lo siguiente:
+
+<Card title="Actividad 7">
+- Crear un una nueva tabla Publicaciones(posts) en la base de datos con los siguientes campos:
+    - id (int, primary key, auto increment)
+    - title (varchar)
+    - content (text)
+    - created_at (timestamp)
+    - updated_at (timestamp)
+    - user_id (int, foreign key referencing users(id))
+- Siguiendo el mismo patrón MVC, crear el modelo, controlador y vistas necesarias para **registrar** y **listar publicaciones**.
+- En la lista de usuarios agregar los botones de **Ver publicaciones** y **Crear publicación** para cada usuario.
+
+:::tip
+**Logica de negocio:**  Se refiere a la parte del código que se encarga de procesar los datos y realizar las operaciones necesarias para cumplir con los requerimientos de la aplicación. Comunmente se encuentra en el modelo, pero puede estar en el controlador dependiendo de la complejidad de la aplicación.
+
+Se recomienda crear **metodos** en el modelo `User`, por ejemplo:
+-  `$user->getPosts()`, que devuelva todas las publicaciones de un usuario.
+-  `$user->createPost()`, que permita crear una nueva publicación.
+-  `$user->getPost($id)`, que devuelva una publicación específica por su ID..
+
+En el modelo `Post` se pueden crear los siguientes métodos:
+-  `$post->getUser()`, que devuelva el usuario que creó la publicación.
+:::
+</Card>
