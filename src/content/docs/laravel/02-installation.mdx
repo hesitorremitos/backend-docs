@@ -1,0 +1,63 @@
+---
+title: Instalación de Laravel
+description: Aprende a instalar Laravel y sus dependencias utilizando Composer, el gestor de dependencias de PHP. Sigue los pasos para configurar tu entorno de desarrollo y crear tu primera aplicación Laravel.
+keywords: instalación, laravel, composer, gestor de dependencias, entorno de desarrollo, aplicación laravel
+---
+
+Para instalar Laravel, es necesario contar con Composer, el gestor de dependencias de PHP. Composer facilita la instalación y actualización de las librerías y dependencias necesarias para tu proyecto. A continuación, te mostramos cómo instalar Laravel y sus dependencias utilizando Composer.
+
+## Requisitos previos
+- PHP 8.0
+- Composer instalado en tu sistema. Puedes descargarlo desde [getcomposer.org](https://getcomposer.org/download/).
+- Un sistema gestor de bases de datos como MySQL, PostgreSQL o SQLite, dependiendo de tus necesidades.
+
+## Instalacion de Composer
+Para instalar Composer, sigue estos pasos:
+1. Descarga el instalador desde [getcomposer.org](https://getcomposer.org/download/).
+2. Ejecuta el instalador y sigue las instrucciones en pantalla.
+3. Verifica la instalación ejecutando `composer --version` en tu terminal.
+
+:::note
+Por defecto *Laragon* ya incluye Composer, por lo que no es necesario instalarlo manualmente. Pero es recomendable añadirlo a las **Variables de entorno** para que puedas usarlo desde cualquier terminal.
+:::
+
+## actualización de Composer
+Para asegurarte de que tienes la última versión de Composer, puedes actualizarlo ejecutando el siguiente comando en tu terminal:
+```bash
+composer self-update
+```
+Esto descargará e instalará la última versión de Composer disponible.
+
+:::note
+Si estás utilizando **Laragon**, es casi **obligatorio** actualizar Composer, ya que Laragon incluye una versión de Composer que puede no estar actualizada.
+:::
+
+
+## Instalación de Laravel
+Existen varias formas de instalar Laravel, en este caso veremos 2 formas de hacerlo:
+1. Instalación mediante el instalador de Laravel.
+2. Instalación mediante Composer.
+
+### Instalación mediante el instalador de Laravel
+Laravel proporciona un instalador que facilita la creación de nuevos proyectos. Para instalarlo, ejecuta el siguiente comando en tu terminal:
+```bash
+composer global require laravel/installer
+```
+- `global` indica que el instalador de Laravel estará disponible en cualquier lugar de tu sistema.
+- `require` indica que estamos instalando un paquete específico.
+- `laravel/installer` es el nombre del paquete que estamos instalando.
+
+Una vez instalado, puedes crear un nuevo proyecto de Laravel ejecutando el siguiente comando:
+```bash
+laravel new [nombre-del-proyecto]
+```
+Esto creará un nuevo directorio con el nombre del proyecto y descargará la última versión de Laravel en ese directorio.
+
+## Instalación mediante Composer
+Si prefieres no usar el instalador de Laravel, puedes crear un nuevo proyecto directamente con Composer. Para hacerlo, ejecuta el siguiente comando en tu terminal:
+```bash
+composer create-project --prefer-dist laravel/laravel [nombre-del-proyecto]
+```
+- `create-project` indica que estamos creando un nuevo proyecto.
+- `--prefer-dist` indica que queremos descargar la versión más reciente de Laravel en formato comprimido.
+- `laravel/laravel` es el nombre del paquete que estamos instalando.
