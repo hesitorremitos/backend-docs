@@ -50,10 +50,7 @@ export default defineConfig({
 					label: 'Programacion del lado del servidor',
 					autogenerate: { directory: 'server-programming' },
 				},
-
-
-
-				
+				{label: 'Laravel', autogenerate: { directory: 'laravel' }},
 				{
 					label: 'Solucionario',
 					autogenerate: { directory: 'solutions' },
