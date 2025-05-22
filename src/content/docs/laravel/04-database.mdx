@@ -1,0 +1,46 @@
+---
+title: "Base de datos"
+description: "Aprende a interactuar con la base de datos en Laravel"
+---
+
+Laravel proporciona una capa de abstracción de base de datos que te permite interactuar con diferentes sistemas de base de datos utilizando una sintaxis común. En este capítulo, aprenderás cómo configurar y utilizar el ORM Eloquent, así como las consultas SQL nativas.
+
+## Configuración de la base de datos
+
+Laravel utiliza el archivo `config/database.php` para configurar la conexión a la base de datos. Este archivo contiene las configuraciones para cada conexión de base de datos que tu aplicación utiliza.
+
+
+## Variables de entorno
+
+Laravel utiliza el archivo `.env` para almacenar las variables de entorno de tu aplicación. Este archivo contiene las variables de entorno que tu aplicación utiliza.
+
+Los datos necesarios para la conexión a la base de datos se encuentran en el archivo `.env`.
+
+```sh
+# .env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+## Las migraciones
+
+Las migraciones son un mecanismo poderoso para crear y modificar tablas en tu base de datos.
+
+Para crear una migración, puedes utilizar el comando `php artisan make:migration nombre_de_la_migracion`.
+
+
+```bash
+php artisan make:migration create_users_table
+```
+Es importante seguir el patron [nombre_de_la_tabla]_[nombre_de_la_accion]
+
+
+
+
+
+
+
