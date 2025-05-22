@@ -252,6 +252,67 @@ El método `POST` es ideal para enviar datos al servidor y realizar operaciones 
 Asegúrate de validar siempre los datos enviados en solicitudes `POST` para garantizar la seguridad y consistencia de tu aplicación.
 :::
 
+## Métodos HTTP en Laravel
+
+Laravel soporta varios métodos HTTP que puedes utilizar en tus rutas para manejar diferentes tipos de solicitudes. A continuación, se describen los métodos más comunes:
+
+1. **GET**: Se utiliza para obtener recursos. Es el método más común y se usa para mostrar datos o vistas.
+   ```php
+   Route::get('/usuarios', function () {
+       return 'Lista de usuarios';
+   });
+   ```
+
+2. **POST**: Se utiliza para enviar datos al servidor, generalmente para crear nuevos recursos.
+   ```php
+   Route::post('/usuarios', function () {
+       return 'Usuario creado';
+   });
+   ```
+
+3. **PUT**: Se utiliza para actualizar recursos existentes. Normalmente se usa para actualizar todos los campos de un recurso.
+   ```php
+   Route::put('/usuarios/{id}', function ($id) {
+       return "Usuario con ID $id actualizado";
+   });
+   ```
+
+4. **PATCH**: Similar a PUT, pero se utiliza para actualizar parcialmente un recurso.
+   ```php
+   Route::patch('/usuarios/{id}', function ($id) {
+       return "Usuario con ID $id actualizado parcialmente";
+   });
+   ```
+
+5. **DELETE**: Se utiliza para eliminar recursos.
+   ```php
+   Route::delete('/usuarios/{id}', function ($id) {
+       return "Usuario con ID $id eliminado";
+   });
+   ```
+
+6. **OPTIONS**: Se utiliza para describir las opciones de comunicación para un recurso específico.
+   ```php
+   Route::options('/usuarios', function () {
+       return response('Métodos permitidos: GET, POST, PUT, DELETE', 200);
+   });
+   ```
+
+### Notas adicionales
+
+- Asegúrate de usar el método correcto según la acción que deseas realizar.
+- Puedes usar herramientas como Postman para probar tus rutas y métodos HTTP.
+- Laravel también soporta rutas con métodos múltiples usando `match` o `any`:
+  ```php
+  Route::match(['get', 'post'], '/contacto', function () {
+      return 'Formulario de contacto';
+  });
+
+  Route::any('/soporte', function () {
+      return 'Página de soporte';
+  });
+  ```
+
 ## Clientes REST
 
 Los clientes REST son herramientas diseñadas para interactuar con APIs RESTful. Estas herramientas permiten enviar solicitudes HTTP (GET, POST, PUT, DELETE, etc.) y recibir respuestas del servidor, facilitando el desarrollo, prueba y depuración de APIs.
