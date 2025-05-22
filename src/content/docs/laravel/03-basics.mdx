@@ -147,3 +147,142 @@ Route::get('/admin', function () {
 :::tip
   Recuerda que puedes combinar múltiples características del enrutamiento, como middleware, prefijos y nombres de rutas, para crear una estructura de enrutamiento más organizada y mantenible.
 :::
+
+El enrutamiento en Laravel es uno de los componentes más fundamentales y poderosos del framework. Permite definir cómo las solicitudes HTTP deben ser manejadas y dirigidas a los controladores correspondientes.
+
+### Rutas Básicas
+
+Las rutas más simples en Laravel se definen en el archivo `routes/web.php` o `routes/api.php`. Aquí tienes algunos ejemplos:
+
+```php
+// Ruta básica
+Route::get('/', function () {
+    return 'Bienvenido a Laravel';
+});
+
+// Ruta con parámetros
+Route::get('/usuario/{id}', function ($id) {
+    return 'Usuario: ' . $id;
+});
+
+// Ruta con parámetros opcionales
+Route::get('/usuario/{id?}', function ($id = null) {
+    return $id ? 'Usuario: ' . $id : 'Todos los usuarios';
+});
+```
+
+### Métodos HTTP
+
+Laravel soporta todos los métodos HTTP comunes:
+
+```php
+Route::get($uri, $callback);
+Route::post($uri, $callback);
+Route::put($uri, $callback);
+Route::patch($uri, $callback);
+Route::delete($uri, $callback);
+Route::options($uri, $callback);
+```
+
+### Rutas con Controladores
+
+En lugar de usar closures, puedes dirigir las rutas a métodos de controladores:
+
+```php
+Route::get('/usuario', [UserController::class, 'index']);
+Route::post('/usuario', [UserController::class, 'store']);
+```
+
+### Rutas con Nombres
+
+Puedes asignar nombres a las rutas para facilitar su referencia:
+
+```php
+Route::get('/usuario/perfil', function () {
+    // ...
+})->name('profile');
+```
+
+### Grupos de Rutas
+
+Los grupos de rutas permiten compartir atributos entre múltiples rutas:
+
+```php
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', function () {
+        // ...
+    });
+    
+    Route::get('/perfil', function () {
+        // ...
+    });
+});
+```
+
+### Rutas de Recursos
+
+Para crear rutas RESTful completas, puedes usar:
+
+```php
+Route::resource('posts', PostController::class);
+```
+
+<Steps>
+1. GET /posts
+    Muestra una lista de todos los posts (index)
+2. GET /posts/create
+    Muestra el formulario para crear un nuevo post (create)
+3. POST /posts
+    Almacena un nuevo post (store)
+4. GET /posts/[id]
+    Muestra un post específico (show)
+5. GET /posts/[id]/edit
+    Muestra el formulario para editar un post (edit)
+6. PUT/PATCH /posts/[id]
+    Actualiza un post específico (update)
+7. DELETE /posts/[id]
+    Elimina un post específico (destroy)
+</Steps>
+
+### Validación de Parámetros
+
+Puedes validar los parámetros de las rutas usando expresiones regulares:
+
+```php
+Route::get('/usuario/{id}', function ($id) {
+    // ...
+})->where('id', '[0-9]+');
+```
+
+### Rutas con Prefijos
+
+Puedes agregar prefijos a grupos de rutas:
+
+```php
+Route::prefix('admin')->group(function () {
+    Route::get('/usuarios', function () {
+        // ...
+    });
+});
+``` 
+
+### Middleware en Rutas
+
+Puedes aplicar middleware a rutas específicas:
+
+```php
+Route::get('/admin', function () {
+    // ...
+})->middleware('auth');
+```
+
+:::info
+  El sistema de enrutamiento de Laravel es extremadamente flexible y potente, permitiendo crear aplicaciones web complejas con una estructura clara y mantenible.
+:::
+
+:::tip
+  Recuerda que puedes combinar múltiples características del enrutamiento, como middleware, prefijos y nombres de rutas, para crear una estructura de enrutamiento más organizada y mantenible.
+:::
+
+
+## Variables de entorno
