@@ -1,6 +1,6 @@
 ---
-title: Elementos básicos de Laravel
-description: Aprende sobre los elementos básicos de Laravel, incluyendo la estructura de directorios, el ciclo de vida de una solicitud y la configuración del entorno. Familiarízate con los componentes esenciales que forman la base de cualquier aplicación Laravel.
+title: Enrutamiento
+description: Aprende a manejar el enrutamiento en Laravel utilizando los métodos GET y POST, así como la validación de datos y el uso de controladores.
 keywords: laravel, elementos básicos, estructura de directorios, ciclo de vida de una solicitud, configuración del entorno, componentes esenciales
 ---
 
@@ -8,7 +8,14 @@ keywords: laravel, elementos básicos, estructura de directorios, ciclo de vida 
 import { Steps,Card } from '@astrojs/starlight/components';
 
 
-Los elementos básicos de Laravel son fundamentales para comprender cómo funciona este potente framework. En esta sección, exploraremos la estructura de directorios, el ciclo de vida de una solicitud y la configuración del entorno. Familiarizarse con estos conceptos es esencial para desarrollar aplicaciones eficientes y escalables con Laravel.
+Laravel es un framework de PHP que facilita el desarrollo de aplicaciones web mediante un enfoque elegante y expresivo. Uno de los aspectos fundamentales de Laravel es su sistema de enrutamiento, que permite definir cómo se manejan las solicitudes HTTP y cómo se responden a ellas.
+El enrutamiento en Laravel es el proceso de asignar URLs a acciones específicas dentro de tu aplicación. Esto permite que los usuarios interactúen con tu aplicación a través de URLs amigables y significativas.
+
+El enrutamiento en Laravel es flexible y potente, permitiendo definir rutas simples, complejas, con parámetros y agrupadas. Además, puedes asociar rutas a controladores para mantener tu código organizado y limpio.
+
+:::tip
+A diferencia de **Apache** o **Nginx**, que manejan el enrutamiento a nivel de servidor, Laravel gestiona el enrutamiento a nivel de aplicación. Esto significa que puedes definir rutas específicas dentro de tu aplicación sin preocuparte por la configuración del servidor.
+:::
 
 ## Enrutamiento con el Método GET
 
