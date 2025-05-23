@@ -436,6 +436,26 @@ Thunder Client es una extensión para Visual Studio Code que permite interactuar
 Thunder Client es una herramienta ligera y fácil de usar para probar APIs RESTful directamente desde Visual Studio Code, ideal para desarrolladores que buscan una alternativa rápida y eficiente a herramientas más complejas como Postman.
 :::
 
+<Card>
+## Ejercicio :badge[Actividad]{variant=caution}
+Define una ruta `POST` en Laravel que reciba datos de un formulario de registro de usuario. La ruta debe validar los datos y devolver una respuesta.
+
+** Instrucciones:
+  - Crea una ruta `POST` que acepte los campos `nombre`, `email` y `password`.
+  - Valida que el `nombre` no debe estar vacio.
+    - Valida que el `email` sea un correo electrónico válido.
+    - Valida que la `password` tenga al menos 8 caracteres.
+
+**Ejemplos**:
+    - **Entrada**: `/registro` con los datos `{"nombre": "Juan", "email": "wrongemail", "password": "12345"}`
+        - **Salida**: `{"error": "El email no es válido"}`
+    - **Entrada**: `/registro` con los datos `{"nombre": "", "email": "example@example".com", "password": "12345678"}`
+        - **Salida**: `{"error": "El nombre no puede estar vacío"}`
+:::note
+Los mensajes de error pueden estar en otro idioma.
+:::
+</Card>
+
 ## Referencias
 
 Para más información sobre los temas tratados, puedes consultar los siguientes recursos:
