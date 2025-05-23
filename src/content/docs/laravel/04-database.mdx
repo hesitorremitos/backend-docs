@@ -1,46 +1,307 @@
 ---
-title: "Base de datos"
+title: "Base de datos y migraciones"
 description: "Aprende a interactuar con la base de datos en Laravel"
 ---
 
+import { LinkCard,Card } from '@astrojs/starlight/components'
+
 Laravel proporciona una capa de abstracción de base de datos que te permite interactuar con diferentes sistemas de base de datos utilizando una sintaxis común. En este capítulo, aprenderás cómo configurar y utilizar el ORM Eloquent, así como las consultas SQL nativas.
 
-## Configuración de la base de datos
+## Ejemplo rápido
 
-Laravel utiliza el archivo `config/database.php` para configurar la conexión a la base de datos. Este archivo contiene las configuraciones para cada conexión de base de datos que tu aplicación utiliza.
-
-
-## Variables de entorno
-
-Laravel utiliza el archivo `.env` para almacenar las variables de entorno de tu aplicación. Este archivo contiene las variables de entorno que tu aplicación utiliza.
-
-Los datos necesarios para la conexión a la base de datos se encuentran en el archivo `.env`.
-
-```sh
-# .env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=laravel
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-## Las migraciones
-
-Las migraciones son un mecanismo poderoso para crear y modificar tablas en tu base de datos.
-
-Para crear una migración, puedes utilizar el comando `php artisan make:migration nombre_de_la_migracion`.
-
+Para crear una tabla de usuarios en tu base de datos, puedes usar el siguiente comando y estructura:
 
 ```bash
 php artisan make:migration create_users_table
 ```
-Es importante seguir el patron [nombre_de_la_tabla]_[nombre_de_la_accion]
 
+Esto generará un archivo de migración en el directorio `database/migrations`. Luego, puedes definir la estructura de la tabla en el método `up`:
 
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+return new class extends Migration {
+    public function up(): void {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamps();
+        });
+    }
 
+    public function down(): void {
+        Schema::dropIfExists('users');
+    }
+};
+```
 
+Ejecuta el comando `php artisan migrate` para aplicar la migración y crear la tabla en la base de datos.
 
+<LinkCard
+  href="https://laravel.com/docs/11.x/migrations"
+  title="Documentación oficial de migraciones"
+  description="Consulta la documentación oficial para más información sobre migraciones en Laravel 11."
+  icon="https://laravel.com/img/logomark.min.svg"
+  iconWidth={24}
+  iconHeight={24}
+/>
 
+## Creación de tablas
+
+Para crear una tabla, utiliza el método `create` en el objeto `Schema`. Este método acepta el nombre de la tabla y una función de cierre que recibe un objeto `Blueprint` como argumento. Aquí tienes un ejemplo:
+
+```php
+Schema::create('posts', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->text('content');
+    $table->timestamps();
+});
+```
+
+<LinkCard
+  href="https://laravel.com/docs/11.x/migrations#creating-tables"
+  title="Creación de tablas"
+  description="Aprende más sobre cómo crear tablas en Laravel 11."
+  icon="https://laravel.com/img/logomark.min.svg"
+  iconWidth={24}
+  iconHeight={24}
+/>
+
+## Actualización de tablas
+
+Para actualizar una tabla existente, utiliza el método `table` en el objeto `Schema`. Por ejemplo, para añadir una nueva columna:
+
+```php
+Schema::table('users', function (Blueprint $table) {
+    $table->string('phone')->nullable();
+});
+```
+
+Si necesitas eliminar una columna, puedes hacerlo de la siguiente manera:
+
+```php
+Schema::table('users', function (Blueprint $table) {
+    $table->dropColumn('phone');
+});
+```
+
+<LinkCard
+  href="https://laravel.com/docs/11.x/migrations#modifying-tables"
+  title="Modificación de tablas"
+  description="Consulta cómo modificar tablas en Laravel 11."
+  icon="https://laravel.com/img/logomark.min.svg"
+  iconWidth={24}
+  iconHeight={24}
+/>
+
+## Eliminación de tablas
+
+Para eliminar una tabla, utiliza el método `dropIfExists` en el objeto `Schema`:
+
+```php
+Schema::dropIfExists('posts');
+```
+
+Este método asegura que la tabla solo se elimine si existe, evitando errores en caso contrario.
+
+<LinkCard
+  href="https://laravel.com/docs/11.x/migrations#dropping-tables"
+  title="Eliminación de tablas"
+  description="Aprende más sobre cómo eliminar tablas en Laravel 11."
+  icon="https://laravel.com/img/logomark.min.svg"
+  iconWidth={24}
+  iconHeight={24}
+/>
+
+## Comandos útiles
+
+Laravel proporciona varios comandos para trabajar con migraciones. Aquí hay algunos de los más comunes:
+
+| Comando                  | Descripción                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| `php artisan migrate`    | Ejecuta todas las migraciones pendientes.                                  |
+| `php artisan migrate:rollback` | Revierte la última operación de migración.                                |
+| `php artisan migrate:reset`    | Revierte todas las migraciones.                                          |
+| `php artisan migrate:refresh`  | Revierte y vuelve a ejecutar todas las migraciones.                      |
+| `php artisan migrate:fresh`    | Elimina todas las tablas y vuelve a ejecutar todas las migraciones.       |
+| `php artisan migrate:status`   | Muestra el estado de cada migración (si ha sido ejecutada o no).          |
+
+<LinkCard
+  href="https://laravel.com/docs/11.x/migrations#artisan-commands"
+  title="Comandos de Artisan"
+  description="Consulta la lista completa de comandos relacionados con migraciones en Laravel 11."
+  icon="https://laravel.com/img/logomark.min.svg"
+  iconWidth={24}
+  iconHeight={24}
+/>
+
+## Ejercicio: Creando tablas relacionadas
+
+En este ejercicio, aprenderás a crear dos tablas relacionadas utilizando migraciones en Laravel. Las tablas serán `authors` y `books`, donde cada libro estará asociado a un autor.
+
+### Paso 1: Crear la migración para la tabla `authors`
+
+Ejecuta el siguiente comando para generar la migración:
+
+```bash
+php artisan make:migration create_authors_table
+```
+
+En el archivo generado, define la estructura de la tabla `authors`:
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void {
+        Schema::create('authors', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void {
+        Schema::dropIfExists('authors');
+    }
+};
+```
+
+### Paso 2: Crear la migración para la tabla `books`
+
+Ejecuta el siguiente comando para generar la migración:
+
+```bash
+php artisan make:migration create_books_table
+```
+
+En el archivo generado, define la estructura de la tabla `books` y establece la relación con `authors`:
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    public function up(): void {
+        Schema::create('books', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->unsignedBigInteger('author_id');
+            $table->foreign('author_id')->references('id')->on('authors')->onDelete('cascade');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void {
+        Schema::dropIfExists('books');
+    }
+};
+```
+
+### Paso 3: Ejecutar las migraciones
+
+Aplica las migraciones para crear las tablas en la base de datos:
+
+```bash
+php artisan migrate
+```
+
+### Resultado esperado
+
+Después de ejecutar las migraciones, deberías tener dos tablas en tu base de datos:
+
+- `authors`: Contiene los datos de los autores.
+- `books`: Contiene los datos de los libros y una clave foránea que referencia a la tabla `authors`.
+
+Este ejercicio te ayudará a comprender cómo crear relaciones entre tablas utilizando migraciones en Laravel.
+
+<Card>
+## Actividad: Ejercicio propuesto
+
+Crea dos tablas relacionadas: `categories` y `products`. Cada producto debe estar asociado a una categoría. Define las migraciones necesarias para crear estas tablas y establecer la relación entre ellas.
+
+### Requisitos:
+
+1. Tabla **categories:**
+   - Debe contener un campo `id` como clave primaria.
+   - Un campo `name` para el nombre de la categoría.
+
+2. Tabla **products** con los siguientes campos:
+   - Debe contener un campo `id` como clave primaria.
+   - `name` para el nombre del producto.
+   - `price` para el precio del producto.
+   - `description` para la descripción del producto.
+   - `stock` para la cantidad disponible.
+   - `available` para indicar si el producto está disponible.
+   - `timestamps` para las fechas de creación y actualización.
+   - `category_id` como clave foránea que referencia a la tabla `categories`.
+
+3. **Relación:**
+   - Cada producto debe estar asociado a una categoría.
+   - Si se elimina una categoría, todos los productos asociados deben eliminarse automáticamente.
+
+### Tareas:
+
+1. Genera las migraciones para ambas tablas.
+2. Define las estructuras de las tablas y establece la relación entre ellas.
+3. Ejecuta las migraciones para crear las tablas en la base de datos.
+
+### Resultado esperado:
+
+Después de completar el ejercicio, deberías tener dos tablas en tu base de datos:
+
+- `categories`: Contiene los datos de las categorías.
+- `products`: Contiene los datos de los productos y una clave foránea que referencia a la tabla `categories`.
+
+Este ejercicio te ayudará a practicar la creación de relaciones entre tablas utilizando migraciones en Laravel.
+</Card>
+
+## Introducción a los modelos
+
+En Laravel, los modelos son la representación de las tablas de la base de datos en tu aplicación. Los modelos te permiten interactuar con los datos de manera sencilla utilizando Eloquent ORM.
+
+### Crear un modelo
+
+Para crear un modelo llamado `Author`, utiliza el siguiente comando:
+
+```bash
+php artisan make:model Author
+```
+
+Esto generará un archivo en el directorio `app/Models/Author.php` con la siguiente estructura básica:
+
+```php title="app/Models/Author.php"
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Author extends Model
+{
+    use HasFactory;
+}
+```
+
+### Usar el modelo en una ruta
+
+Puedes utilizar el modelo `Author` en una ruta para interactuar con la base de datos. Por ejemplo, para obtener todos los autores:
+
+```php title="routes/web.php"
+use App\Models\Author;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/authors', function () {
+    return Author::all();
+});
+```
+
+Este ejemplo define una ruta que devuelve todos los registros de la tabla `authors` en formato JSON.
+
+Con esto, estás listo para comenzar a trabajar con modelos en Laravel. En el siguiente capítulo, profundizaremos en cómo utilizar Eloquent ORM para realizar operaciones más avanzadas.
