@@ -52,10 +52,6 @@ export default defineConfig({
 				},
 				{label: 'Laravel', autogenerate: { directory: 'laravel' }},
 				{
-					label: 'Laravel en español', // Etiqueta del enlace
-					link: 'https://documentacionlaravel.com/docs/11.x', // URL del enlace
-				},
-				{
 					label: 'Solucionario',
 					autogenerate: { directory: 'solutions' },
 					collapsed: true,
