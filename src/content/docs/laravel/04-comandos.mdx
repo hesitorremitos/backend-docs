@@ -1,0 +1,96 @@
+---
+title: Guia de Comandos
+---
+
+## Requerimientos
+- Composer instalado
+- PHP
+
+## Comprobar PHP y composer
+```bash
+php --version
+composer --version
+```
+> El segundo comando actualizara o indicara que composer ya se encuentra instalado.
+
+## Creacion de proyecto laravel
+```bash
+composer create-project laravel/laravel [nombre]
+```
+> En [nombre] debera ir el nombre del proyecto
+> El proyecto se creara en la ruta acltual de la terminal
+
+## Comandos de laravel
+Todos los comandos de laravel parten a partir de usar `artisan` con php, entonces todos los comandos iniciaran con `php artisan`
+### Ejecucion del servidor de desarrollo de laravel
+```bash
+php artisan serve
+```
+> Es importante tener la ventana abierta el comando en ejecucion, cuando esta se cierre tambien lo hara el servidor.
+
+### Instalacion de API(OPCIONAL)
+En versiones determinadas la API no viene habilitada po defecto. Puede comprobar esto buscando el archivo `routes/api.php`
+```
+php artisan install:api
+```
+> Si ve que el archivo ya existe no es necesario escribir el comando
+
+### Creando las migraciones(tablas)
+```bash
+php artisan make:migration create_[tabla]_table
+```
+> El nombre de [table] debera ser en plural con terminacion en "s"
+
+### Creando los comtroladores
+```bash
+php artisan make:controller [modelo]Controller
+```
+
+### Creando los Modelos
+```bash
+php artisan make:model [modelo]
+```
+> El modelo debe estar en singular
+
+
+### Creacion de multiples recursos de laravel
+Este comando nos permite la creacion de multiples recursos
+```bash
+php artisan make:model [modelo] -m -c -r --api
+```
+- **m** crea la migracion para el modelo, la tabla sera con la terminacion 's' del modelo
+- **c** Crea el controlador correspondiente a el modelo
+- **r** Hace que el controlador tenga predefinido los metodos mas esenciales CRUD
+- **--api** indicamos que todos los recursos se crearan para una **api**
+
+Es posible acortar todo este comando
+```bash
+php artisan make:model [modelo] -mcr --api
+```
+
+> Se debe tener cuidado con las migraciones, ya que por defecto, si usted define el modelo "Facultad", por convencion laravel creara una tabla con una 's' al final "Facultads"
+
+
+### Ejecutar las migraciones
+Para insertar las tablas definidas en las migraciones
+```bash
+php artisan migrate
+```
+
+En caso de que quier hacer una migracion de '0'
+```bash
+php artisan migrate:fresh
+```
+
+### Listar rutas
+Tambien es posible listar todas las rutas definidas en `routes/`
+```bash
+php artisan route:list
+```
+
+### Otros comandos
+En caso de que quiera ver todos los comandos o mas detalles, escriba
+```bash
+php artisan list
+```
+> Esto desplegara una lista de los comandos que tiene dispoinble laravel
