@@ -1,0 +1,88 @@
+---
+title: Ideas para Proyectos
+description: Ideas para REST API con Laravel
+keywords: laravel, proyectos, ideas, rest api
+---
+
+import { B, Info, Note } from '@astrojs/starlight/components'
+
+:::info
+Estos proyectos están inspirados en el repositorio [Public APIs](https://github.com/public-apis/public-apis).  
+¡Ideales para practicar tus habilidades con **Laravel** y APIs REST!
+:::
+
+**Requisitos generales:**
+- Implementa operaciones **CRUD** completas.
+- Las migraciones deben estar a consideración del Estudiante.
+- Incluye al menos **2 modelos relacionados** y sus migraciones.
+- Las rutas deben seguir el estándar **REST**.
+- Debe estar desplegado en el hosting [Cloud Panel](https://cloud.inf-530.click)
+
+---
+
+## API de anime
+
+Una API que permita a los usuarios buscar información sobre animes, personajes, episodios y más.
+
+**Ejemplo de endpoints:**
+- `/animes`: Listar todos los animes.
+- `/animes?año=2023`: Filtrar animes por año.
+- `/animes?genero=acción`: Filtrar animes por género.
+- `/animes?nombre=Naruto`: Buscar animes por nombre.
+- `/animes/{id}`: Obtener detalles de un anime específico.
+- `/animes/{id}/personajes`: Listar personajes de un anime específico.
+
+**Inspiración:**  
+[Jikan API Docs](https://docs.api.jikan.moe/) — Una API no oficial para obtener información sobre animes y mangas.
+
+---
+
+## API de Rick and Morty
+
+Una API que permita a los usuarios explorar el universo de Rick and Morty, incluyendo personajes, episodios y ubicaciones.
+
+**Ejemplo de endpoints:**
+- `/personajes`: Listar todos los personajes.
+- `/personajes/{id}`: Obtener detalles de un personaje específico.
+- `/episodios`: Listar todos los episodios.
+- `/episodios?desde=2023-01-01&hasta=2023-12-31`: Filtrar episodios por fecha.
+- `/episodios?nombre=Pilot`: Buscar episodios por nombre.
+- `/episodios/{id}`: Obtener detalles de un episodio específico.
+- `/episodios/{id}/personajes`: Listar personajes de un episodio específico.
+
+**Inspiración:**  
+[Rick and Morty API Docs](https://rickandmortyapi.com/documentation) — Documentación oficial de la API de Rick and Morty.
+
+---
+
+## API de películas
+
+Una API que permita a los usuarios buscar información sobre películas, actores, géneros y más.
+
+**Ejemplo de endpoints:**
+- `/peliculas`: Listar todas las películas.
+- `/peliculas?año=2023`: Filtrar películas por año.
+- `/peliculas?genero=acción`: Filtrar películas por género.
+- `/peliculas?nombre=Inception`: Buscar películas por nombre.
+- `/peliculas/{id}`: Obtener detalles de una película específica.
+- `/peliculas/{id}/actores`: Listar actores de una película específica.
+
+**Inspiración:**  
+[The Movie Database (TMDB) API Docs](https://developers.themoviedb.org/3) — Documentación oficial de la API de TMDB.
+
+:::note
+Requiere una clave de API para acceder a los datos, por lo que deberás registrarte en su sitio web para obtener una clave de API gratuita.
+:::
+
+
+## API de Musica
+Una API que permita a los usuarios buscar información sobre canciones, artistas, álbumes y géneros musicales.
+**Ejemplo de endpoints:**
+- `/canciones`: Listar todas las canciones.
+- `/canciones?año=2023`: Filtrar canciones por año.
+- `/canciones?genero=rock`: Filtrar canciones por género.
+- `/canciones?nombre=Bohemian Rhapsody`: Buscar canciones por nombre.
+- `/canciones/{id}`: Obtener detalles de una canción específica.
+- `/canciones/{id}/artistas`: Listar artistas de una canción específica.
+**Inspiración:**  
+[Spotify API Docs](https://developer.spotify.com/documentation/web-api/) — Documentación oficial de la API de Spotify.
