@@ -1,0 +1,64 @@
+---
+title: Práctica 3
+description: Práctica 3 del curso de Backend 
+---
+
+import {FileTree} from "@astrojs/starlight/components"
+
+Dato el siguiente tabla de productos:
+
+| Campo | Descripción |
+| ----- | ----------- |
+| id | Identificador único del producto |
+| nombre | Nombre del producto |
+| precio | Precio del producto |
+| stock | Cantidad disponible en inventario |
+| creado_en | Fecha de creación del producto |
+| actualizado_en | Fecha de última actualización del producto |
+| eliminado | Indica si el producto ha sido eliminado (booleano) |
+
+1. Realizar una API RESTful para gestionar productos con las siguientes operaciones:
+  - Crear un producto
+  - Leer todos los productos
+  - Leer un producto por ID
+  - Actualizar un producto por ID
+  - Eliminar un producto por ID (marcar como eliminado)
+
+2. Usar la arquitectura MVC (Excluyendo la capa de vista) para estructurar el proyecto.
+3. Debe hacerlo en Flask y Express.
+
+## En Flask
+- Usar Flask para crear la API RESTful.
+- Los modelos deben funcionar en MySQL y PostgreSQL.
+<FileTree>
+- models
+  - Producto.py
+- controllers
+  - ProductoController.py
+- routes
+  - api.py
+- app.py
+- requirements.txt
+- .env
+- .gitignore // (opcional)
+</FileTree>
+
+:::note
+Defina una variable de entorno `DB_TYPE` u otro nombre para seleccionar entre MySQL y PostgreSQL.
+:::
+
+## En Express
+- Usar Express, Sequelize para crear la API RESTful.
+- Los modelos deben funcionar en MySQL y PostgreSQL.
+<FileTree>
+- models
+  - Producto.js
+- controllers
+  - ProductoController.js
+- routes
+    - api.js
+- app.js
+- db.config.js
+- package.json
+- .gitignore // (opcional)
+</FileTree>

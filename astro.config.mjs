@@ -56,6 +56,10 @@ export default defineConfig({
 					autogenerate: { directory: 'solutions' },
 					collapsed: true,
 				},
+				{
+					label: 'Practicas',
+					autogenerate: { directory: 'practicas' },
+				}
 				
 				
 			],
