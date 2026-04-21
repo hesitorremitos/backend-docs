@@ -1,66 +1,115 @@
 ---
-title: ¿Qué es?
+title: Que es?
 description: Programacion del lado del servidor
-draft: false
 ---
 
-La programación del lado del servidor es el proceso de crear sitios o aplicaciones web que se ejecutan en un servidor y que son entregados al navegador del usuario.
+import { Card, Steps } from '@astrojs/starlight/components'
+import { LinkCard } from '@astrojs/starlight/components'
+
+# Programacion del Lado del Servidor
+
+La programacion del lado del servidor (Server-Side Programming) es el proceso de crear aplicaciones que se ejecutan en un servidor web y generan respuestas dinamicas para los clientes.
 
 ```d2 pad=30
 shape: sequence_diagram
 client: CLIENTE
-server: SERVER
+server: SERVIDOR
 
-# (*->*).style.animated: true
-client->server: Peticion de recursos
-server->client: Respuesta
+database: BASE DE DATOS
+
+client->server: 1. Peticion HTTP (GET /usuarios)
+server->database: 2. Consulta SQL
+
+database->server: 3. Resultados
+server->server: 4. Procesar datos (PHP)
+server->client: 5. Respuesta HTML/JSON
 
 ```
 
+## Desarrollo Web Backend
 
-## Desarollo web Backend
-Actualmente, las aplicaciones web son muy complejas, y poseen caracteristicas como:
-- Autenticación de usuarios.
-- Almacenamiento de datos.	
-- Envio de correos electronicos.
-- Procesamiento de pagos.
-- Entre otros.
+Las aplicaciones web modernas requieren funcionalidades complejas que solo pueden ejecutarse en el servidor:
 
-Para poder llevar a cabo estas tareas se necesita de un **servidor web** que se encargue de recibir las solicitudes de los navegadores de los usuarios y de enviarles el contenido HTML de las páginas web.
+<Steps>
+1. **Autenticacion de usuarios**: Validacion de credenciales, gestion de sesiones y tokens de seguridad.
+2. **Almacenamiento de datos**: Persistencia en bases de datos, cache y sistemas de archivos.
+3. **Procesamiento de negocio**: Reglas de negocio, calculos, integraciones con otros servicios.
+4. **Seguridad**: Encriptacion, validacion de datos, proteccion contra ataques (SQL Injection, XSS).
+5. **Comunicaciones**: Envio de correos, notificaciones push, WebSockets.
+</Steps>
 
-Dichas tareas se realizan en el **backend** de una aplicacion web, que es la parte que se ejecuta en el servidor y que se encarga de procesar las solicitudes de los usuarios y de enviarles el contenido HTML de las paginas web.
+## El Servidor Web
 
+Un servidor web es un programa que escucha peticiones HTTP y responde con contenido. Los mas utilizados en el ecosistema PHP son:
 
-Para hacer esto posible se requiere de un **servidor web**, que es un programa que se ejecuta en un servidor y que se encarga de recibir las solicitudes de los navegadores de los usuarios y de enviarles el contenido HTML de las páginas web.
+| Servidor | Caracteristicas | Uso Principal |
+|----------|----------------|---------------|
+| **Apache HTTP Server** | Flexible, modular, archivo `.htaccess` | Hosting compartido, proyectos PHP tradicionales |
+| **Nginx** | Alto rendimiento, bajo consumo de recursos, proxy inverso | Aplicaciones de alta concurrencia, microservicios |
+| **Caddy** | Configuracion automatica HTTPS, moderno | Desarrollo local, despliegues simples |
+| **IIS** | Integrado con Windows, soporte .NET | Entornos empresariales Windows |
 
-Los programas mas comunes para crear un servidor web son:
-- **Apache2**, es el mas usado en el mundo.
-- **Nginx**, es el segundo mas usado en el mundo.
-- **IIS**, es el servidor web de Microsoft, funciona solo en Windows.
-- Otros que se apoyan a un lenguaje de programación como Node.js, Python, Ruby, etc.
+:::tip[Apache vs Nginx]
+**Apache** utiliza un enfoque basado en procesos/threads con configuracion por directorio (`.htaccess`), ideal para hosting compartido. **Nginx** usa arquitectura asincrona orientada a eventos, manejando mas conexiones simultaneas con menos memoria. Para aplicaciones Laravel modernas, Nginx es generalmente preferido en produccion.
+:::
 
+## Stack Tecnologico Backend
 
+Un stack backend tipico incluye multiples componentes que trabajan en conjunto:
 
-## Servidor web(Apache2)
-En el curso de programación del lado del servidor, se utilizara Apache2 como servidor web, ya que es el mas usado en el mundo y es muy facil de configurar.
+<Card title="Componentes del Stack Backend" icon="information">
+- **Servidor Web**: Apache2 o Nginx - recibe y responde peticiones HTTP
+- **Interprete PHP**: Ejecuta el codigo PHP y genera HTML dinamico
+- **Base de Datos**: MySQL/MariaDB, PostgreSQL, SQLite - almacenamiento persistente
+- **Cache**: Redis o Memcached - almacenamiento en memoria para rendimiento
+- **Gestor de Dependencias**: Composer - manejo de librerias PHP
+- **Control de Versiones**: Git - seguimiento de cambios en el codigo
+</Card>
 
-Algunas de sus caracteristicas son:
-- **Codigo abierto**, lo que significa que es gratuito y que cualquiera puede utilizarlo.
-- **Amplio soporte**, lo que significa que hay una gran cantidad de documentación y tutoriales disponibles.
-- **Recursos de la comunidad**, lo que significa que hay una gran cantidad de bibliotecas y frameworks disponibles.
-- **Multiproposito**, lo que significa que se puede utilizar para crear una amplia variedad de aplicaciones web.
+## Entornos de Desarrollo Integrados
 
+Configurar manualmente cada componente del stack puede ser complejo. Por eso existen paquetes que incluyen todo lo necesario:
 
-## Otras Herramientas de Backend
-Aparte de un *servidor web se requieren elementos adicionales para poder ejecutar aplicaciones web, como ser:
-- **Base de datos**, comunmente el backend de una aplicacion web necesita almacenar datos en una base de datos.
-- **Lenguaje de programación**, es el encargado de generar el contenido HTML **dinamico** que se envia al navegador del usuario.
-- **Framework**, en aplicaciones web complejas se necesita un framework que facilite el desarrollo de la aplicacion.
-- **Herramientas de desarrollo**, para poder desarrollar aplicaciones web se necesita un editor de codigo, un navegador web, etc.
-- Otros como **servidor de correo, servidor de archivos, etc**.
+| Paquete | Sistema Operativo | Componentes | Ideal Para |
+|---------|------------------|-------------|------------|
+| **XAMPP** | Windows, Linux, macOS | Apache, MariaDB, PHP, Perl | Principiantes, multiplataforma |
+| **Laragon** | Windows | Apache/Nginx, MySQL, PHP, Redis, Node.js | Desarrollo Windows (usado en este curso) |
+| **WAMP** | Windows | Apache, MySQL, PHP | Solo Windows |
+| **MAMP** | macOS, Windows | Apache/Nginx, MySQL, PHP | Usuarios Mac |
+| **LAMP** | Linux | Apache, MySQL, PHP | Servidores Linux |
 
-Como se puede ver, la programación del lado del servidor es un proceso complejo que requiere de una gran cantidad de herramientas y conocimientos para poder llevarlo a cabo.
+:::note[Sobre Laragon]
+En este curso utilizamos **Laragon** por su facilidad de uso en Windows, soporte para multiples versiones de PHP, configuracion intuitiva y herramientas integradas como SSL automatico y creacion rapida de proyectos Laravel.
+:::
 
-Debido a esta dificultad nacen las aplicaciones como **XAMPP, WAMP, LAMP, MAMP**, que son paquetes que incluyen todo lo necesario para poder desarrollar aplicaciones web en un solo lugar.
+## Arquitectura Cliente-Servidor
 
-![Development tools](https://th.bing.com/th/id/OIP.G1SuEkExtWWtP3_mtunhygHaD3?rs=1&pid=ImgDetMain)
+El modelo cliente-servidor es la base de la web moderna:
+
+```
++-----------+        HTTP Request        +-------------+
+|           | -------------------------> |             |
+|  Cliente  |                            |  Servidor   |
+| (Browser) | <------------------------- |   (PHP)     |
+|           |      HTML/JSON/CSS/JS      |             |
++-----------+                            +-------------+
+                                                  |
+                                                  v
+                                           +-------------+
+                                           |   MySQL     |
+                                           |  (Datos)    |
+                                           +-------------+
+```
+
+1. El **cliente** (navegador) envia una peticion HTTP al servidor
+2. El **servidor web** recibe la peticion y la pasa al interprete PHP
+3. **PHP** ejecuta la logica de la aplicacion, consultando la base de datos si es necesario
+4. PHP genera una respuesta (tipicamente HTML o JSON)
+5. El servidor web envia la respuesta al cliente
+6. El cliente renderiza la respuesta para el usuario
+
+<LinkCard
+  href="https://developer.mozilla.org/es/docs/Learn/Server-side"
+  title="MDN Web Docs - Programacion del lado del servidor"
+  description="Guia completa de Mozilla sobre desarrollo server-side."
+/>

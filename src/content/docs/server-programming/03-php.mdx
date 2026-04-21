@@ -1,214 +1,207 @@
 ---
-title: Programación en PHP
-description: Guía completa de programación en PHP
+title: Programacion en PHP
+description: Guia completa de programacion en PHP
 sidebar:
-  label: Programación en PHP
+  label: Programacion en PHP
 draft: false
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Card, CardGrid } from '@astrojs/starlight/components';
-import { Steps,LinkCard } from '@astrojs/starlight/components';
+import { Steps, LinkCard } from '@astrojs/starlight/components';
 
-
-PHP es un lenguaje de programación que fue creado principalmente para añadir funcionalidades a las páginas web. Es un lenguaje de programación de propósito general, que se puede utilizar para crear aplicaciones web, aplicaciones de escritorio, aplicaciones móviles, etc.
+PHP (PHP: Hypertext Preprocessor) es un lenguaje de programacion de proposito general especialmente disenado para el desarrollo web del lado del servidor. Fue creado por Rasmus Lerdorf en 1994 y es mantenido actualmente por The PHP Group.
 
 <CardGrid>
-  <Card title="Código Abierto" icon="open-book">
-    Gratuito y accesible para todos los desarrolladores.
+  <Card title="Codigo Abierto" icon="open-book">
+    Gratuito y accesible para todos los desarrolladores. Licencia PHP License.
   </Card>
   <Card title="Amplio Soporte" icon="document">
-    Extensa documentación y recursos de aprendizaje.
+    Documentacion oficial completa en [php.net](https://www.php.net/docs.php)
   </Card>
   <Card title="Comunidad Activa" icon="random">
     Gran cantidad de bibliotecas y frameworks disponibles.
   </Card>
   <Card title="Multiparadigma" icon="setting">
-    Soporta programación orientada a objetos, procedural y funcional.
+    Soporta programacion orientada a objetos, procedural y funcional.
   </Card>
 </CardGrid>
 
-## Introducción a PHP
-PHP es un lenguaje que usa la **Programacion procedural** principalmente, ya que la mayoria de sus funciones son de este tipo. Sin embargo, también soporta la **Programación orientada a objetos** (OOP) y la **Programación funcional**.
-:::nota
-La programacion procedural es un paradigma de programación que se basa en la idea de dividir un programa en procedimientos o funciones.  Entonces los datos primitivos no poseen metodos ni propiedades, y para tratar con ellos debemos usar funciones integradas del lenguaje.
+:::tip[Fuentes Oficiales]
+Esta guia se basa en la [documentacion oficial de PHP](https://www.php.net/manual/es/) y las mejores practicas de [PHP: The Right Way](https://phptherightway.com/).
+:::
 
-## Configuración Inicial
+## Configuracion Inicial
+
 <Steps>
-1. Instalar PHP en tu sistema
+1. Verificar que PHP esta instalado en tu sistema (incluido en Laragon)
 2. Configurar un servidor web (Apache/Nginx)
-3. Configurar un editor de código
+3. Configurar un editor de codigo
 4. Crear tu primer archivo PHP
 </Steps>
 
-:::note[Estructura Básica]
-- Los archivos PHP deben tener la extensión `.php`
-- El código PHP se delimita con `<?php` y `?>`
-- Si el archivo solo contiene código PHP, se recomienda omitir el cierre `?>`
+:::note[Estructura Basica]
+- Los archivos PHP deben tener la extension `.php`
+- El codigo PHP se delimita con `<?php` y `?>`
+- Si el archivo solo contiene codigo PHP, se recomienda omitir el cierre `?>`
+- Se recomienda usar `declare(strict_types=1);` para mayor seguridad de tipos
 :::
 
 ## Fundamentos
 
-### Sintaxis Básica
-`echo` y `print` son constructores del lenguaje que permiten mostrar una o más cadenas de texto. La principal diferencia es que `print` solo puede tomar un argumento y siempre devuelve 1.
+### Sintaxis Basica
+`echo` y `print` son constructores del lenguaje que permiten mostrar una o mas cadenas de texto. La principal diferencia es que `print` solo puede tomar un argumento y siempre devuelve 1.
 
 :::tip
-Tambien es posible usar las secuencias de escape `\n` y `\t` para crear saltos de línea y tabulaciones respectivamente.
+Tambien es posible usar las secuencias de escape `\n` y `\t` para crear saltos de linea y tabulaciones respectivamente.
 :::
-
 
 ```php
 <?php
+declare(strict_types=1);
+
 echo "Hola Mundo";
-echo "Hola Mundo\n"; // con salto de línea
+echo "Hola Mundo\n"; // con salto de linea
 ```
 ```php
 <?php
+declare(strict_types=1);
+
 print("Hola Mundo");
-print "Hola Mundo"; // También válido
+print "Hola Mundo"; // Tambien valido
 ```
 
 ### Variables
-Las variables en PHP son contenedores para almacenar información. Se identifican siempre con el símbolo `$` seguido del nombre de la variable.
+Las variables en PHP son contenedores para almacenar informacion. Se identifican siempre con el simbolo `$` seguido del nombre de la variable.
 
 ```php
-// Variables y ejemplos de uso
-$nombre = "Juan" // String
-echo $nombre; // Salida: Hola Juan
+<?php
+declare(strict_types=1);
 
-$edad = 25; // Integer
-echo $edad; // Salida: 30
+$nombre = "Juan";    // String
+$edad = 25;          // Integer
+$precio = 19.99;     // Float
+$activo = true;      // Boolean
+$datos = null;       // Null - Sin valor
 
-$precio = 19.99; // Float 
-echo $precio; // Salida: 39.98
-
-$activo = true; // Boolean 
-echo $activo; // Salida: 1
-
-$datos = null; // Null - Sin valor
-echo $datos; // Salida: (nada)
+// PHP 8.x: Tipado estricto recomendado
+function saludar(string $nombre): string {
+    return "Hola, $nombre";
+}
 ```
 
 #### Obtener el Tipo de Dato
-Para poder obtener el tipo de dato de una variable, se puede usar la función `gettype()`. También se pueden usar funciones como `is_string()`, `is_int()`, `is_float()`, para verificar el tipo.
+Para poder obtener el tipo de dato de una variable, se puede usar la funcion `gettype()`. Tambien se pueden usar funciones como `is_string()`, `is_int()`, `is_float()`, para verificar el tipo.
 
 ```php
-// Ejemplo de tipos de datos
+<?php
+declare(strict_types=1);
+
 $nombre = "Juan";
 $edad = 25;
 $precio = 19.99;
 $activo = true;
 $datos = null;
-echo gettype($nombre); // string
-echo gettype($edad); // integer
-echo gettype($precio); // double
-echo gettype($activo); // boolean
-echo gettype($datos); // NULL
+
+echo gettype($nombre);  // string
+echo gettype($edad);    // integer
+echo gettype($precio);  // double
+echo gettype($activo);  // boolean
+echo gettype($datos);   // NULL
 ```
 
-### Concatenación
-La concatenación en PHP se realiza con el operador `.` (punto). 
+### Concatenacion
+La concatenacion en PHP se realiza con el operador `.` (punto).
 
 ```php
-// Concatenación de cadenas
+<?php
+declare(strict_types=1);
+
 $nombre = "Juan";
-$apellido = "Pérez";
-echo $nombre . " " . $apellido; //Nombre completo
-print("Hola " . $nombre . "\n"); // Hola Juan
+$apellido = "Perez";
+echo $nombre . " " . $apellido; // Nombre completo
 ```
-También se puede usar la interpolación de variables dentro de comillas dobles.
+
+Tambien se puede usar la interpolacion de variables dentro de comillas dobles.
 
 ```php
-echo "Hola, $nombre $apellido\n"; // Hola, Juan Pérez
-print("Hola, $nombre $apellido\n"); // Hola, Juan Pérez
-```
+<?php
+declare(strict_types=1);
 
-Otra forma de concatenar es usando las comillas simples, pero en este caso no se interpretan las variables.
+$nombre = "Juan";
+$apellido = "Perez";
+echo "Hola, $nombre $apellido\n"; // Hola, Juan Perez
+```
 
 :::caution
-Las comillas simples no interpretan variables, por lo que se deben usar comillas dobles para la interpolación.
+Las comillas simples no interpretan variables, por lo que se deben usar comillas dobles para la interpolacion.
 ```php
-echo 'Hola, $nombre $apellido\n'; // Esto no interpreta las variables
+echo 'Hola, $nombre'; // Esto NO interpreta las variables
 ```
 :::
 
 ### Operadores
-Los operadores son iguales a muchos otros lenguajes de programación.
 
-#### Operadores Aritméticos
-Los operadores aritméticos son los que se utilizan para realizar operaciones matemáticas.
-
-```php	
-// Ejemplo de operadores aritméticos
-$suma = 5 + 3;      // Suma
-$resta = 10 - 2;    // Resta
-$multiplicacion = 4 * 2; // Multiplicación
-$division = 10 / 2; // División
-```
-#### Operadores de Comparación
-Los operadores de comparación se utilizan para comparar dos valores y devuelven un valor booleano (true o false).
-
-| Operador | Descripción |
-|----------|-------------|
-| `==`     | Igual a    |
-| `<`    | Menor que  |
-| `>`    | Mayor que  |
-| `<=`   | Menor o igual que |
-| `>=`   | Mayor o igual que |
-| `!=`   | Diferente de |
-| `===`  | Igual y del mismo tipo |
-| NULL | Se intepreta como falso |
-| 1 | Se intepreta como verdadero |
-| 0 | Se intepreta como falso |
-
-```php	
-1 == 1 // true
-1 > 2 // false
-1 < 2 // true
-1 != 2 // true
-/ etc...
-```
-
-#### Operadores Lógicos
-Los operadores lógicos se utilizan para combinar expresiones booleanas.
-| Operador | Descripción |
-|----------|-------------|
-| `&&`     | Y lógico    |
-| `\|\|`     | O lógico    |
-| `!`      | No lógico   |
-
+#### Operadores Aritmeticos
 ```php
-// Ejemplo de operadores lógicos
-1 == 1 && 2 == 2 // true AND true = true
-1 == 1 || 2 == 3 // true OR false = true
-1 == 1 && 2 == 3 // true AND false = false
-! (1 == 1) // false
+<?php
+declare(strict_types=1);
+
+$suma = 5 + 3;
+$resta = 10 - 2;
+$multiplicacion = 4 * 2;
+$division = 10 / 2;
+$modulo = 10 % 3;
 ```
 
-#### Operadores de Asignación
-Los operadores de asignación se utilizan para asignar valores a variables.
+#### Operadores de Comparacion
 
+| Operador | Descripcion |
+|----------|-------------|
+| `==`     | Igual a (comparacion flexible) |
+| `===`    | Identico a (igual y mismo tipo) |
+| `<`      | Menor que |
+| `>`      | Mayor que |
+| `<=`     | Menor o igual que |
+| `>=`     | Mayor o igual que |
+| `!=`     | Diferente de |
+| `!==`    | No identico |
+
+:::caution[Importante]
+Se recomienda usar `===` y `!==` en lugar de `==` y `!=` para evitar problemas de conversion de tipos. Por ejemplo, `"1" == 1` es `true`, pero `"1" === 1` es `false`.
+:::
+
+#### Operadores Logicos
+| Operador | Descripcion |
+|----------|-------------|
+| `&&`     | Y logico |
+| `\|\|`   | O logico |
+| `!`      | No logico |
+
+#### Operadores de Asignacion
 ```php
-// Ejemplo de operadores de asignación
-$numero = 5; // Asignación simple
-$numero += 2; // Asignación con suma
-$numero -= 3; // Asignación con resta
-$numero *= 2; // Asignación con multiplicación
-$numero /= 2; // Asignación con división
-$numero %= 2; // Asignación con módulo
+<?php
+declare(strict_types=1);
+
+$numero = 5;    // Asignacion simple
+$numero += 2;   // Suma y asigna
+$numero -= 3;   // Resta y asigna
+$numero *= 2;   // Multiplica y asigna
+$numero /= 2;   // Divide y asigna
+$numero %= 2;   // Modulo y asigna
 ```
 
 ### Estructuras de Control
-:::tip[Buena Práctica]
-Siempre usa llaves `{}` en tus estructuras de control, incluso para bloques de una sola línea, para mejorar la legibilidad.
-:::
 
 <Tabs>
   <TabItem label="If/Else">
     ```php
+    <?php
+    declare(strict_types=1);
+
     $edad = 20;
     $mensaje = '';
-    
+
     if ($edad < 18) {
         $mensaje = "Eres menor de edad";
     } elseif ($edad >= 18 && $edad < 65) {
@@ -218,32 +211,42 @@ Siempre usa llaves `{}` en tus estructuras de control, incluso para bloques de u
     }
     ```
   </TabItem>
-  <TabItem label="Switch">
+  <TabItem label="Switch (vs Match)">
     ```php
+    <?php
+    declare(strict_types=1);
+
+    // Forma tradicional con switch
     $diaSemana = "Lunes";
-    
     switch ($diaSemana) {
         case 'Lunes':
             echo "Inicio de semana";
             break;
         case 'Viernes':
-            echo "¡Fin de semana!";
+            echo "Fin de semana!";
             break;
         default:
-            echo "Día normal";
+            echo "Dia normal";
     }
+
+    // Forma moderna con match (PHP 8.0+)
+    $mensaje = match($diaSemana) {
+        'Lunes' => "Inicio de semana",
+        'Viernes' => "Fin de semana!",
+        default => "Dia normal",
+    };
     ```
   </TabItem>
 </Tabs>
 
 ### Bucles
-:::note[Definición]
-Los bucles permiten ejecutar un bloque de código repetidamente mientras se cumpla una condición determinada.
-:::
 
 <Tabs>
   <TabItem label="For">
     ```php
+    <?php
+    declare(strict_types=1);
+
     // Tabla de multiplicar
     $numero = 5;
     for ($i = 1; $i <= 10; $i++) {
@@ -253,17 +256,22 @@ Los bucles permiten ejecutar un bloque de código repetidamente mientras se cump
   </TabItem>
   <TabItem label="While">
     ```php
-    // Contador regresivo
+    <?php
+    declare(strict_types=1);
+
     $countdown = 5;
     while ($countdown > 0) {
         echo $countdown . "...\n";
         $countdown--;
     }
-    echo "¡Despegue!";
+    echo "Despegue!";
     ```
   </TabItem>
   <TabItem label="Foreach">
     ```php
+    <?php
+    declare(strict_types=1);
+
     $frutas = ['manzana', 'pera', 'uva'];
     foreach ($frutas as $indice => $fruta) {
         echo "$indice: $fruta\n";
@@ -272,216 +280,391 @@ Los bucles permiten ejecutar un bloque de código repetidamente mientras se cump
   </TabItem>
 </Tabs>
 
-<LinkCard title='Sintaxis Basica' href="https://www.php.net/manual/es/language.basic-syntax.php" target="_blank" description='Documentacion oficial de PHP, donde se explica la sintaxis basica del lenguaje.'>
-Documentacion oficial de PHP, donde se explica la sintaxis basica del lenguaje.
-</LinkCard>
-
-## Programacion procedural o procedimental
-La programación procedural es un paradigma de programación que se basa en la idea de dividir un programa en procedimientos o funciones. En este paradigma, los datos primitivos no poseen métodos ni propiedades, y para tratar con ellos debemos usar funciones integradas del lenguaje.
-
-A diferencia de otros lenguajes como **javascript**, donde los objetos son la base del lenguaje, en PHP procedural los procedimientos o funciones son la base del lenguaje.
-
-Entonces para transformar datos o realizar operaciones sobre ellos, se utilizan funciones integradas del lenguaje. Por ejemplo, para trabajar con cadenas de texto, se utilizan funciones como `strlen()`, `strtoupper()`, `strtolower()`, etc.
-
-```php
-// Ejemplo de funciones integradas
-$nombre = "Juan Pérez";
-$longitud = strlen($nombre);
-$mayus = strtoupper($nombre);
-$tam = strlen($mayus);
-```
-:::tip
-Por defecto y el php puro es procedural, pero con la incorporacion de extensiones y librerias, se puede usar la programacion orientada a objetos.
-:::
+<LinkCard title='Sintaxis Basica' href="https://www.php.net/manual/es/language.basic-syntax.php" target="_blank" description='Documentacion oficial de PHP, donde se explica la sintaxis basica del lenguaje.'/>
 
 ## Arrays
-Los arrays son estructuras de datos que permiten almacenar múltiples valores en una sola variable. PHP soporta arrays indexados y asociativos.
+
+Los arrays son estructuras de datos que permiten almacenar multiples valores en una sola variable. PHP soporta arrays indexados y asociativos.
 
 ### Arrays Indexados
-Podriamos decir que son los arrays normales, donde cada elemento tiene un índice numérico. Para acceder a un elemento, se usa el índice entre corchetes `[]`.
-
 ```php
-// Ejemplo de array indexado
+<?php
+declare(strict_types=1);
+
 $frutas = ['manzana', 'pera', 'uva'];
 echo $frutas[0]; // Salida: manzana
 echo $frutas[1]; // Salida: pera
 echo $frutas[2]; // Salida: uva
 ```
-#### Manipulando Arrays
-Como se dijo, php es procedural, por lo que para manipular arrays se utilizan funciones integradas del lenguaje.
 
-| Funcion | Descripción |
+#### Funciones de Arrays
+
+| Funcion | Descripcion |
 |---------|-------------|
-| `count()` | Devuelve el número de elementos en un array |
-| `array_push()` | Agrega uno o más elementos al final de un array |
-| `array_pop()` | Elimina el último elemento de un array |
-| `array_shift()` | Elimina el primer elemento de un array |
-| `array_unshift()` | Agrega uno o más elementos al principio de un array |
-| `array_slice()` | Extrae una porción de un array |
-| `array_merge()` | Combina uno o más arrays |
-| etc... | Hay muchas más funciones para manipular arrays en PHP |
+| `count()` | Devuelve el numero de elementos |
+| `array_push()` | Agrega elementos al final |
+| `array_pop()` | Elimina el ultimo elemento |
+| `array_shift()` | Elimina el primer elemento |
+| `array_unshift()` | Agrega elementos al principio |
+| `array_merge()` | Combina arrays |
+| `array_filter()` | Filtra elementos |
+| `array_map()` | Aplica una funcion a cada elemento |
 
-:::note
-A diferente de otros lenguajes, PHP no requiere declarar el tipo de array. Un array puede contener diferentes tipos de datos.
 ```php
-// Array con diferentes tipos de datos
-$datos = ['Juan', 25, 19.99, true];
-echo $datos[0]; // Salida: Juan
-echo $datos[1]; // Salida: 25
-echo $datos[2]; // Salida: 19.99
-echo $datos[3]; // Salida: 1 (true)
-```
-:::
+<?php
+declare(strict_types=1);
 
+$frutas = ['manzana', 'pera', 'uva'];
+$frutas[] = 'naranja';              // Agregar al final
+array_push($frutas, 'kiwi');        // Lo mismo
+array_pop($frutas);                 // Elimina el ultimo
+array_shift($frutas);               // Elimina el primero
+```
 
 ### Arrays Asociativos
-Los arrays asociativos son similares a los **dictcionarios** en otros lenguajes, donde cada elemento tiene una clave asociada. Para acceder a un elemento, se usa la clave entre comillas.
+Los arrays asociativos son similares a los diccionarios en otros lenguajes.
 
 ```php
-// Ejemplo de array asociativo
+<?php
+declare(strict_types=1);
+
 $persona = [
     'nombre' => 'Juan',
     'edad' => 25,
-    'ciudad' => 'Madrid'
+    'ciudad' => 'Madrid',
     'activo' => true
 ];
 echo $persona['nombre']; // Salida: Juan
-echo $persona['edad']; // Salida: 25
-echo $persona['ciudad']; // Salida: Madrid
+echo $persona['edad'];   // Salida: 25
 ```
-<LinkCard title='Funciones de Arrays' href="https://www.php.net/manual/es/ref.array.php" target="_blank" description='Documentacion oficial de PHP, donde se explica las funciones de arrays.'>
-</LinkCard>
 
-
-### Funciones de Arrays
-```php
-// Funciones útiles para arrays
-$frutas = ['manzana', 'pera', 'uva'];
-$frutas[] = 'naranja'; // Agregar elemento al final
-array_push($frutas, 'kiwi'); // Hace lo mismo
-array_pop($frutas); // Elimina el último elemento
-array_shift($frutas); // Elimina el primer elemento
-``` 
-
-
+<LinkCard title='Funciones de Arrays' href="https://www.php.net/manual/es/ref.array.php" target="_blank" description='Documentacion oficial de PHP sobre funciones de arrays.'/>
 
 ## Funciones
-Las funciones son bloques de código reutilizables que realizan una tarea específica y pueden recibir parámetros y devolver valores.
+
+Las funciones son bloques de codigo reutilizables que realizan una tarea especifica.
 
 ```php
-// Ejemplo de función con tipos y valor por defecto
+<?php
+declare(strict_types=1);
+
 function calcularPrecioTotal(float $precio, float $impuesto = 0.21): float {
     return $precio * (1 + $impuesto);
 }
 
-// Uso de la función
 echo calcularPrecioTotal(100);      // 121
 echo calcularPrecioTotal(100, 0.1); // 110
 ```
-### Requerimientos minimos
-Se debe de conocer minimamente los siguientes conceptos:
-- Parámetros y argumentos
-- Valores de retorno(Devolver valores)
-- Funciones anónimas (closures)
 
-<LinkCard title='Funciones en PHP' href="https://www.php.net/manual/es/language.functions.php" target="_blank" description='Documentacion oficial de PHP, donde se explica las funciones en PHP.'/>
+:::tip[Funciones modernas PHP 8.0+]
+- **Union Types**: `function foo(int|float $numero): void`
+- **Named Arguments**: `calcularPrecioTotal(precio: 100, impuesto: 0.1)`
+- **Nullsafe Operator**: `$usuario?->getDireccion()?->ciudad`
+- **Match Expressions**: Reemplazo mas potente de switch
+:::
 
+<LinkCard title='Funciones en PHP' href="https://www.php.net/manual/es/language.functions.php" target="_blank" description='Documentacion oficial de PHP sobre funciones.'/>
 
-## Programación Orientada a Objetos(Pendiente)
-Ejemplo de creación de una clase en PHP:
+## Programacion Orientada a Objetos (POO)
+
+La Programacion Orientada a Objetos es un paradigma fundamental en PHP moderno. Desde PHP 5.0 (2004) y especialmente con PHP 7.0+ y 8.0+, el soporte para OOP es robusto y completo.
+
+:::tip[Fuentes]
+Basado en [Object Oriented Programming en php.net](https://www.php.net/manual/es/language.oop5.php) y principios SOLID de [PHP: The Right Way](https://phptherightway.com/#object-oriented-programming).
+:::
+
+### Clases y Objetos
+
+Una **clase** es una plantilla que define las propiedades y metodos de un objeto. Un **objeto** es una instancia de una clase.
 
 ```php
+<?php
+declare(strict_types=1);
+
 class Persona {
-    private $nombre;
-    public $edad;
-    
-    public function __construct($nombre, $edad) {
+    // Propiedades (atributos)
+    public string $nombre;
+    public int $edad;
+    private ?string $email = null;  // PHP 7.4+: Tipado de propiedades
+
+    // Constructor (PHP 8.0+: Constructor Property Promotion)
+    public function __construct(string $nombre, int $edad) {
         $this->nombre = $nombre;
         $this->edad = $edad;
     }
-    
-    public function getNombre() {
-        return $this->nombre;
+
+    // Metodos
+    public function saludar(): string {
+        return "Hola, mi nombre es {$this->nombre}";
     }
 
-    public function saludar() {
-        return "Hola, mi nombre es " . $this->nombre;
+    public function setEmail(string $email): void {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidArgumentException('Email invalido');
+        }
+        $this->email = $email;
+    }
+
+    public function getEmail(): ?string {
+        return $this->email;
+    }
+}
+
+// Crear un objeto (instancia)
+$persona = new Persona("Juan", 25);
+echo $persona->saludar();
+$persona->setEmail("juan@example.com");
+```
+
+### PHP 8.0+: Constructor Property Promotion
+
+PHP 8.0 introdujo una sintaxis mas concisa para el constructor:
+
+```php
+<?php
+declare(strict_types=1);
+
+class Producto {
+    public function __construct(
+        public string $nombre,
+        public float $precio,
+        private int $stock = 0
+    ) {}
+
+    public function estaDisponible(): bool {
+        return $this->stock > 0;
+    }
+}
+
+$producto = new Producto("Laptop", 999.99, 10);
+echo $producto->nombre;  // Acceso directo a propiedad publica
+```
+
+### Encapsulamiento: Visibilidad
+
+| Modificador | Acceso |
+|-------------|--------|
+| `public` | Accesible desde cualquier lugar |
+| `protected` | Accesible desde la clase y sus hijas |
+| `private` | Solo accesible desde la clase que lo define |
+
+```php
+<?php
+declare(strict_types=1);
+
+class CuentaBancaria {
+    private float $saldo = 0;
+
+    public function depositar(float $cantidad): void {
+        if ($cantidad <= 0) {
+            throw new InvalidArgumentException("La cantidad debe ser positiva");
+        }
+        $this->saldo += $cantidad;
+    }
+
+    public function retirar(float $cantidad): bool {
+        if ($cantidad > $this->saldo) {
+            return false;
+        }
+        $this->saldo -= $cantidad;
+        return true;
+    }
+
+    public function getSaldo(): float {
+        return $this->saldo;
     }
 }
 ```
-### Requerimientos minimos
-Se debe de conocer minimamente los siguientes conceptos:
-- Propiedades
-- Métodos
-- Definición de clases
-- Visibilidad o encapsulamiento (public, private, protected)
-<LinkCard title='Programacion Orientada a Objetos' href="https://www.php.net/manual/es/language.oop5.php" target="_blank" description='Documentacion oficial de PHP, donde se explica la programacion orientada a objetos.'>
-</LinkCard>
 
-## Objetos en PHP
-Los objetos son instancias de clases y pueden contener propiedades y métodos.
-- Propiedades: Variables que pertenecen a la clase.
-- Métodos: Funciones que pertenecen a la clase.
+### Herencia
 
-Para acceder a las propiedades y métodos de un objeto, se utiliza el operador `->`.
+La herencia permite que una clase hija herede propiedades y metodos de una clase padre.
 
 ```php
-// Crear un objeto de la clase Persona
-$persona = new Persona("Juan", 25);
-echo $persona->getNombre();
-echo $persona->saludar();
-echo $persona->edad;
+<?php
+declare(strict_types=1);
+
+class Animal {
+    public function __construct(
+        protected string $nombre
+    ) {}
+
+    public function hacerSonido(): string {
+        return "Sonido generico";
+    }
+}
+
+class Perro extends Animal {
+    public function hacerSonido(): string {
+        return "Guau!";
+    }
+
+    public function ladrar(): string {
+        return "{$this->nombre} dice: Guau!";
+    }
+}
+
+$perro = new Perro("Firulais");
+echo $perro->hacerSonido(); // Guau!
+echo $perro->ladrar();      // Firulais dice: Guau!
 ```
 
-### Requerimientos minimos
-Se debe de conocer minimamente los siguientes conceptos:
-- Instanciación de objetos
-- Acceso a propiedades y métodos
-<LinkCard title='Objetos en PHP' href="https://www.php.net/manual/es/language.types.object.php">
-Documentacion oficial de PHP, donde se explica los objetos en PHP.
-</LinkCard>
+### Interfaces y Clases Abstractas
 
-## Base de Datos
-<Steps>
-1. Conexión a MySQL
-2. Consultas básicas (CRUD)
-3. Prepared Statements
-4. Manejo de errores
-</Steps>
+Las **interfaces** definen un contrato que las clases deben cumplir. Las **clases abstractas** pueden tener metodos implementados y abstractos.
 
-## Seguridad
-- Validación de datos
-- Sanitización de entradas
-- Prevención de SQL Injection
-- Manejo de sesiones
-- CSRF Protection
+```php
+<?php
+declare(strict_types=1);
 
-## Buenas Prácticas
+// Interface: solo define metodos, no implementacion
+interface Figura {
+    public function area(): float;
+    public function perimetro(): float;
+}
+
+// Clase abstracta: puede tener metodos implementados
+abstract class FiguraBase implements Figura {
+    public function __construct(
+        protected string $color
+    ) {}
+
+    public function getColor(): string {
+        return $this->color;
+    }
+}
+
+class Rectangulo extends FiguraBase {
+    public function __construct(
+        string $color,
+        private float $ancho,
+        private float $alto
+    ) {
+        parent::__construct($color);
+    }
+
+    public function area(): float {
+        return $this->ancho * $this->alto;
+    }
+
+    public function perimetro(): float {
+        return 2 * ($this->ancho + $this->alto);
+    }
+}
+
+$rect = new Rectangulo("rojo", 5, 3);
+echo $rect->area();      // 15
+echo $rect->perimetro(); // 16
+```
+
+### Traits
+
+Los **Traits** permiten reutilizar codigo en multiples clases sin usar herencia multiple.
+
+```php
+<?php
+declare(strict_types=1);
+
+trait Logger {
+    public function log(string $mensaje): void {
+        echo "[" . date("Y-m-d H:i:s") . "] $mensaje\n";
+    }
+}
+
+class Usuario {
+    use Logger;
+
+    public function __construct(
+        public string $nombre
+    ) {}
+
+    public function guardar(): void {
+        $this->log("Guardando usuario: {$this->nombre}");
+    }
+}
+
+$usuario = new Usuario("Ana");
+$usuario->guardar(); // [2024-...] Guardando usuario: Ana
+```
+
+### Namespace y Autoloading
+
+Los **namespaces** organizan el codigo y evitan colisiones de nombres.
+
+```php
+<?php
+declare(strict_types=1);
+
+namespace App\Models;
+
+class Usuario {
+    // ...
+}
+```
+
+Uso:
+```php
+<?php
+declare(strict_types=1);
+
+require_once 'App/Models/Usuario.php';
+
+use App\Models\Usuario;
+
+$usuario = new Usuario();
+```
+
+:::tip[PSR-4 Autoloading]
+En proyectos modernos se usa [Composer](https://getcomposer.org/) con PSR-4 para autoloading automatico de clases, siguiendo los estandares de [PHP-FIG](https://www.php-fig.org/psr/psr-4/).
+:::
+
+<LinkCard title='POO en PHP' href="https://www.php.net/manual/es/language.oop5.php" target="_blank" description='Documentacion oficial de PHP sobre Programacion Orientada a Objetos.'/>
+
+## Manejo de Errores y Excepciones
+
+PHP soporta manejo de excepciones similar a otros lenguajes orientados a objetos.
+
+```php
+<?php
+declare(strict_types=1);
+
+function dividir(float $a, float $b): float {
+    if ($b === 0.0) {
+        throw new DivisionByZeroError("No se puede dividir por cero");
+    }
+    return $a / $b;
+}
+
+try {
+    $resultado = dividir(10, 0);
+} catch (DivisionByZeroError $e) {
+    echo "Error: " . $e->getMessage();
+} catch (Exception $e) {
+    echo "Error general: " . $e->getMessage();
+} finally {
+    echo "Esto siempre se ejecuta";
+}
+```
+
+## Buenas Practicas en PHP Moderno
+
 <CardGrid>
-  <Card title="Código Limpio" icon="approve-check">
-    Mantener un estilo de código consistente
+  <Card title="Strict Types" icon="approve-check">
+    Siempre usa `declare(strict_types=1);` al inicio de archivos PHP para evitar conversiones implicitas de tipos.
   </Card>
-  <Card title="Seguridad" icon="warning">
-    Implementar medidas de seguridad básicas
+  <Card title="Prepared Statements" icon="warning">
+    Siempre usa consultas preparadas para prevenir inyeccion SQL. Nunca concatenes variables directamente en SQL.
   </Card>
-  <Card title="Optimización" icon="rocket">
-    Optimizar el rendimiento del código
+  <Card title="Validacion de Datos" icon="rocket">
+    Usa `filter_var()` para validar emails, URLs, etc. Valida siempre los datos de entrada del usuario.
   </Card>
-  <Card title="Documentación" icon="document">
-    Documentar el código adecuadamente
+  <Card title="Namespaces" icon="document">
+    Usa namespaces para organizar tu codigo y seguir los estandares PSR-4.
   </Card>
 </CardGrid>
 
-## Frameworks y Herramientas
-- Laravel
-- Symfony
-- CodeIgniter
-- Composer
-- PHPUnit
-
-## Recursos Adicionales
-:::tip[Enlaces Útiles]
-- [Documentación oficial de PHP](https://www.php.net/docs.php)
-- [PHP The Right Way](https://phptherightway.com/)
+:::tip[Recursos Adicionales]
+- [PHP: The Right Way](https://phptherightway.com/) - Guia de mejores practicas actualizada
+- [Documentacion oficial de PHP](https://www.php.net/docs.php)
 - [PHP Standards Recommendations (PSR)](https://www.php-fig.org/psr/)
 :::

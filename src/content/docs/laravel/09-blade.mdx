@@ -1,0 +1,393 @@
+---
+title: Blade y Middleware
+description: Aprende a usar el motor de plantillas Blade y el sistema de Middleware en Laravel.
+---
+
+import { Card, Steps, Tabs, TabItem } from '@astrojs/starlight/components'
+import { LinkCard } from '@astrojs/starlight/components'
+
+# Blade y Middleware
+
+## Blade: Motor de Plantillas
+
+<Card title="Que es Blade?" icon="information">
+**Blade** es el motor de plantillas simple pero potente incluido con Laravel. A diferencia de otros motores de plantillas, Blade permite usar codigo PHP plano en las vistas. Todas las vistas de Blade se compilan a codigo PHP plano y se almacenan en cache hasta que se modifican.
+</Card>
+
+:::tip[Documentacion Oficial]
+Esta guia se basa en la [documentacion oficial de Blade de Laravel](https://laravel.com/docs/11.x/blade).
+:::
+
+### Sintaxis Basica
+
+#### Mostrar Datos
+
+```blade
+{{-- Mostrar variable --}}
+{{ $nombre }}
+
+{{-- Mostrar con escape HTML (seguro) --}}
+{{ $htmlContent }}
+
+{{-- Mostrar sin escape (cuidado!) --}}
+{!! $htmlContent !!}
+
+{{-- Blade PHP echo --}}
+{{{ $nombre }}}
+```
+
+:::caution
+Usa siempre `{{ }}` para escapar HTML y prevenir ataques XSS. Usa `{!! !!}` solo cuando confies plenamente en el contenido.
+:::
+
+#### Directivas de Control
+
+```blade
+{{-- Condicionales --}}
+@if($usuario->esAdmin())
+    <p>Bienvenido, Administrador</p>
+@elseif($usuario->esModerador())
+    <p>Bienvenido, Moderador</p>
+@else
+    <p>Bienvenido, Usuario</p>
+@endif
+
+{{-- Unless (if not) --}}
+@unless($usuario->esActivo())
+    <p>Tu cuenta esta inactiva</p>
+@endunless
+
+{{-- Isset --}}
+@isset($registro)
+    <p>El registro existe</p>
+@endisset
+
+{{-- Empty --}}
+@empty($productos)
+    <p>No hay productos disponibles</p>
+@endempty
+```
+
+#### Bucles
+
+```blade
+{{-- Foreach --}}
+@foreach($usuarios as $usuario)
+    <p>{{ $usuario->nombre }}</p>
+@endforeach
+
+{{-- Forelse (foreach con caso vacio) --}}
+@forelse($productos as $producto)
+    <p>{{ $producto->nombre }} - ${{ $producto->precio }}</p>
+@empty
+    <p>No hay productos</p>
+@endforelse
+
+{{-- For --}}
+@for($i = 0; $i < 10; $i++)
+    <p>Iteracion {{ $i }}</p>
+@endfor
+
+{{-- While --}}
+@while($condicion)
+    <p>Ejecutando...</p>
+@endwhile
+
+{{-- Loop variable en foreach --}}
+@foreach($usuarios as $usuario)
+    <p>{{ $loop->iteration }}. {{ $usuario->nombre }}</p>
+    {{-- $loop->first, $loop->last, $loop->even, $loop->odd, $loop->count --}}
+@endforeach
+```
+
+#### Herencia de Layouts
+
+**Layout base** (`resources/views/layouts/app.blade.php`):
+
+```blade
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('titulo', 'Mi App')</title>
+    @stack('styles')
+</head>
+<body>
+    <header>
+        @section('header')
+            <h1>Mi Aplicacion</h1>
+        @show
+    </header>
+
+    <main>
+        @yield('contenido')
+    </main>
+
+    <footer>
+        @yield('footer', 'Pie de pagina por defecto')
+    </footer>
+
+    @stack('scripts')
+</body>
+</html>
+```
+
+**Vista que extiende** (`resources/views/usuarios/index.blade.php`):
+
+```blade
+@extends('layouts.app')
+
+@section('titulo', 'Lista de Usuarios')
+
+@section('header')
+    @parent
+    <nav>
+        <a href="/">Inicio</a>
+        <a href="/usuarios">Usuarios</a>
+    </nav>
+@endsection
+
+@section('contenido')
+    <h2>Usuarios Registrados</h2>
+
+    @forelse($usuarios as $usuario)
+        <div class="usuario-card">
+            <h3>{{ $usuario->nombre }}</h3>
+            <p>{{ $usuario->email }}</p>
+        </div>
+    @empty
+        <p>No hay usuarios registrados.</p>
+    @endforelse
+@endsection
+
+@push('scripts')
+    <script>
+        console.log('Pagina de usuarios cargada');
+    </script>
+@endpush
+```
+
+#### Componentes Blade
+
+Los componentes permiten crear elementos reutilizables:
+
+```bash
+php artisan make:component Alert
+```
+
+**Clase del componente** (`app/View/Components/Alert.php`):
+
+```php
+<?php
+
+namespace App\View\Components;
+
+use Illuminate\View\Component;
+
+class Alert extends Component
+{
+    public function __construct(
+        public string $tipo = 'info',
+        public string $mensaje = ''
+    ) {}
+
+    public function render()
+    {
+        return view('components.alert');
+    }
+}
+```
+
+**Vista del componente** (`resources/views/components/alert.blade.php`):
+
+```blade
+<div class="alert alert-{{ $tipo }}">
+    {{ $mensaje }}
+</div>
+```
+
+Uso:
+```blade
+<x-alert tipo="success" mensaje="Operacion completada!" />
+<x-alert tipo="danger" mensaje="Error en el servidor." />
+<x-alert tipo="warning" mensaje="Verifica tus datos." />
+```
+
+---
+
+## Middleware
+
+<Card title="Que es Middleware?" icon="shield">
+El **Middleware** es un mecanismo de filtracion de peticiones HTTP. Proporciona una capa entre la peticion del usuario y la aplicacion, permitiendo ejecutar codigo antes o despues de que la peticion llegue al controlador.
+</Card>
+
+### Tipos de Middleware en Laravel
+
+| Tipo | Descripcion |
+|------|-------------|
+| **Global** | Se ejecuta en todas las peticiones HTTP |
+| **Route** | Se asigna a rutas especificas |
+| **Group** | Se aplica a un grupo de rutas |
+
+### Crear Middleware
+
+```bash
+php artisan make:middleware VerificarEdad
+```
+
+Esto crea el archivo `app/Http/Middleware/VerificarEdad.php`:
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class VerificarEdad
+{
+    /**
+     * Maneja una solicitud entrante.
+     */
+    public function handle(Request $request, Closure $next, int $edadMinima = 18): Response
+    {
+        if ($request->user()->edad < $edadMinima) {
+            return redirect('inicio')->with('error', 'No tienes la edad requerida.');
+        }
+
+        return $next($request);
+    }
+}
+```
+
+### Registrar Middleware
+
+En `bootstrap/app.php` (Laravel 11) o `app/Http/Kernel.php` (versiones anteriores):
+
+```php
+// Alias para usar en rutas
+use App\Http\Middleware\VerificarEdad;
+
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->alias([
+        'verificar.edad' => VerificarEdad::class,
+    ]);
+})
+```
+
+### Usar Middleware en Rutas
+
+```php
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsuarioController;
+
+// Middleware en ruta individual
+Route::get('/dashboard', [UsuarioController::class, 'dashboard'])
+    ->middleware('auth');
+
+// Middleware con parametros
+Route::get('/adultos', [UsuarioController::class, 'adultos'])
+    ->middleware('verificar.edad:21');
+
+// Grupo de rutas con middleware
+Route::middleware(['auth', 'verificar.edad'])->group(function () {
+    Route::get('/panel', [UsuarioController::class, 'panel']);
+    Route::get('/configuracion', [UsuarioController::class, 'configuracion']);
+});
+
+// Middleware para API
+Route::middleware('auth:sanctum')->prefix('api')->group(function () {
+    Route::get('/user', fn($request) => $request->user());
+});
+```
+
+### Middlewares Incorporados de Laravel
+
+| Middleware | Descripcion |
+|------------|-------------|
+| `auth` | Verifica que el usuario este autenticado |
+| `auth.basic` | Autenticacion HTTP basica |
+| `auth:sanctum` | Autenticacion con tokens Sanctum |
+| `cache.headers` | Agrega headers de cache a la respuesta |
+| `can` | Verifica politicas de autorizacion |
+| `guest` | Verifica que el usuario NO este autenticado |
+| `signed` | Valida URLs firmadas |
+| `throttle` | Limita la tasa de peticiones |
+| `verified` | Verifica que el email este verificado |
+
+### Ejemplo: Middleware de Logging
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
+
+class LogPeticiones
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        $inicio = microtime(true);
+
+        $respuesta = $next($request);
+
+        $duracion = round((microtime(true) - $inicio) * 1000, 2);
+
+        Log::info('Peticion HTTP', [
+            'metodo' => $request->method(),
+            'url' => $request->fullUrl(),
+            'ip' => $request->ip(),
+            'status' => $respuesta->getStatusCode(),
+            'duracion_ms' => $duracion,
+        ]);
+
+        return $respuesta;
+    }
+}
+```
+
+## Ejercicio Practico
+
+<Card title="Sistema con Blade y Middleware" icon="rocket">
+Implementa un panel de administracion con las siguientes caracteristicas:
+
+### Requisitos:
+
+1. **Layout principal** con:
+   - Navegacion con enlaces a Dashboard, Usuarios, Productos
+   - Seccion para mensajes flash (exito/error)
+   - Footer dinamico con el año actual
+
+2. **Middleware `RolMiddleware`** que:
+   - Verifique que el usuario tenga un rol especifico
+   - Reciba el rol como parametro (`admin`, `editor`)
+   - Redirija con error si no tiene permisos
+
+3. **Vistas Blade** para:
+   - Dashboard (accesible por todos los autenticados)
+   - Gestion de Usuarios (solo admin)
+   - Gestion de Productos (admin y editor)
+
+4. **Componentes**:
+   - `<x-card titulo="...">` para paneles
+   - `<x-tabla :items="$usuarios">` para listados
+   - `<x-alert tipo="success|error|warning">` para mensajes
+
+<LinkCard
+  href="https://laravel.com/docs/11.x/blade"
+  title="Documentacion de Blade"
+  description="Documentacion oficial del motor de plantillas Blade."
+  icon="https://laravel.com/img/logomark.min.svg"
+  iconWidth={24}
+  iconHeight={24}
+/>
+</Card>

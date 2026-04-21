@@ -1,76 +1,93 @@
 ---
-title: Preparacion de entorno
-description: Preparacion de entorno de desarrollo
-draft: false
+title: Preparacion del entorno
+description: Configuracion del entorno de desarrollo para PHP y Laravel
 ---
 
-import { Steps,Card,FileTree } from '@astrojs/starlight/components';
+import { Steps, Card, CardGrid } from '@astrojs/starlight/components'
 
+# Preparacion del Entorno de Desarrollo
 
-La anterior sección nos dio una idea de lo que es la programación del lado del servidor y de las herramientas que se necesitan para poder llevarla a cabo. En esta seccion veremos las herramientas que nos permitiran **emular** dichas herramientas de manera mas facil y rapida.
+Para el desarrollo backend con PHP, necesitamos un servidor web local que ejecute PHP y una base de datos. En este curso utilizaremos **Laragon**, un entorno de desarrollo ligero y completo para Windows.
 
-## Entorno de desarollo
-En el desarollo de aplicaciones existen escencialmente dos entornos, el de **producción** y el de **desarrollo**. El entorno de producción es el entorno en el que se ejecuta la aplicación en un servidor real, mientras que el entorno de desarrollo es el entorno en el que se desarrolla la aplicación.
+## Instalacion de Laragon
 
-```d2 pad=20
-laragon:{
-    direction: left
-    label: Laragon
-    icon.near: top-left
-    icon: https://miro.medium.com/v2/resize:fit:800/1*SNA3tR3GPoiPNTH8ZR_fVA.png
-    grid-rows: 1
-    Apache2:{
-        shape: image
-        icon: https://icons.terrastruct.com/dev%2Fapache.svg
-    }
-    MySQL:{
-        shape: image
-        icon: https://icons.terrastruct.com/dev%2Fmysql.svg
-    }
-    PHP:{
-        shape: image
-        icon: https://icons.terrastruct.com/dev%2Fphp.svg
-    }
-    Git:{
-        shape: image
-        icon: https://icons.terrastruct.com/dev%2Fgit.svg
-    } 
-}
-```
+<Steps>
+1. **Descargar Laragon**: Visita [laragon.org](https://laragon.org/download/) y descarga la version `Full` (incluye MySQL, PHP, Apache, Node.js y mas herramientas).
 
-El entorno de desarrollo es un entorno en el que se pueden realizar pruebas y depuración de la aplicación antes de que se ejecute en un servidor real. En este entorno se pueden realizar cambios en el código de la aplicación y ver los resultados de esos cambios en tiempo real, se puede tratar con datos ficticios y esto permite probar la aplicación en diferentes escenarios.
+2. **Ejecutar el instalador**: Abre el instalador y sigue las instrucciones. Se recomienda instalar en una ruta sin espacios (ej: `C:\laragon`).
 
-## Laragon
-Laragon es un paquete de desarrollo web que incluye todo lo necesario para desarrollar aplicaciones web en un solo lugar. Laragon incluye un servidor web, una base de datos, un lenguaje de programación, un framework y herramientas de desarrollo.
+3. **Iniciar Laragon**: Ejecuta Laragon desde el menu de inicio o el acceso directo. El panel principal mostrara los servicios disponibles.
 
+4. **Iniciar servicios**: Haz clic en `Start All` para iniciar Apache (servidor web) y MySQL (base de datos).
 
+5. **Verificar instalacion**: Abre tu navegador y visita `http://localhost`. Deberias ver la pagina de bienvenida de Laragon.
+</Steps>
 
-:::note
-Se escogio Laragon por ser un paquete de desarrollo web **mas facil** de manejar segun nuestra experiencia.
-Si desea utilizar otro paquete de desarrollo web, puede hacerlo.
-:::
+## Instalacion de Extensiones para VS Code
 
-![Laragon](https://lavalamplab.b-cdn.net/wp-content/uploads/2022/10/laragon-1536x960.jpg)
+Para un desarrollo eficiente de PHP, instala estas extensiones en Visual Studio Code:
 
-## Estructura de carpetas de Laragon
-Despues de instalar Laragon, en su ubicacion por defecto, se creara una carpeta llamada `laragon` en el disco `C:`. A contuniacion se muestra explica la estructura de carpetas.
-
-:::caution
-No se mencionaran todas las carpetas, solo las mas importantes.
-Para entender mejor la estructura de carpetas de Laragon, imaginelo como la estructura de una **distribucion de linux**, ya que se asemeja mucho a esta.
-:::
-
-### `bin`
-Contiene los ejecutables de los programas que vienen con Laragon(`.exe`). En cada carpeta tambien es posible encontrar diferentes **versiones** de los programas, y en algunos casos tambien veremos los **archivos de configuracion** de los programas.
+| Extension | Autor | Funcion |
+|-----------|-------|---------|
+| PHP Intelephense | Ben Mewburn | Autocompletado, navegacion, refactorizacion |
+| PHP Debug | Xdebug | Depuracion de codigo PHP |
+| Laravel Extension Pack | Winilin | Conjunto de extensiones para Laravel |
+| Thunder Client | Rangar | Cliente REST para probar APIs |
+| EditorConfig | EditorConfig | Mantener consistencia de estilo entre editores |
+| DotENV | mikestead | Resaltado de sintaxis para archivos .env |
 
 :::tip
-Laragon no se limita a las versiones de los programas que vienen con el, es posible instalar **otras versiones** de los programas. y ejecutarlas desde Laragon.
+Busca e instala las extensiones directamente desde el panel de extensiones de VS Code (`Ctrl+Shift+X`) o mediante la pagina web del [VS Code Marketplace](https://marketplace.visualstudio.com/).
 :::
 
-Por mencionar algunos programas que vienen con Laragon:
-- `apache` : El ejecutable que permitira a laragon ejecutar un servidor web.
-- `mysql` : El ejecutable que permitira a laragon ejecutar un servidor de base de datos.
-- `php` : El ejecutable que permitira a laragon ejecutar un servidor de lenguaje de programación.
+## Herramientas Adicionales
+
+<CardGrid>
+  <Card title="Cliente REST" icon="seti:shell">
+    **Thunder Client** o **Postman** para probar APIs REST directamente desde VS Code.
+  </Card>
+  <Card title="Version de PHP" icon="seti:php">
+    Laragon incluye PHP 8.x por defecto. Puedes cambiar la version desde el menu de Laragon.
+  </Card>
+  <Card title="Base de Datos" icon="seti:db">
+    Laragon incluye **HeidiSQL** para gestionar MySQL/MariaDB de forma visual.
+  </Card>
+  <Card title="Terminal" icon="seti:powershell">
+    Laragon incluye una terminal integrada con **Cmder** con soporte para Git y comandos Linux.
+  </Card>
+</CardGrid>
+
+## Comandos Utiles de Laragon
+
+| Comando | Descripcion |
+|---------|-------------|
+| `Iniciar Todo` | Inicia Apache y MySQL |
+| `Detener Todo` | Detiene todos los servicios |
+| `www` | Abre la carpeta de proyectos en el explorador |
+| `Root` | Abre la terminal en la raiz de Laragon |
+| `Base de datos` | Abre HeidiSQL para gestionar MySQL |
+
+## Verificar la Instalacion
+
+Abre la terminal de Laragon (`Root`) y ejecuta:
+
+```bash
+# Verificar version de PHP
+php -v
+
+# Verificar version de Composer
+composer -v
+
+# Verificar version de Node.js
+node -v
+```
+
+Deberias ver las versiones instaladas de cada herramienta sin errores.
+
+## Siguiente Paso
+
+Una vez que tengas tu entorno configurado, continua con la seccion de **Programacion en PHP** para comenzar a aprender el lenguaje.
+El ejecutable que permitira a laragon ejecutar un servidor de lenguaje de programación.
 - `git` : El ejecutable que permitira a laragon ejecutar un cliente de control de versiones.
 - `nginx` : Parecido a apache, pero mas rapido, la configuracion es diferente.
 

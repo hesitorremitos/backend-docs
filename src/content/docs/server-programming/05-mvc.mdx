@@ -3,360 +3,433 @@ title: Arquitectura MVC en PHP
 label: Arquitectura MVC
 ---
 
-import { Card, Steps, Tabs, TabItem, FileTree } from '@astrojs/starlight/components'
+import { Card, Steps, Tabs, TabItem, FileTree, LinkCard } from '@astrojs/starlight/components'
 
 # Arquitectura MVC en PHP
 
-<Card title="¿Qué es MVC?" icon="information">
-La arquitectura **MVC** (Modelo-Vista-Controlador) es un patrón de diseño que separa la lógica de negocio, la interfaz de usuario y el control de flujo en aplicaciones web. Esta separación facilita la organización, el mantenimiento y la escalabilidad del código.
+<Card title="Que es MVC?" icon="information">
+La arquitectura **MVC** (Modelo-Vista-Controlador) es un patron de diseno arquitectonico que separa una aplicacion en tres componentes interconectados: el **Modelo** (datos y logica de negocio), la **Vista** (presentacion) y el **Controlador** (gestion de solicitudes y coordinacion).
 </Card>
 
-## ¿Cómo funciona MVC?
+:::tip[Fuentes Academicas]
+El patron MVC fue introducido por Trygve Reenskaug en los anos 70, mientras trabajaba en Smalltalk-80 en Xerox PARC. Segun la [documentacion académica de la UNC](https://www.cs.unc.edu/~dewan/comp401/current/Class%20Notes/MVC.pdf), MVC es una extension del patron "interactor" que separa la entrada (Controller), la salida (View) y los datos (Model).
+:::
+
+## Los Tres Componentes de MVC
 
 <Steps>
-1. **Modelo (Model):** Gestiona los datos y la lógica de negocio. Se comunica con la base de datos y representa los objetos de la aplicación.
-2. **Vista (View):** Es la interfaz de usuario. Presenta los datos del modelo y recibe la interacción del usuario.
-3. **Controlador (Controller):** Recibe las acciones del usuario, procesa las solicitudes, actualiza el modelo y selecciona la vista adecuada.
+1. **Modelo (Model):** Gestiona los datos y la logica de negocio. Se comunica con la base de datos, define reglas de validacion y notifica cambios. No depende de la interfaz de usuario.
+2. **Vista (View):** Es la interfaz de usuario. Presenta los datos del modelo al usuario y recibe su interaccion. No contiene logica de negocio.
+3. **Controlador (Controller):** Recibe las acciones del usuario, procesa las solicitudes, actualiza el modelo y selecciona la vista adecuada para mostrar.
 </Steps>
 
----
+## Flujo de Datos en MVC
+
+Segun [Visual Paradigm](https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-model-view-control-mvc/), el flujo de trabajo es:
+
+1. El **usuario** interactua con la **Vista** (ej. hace clic en un boton)
+2. La **Vista** envia la accion al **Controlador**
+3. El **Controlador** procesa la entrada y actualiza el **Modelo** si es necesario
+4. El **Modelo** notifica a la **Vista** sobre cambios en los datos
+5. La **Vista** se actualiza para reflejar el nuevo estado
+
+```
+Usuario -> Vista -> Controlador -> Modelo -> Vista (actualizada)
+              ^_________________________________|
+```
 
 ## Ventajas de usar MVC
 
 <Tabs>
   <TabItem label="Ventajas">
-    - **Separación de responsabilidades:** Cada componente tiene una función clara.
-    - **Facilita el mantenimiento:** Cambios en la lógica de negocio o la interfaz no afectan a los otros componentes.
+    - **Separacion de responsabilidades:** Cada componente tiene una funcion clara y unica.
+    - **Facilita el mantenimiento:** Cambios en la logica de negocio o la interfaz no afectan a otros componentes.
     - **Escalabilidad:** Permite agregar nuevas funcionalidades de forma ordenada.
     - **Trabajo en equipo:** Desarrolladores pueden trabajar en modelos, vistas o controladores de forma independiente.
-    - **Pruebas más sencillas:** La lógica desacoplada facilita las pruebas unitarias.
+    - **Testabilidad:** La logica desacoplada facilita las pruebas unitarias de cada componente.
+    - **Reutilizacion:** Un mismo modelo puede tener multiples vistas sin modificaciones.
   </TabItem>
-  <TabItem label="¿Cuándo usarlo?">
-    - En aplicaciones web medianas o grandes.
-    - Cuando se requiere mantener el código organizado y escalable.
-    - Cuando varios desarrolladores trabajan en el mismo proyecto.
+  <TabItem label="Cuando usarlo?">
+    - Aplicaciones web medianas o grandes.
+    - Proyectos con multiples desarrolladores.
+    - Cuando se requiere mantener el codigo organizado y escalable.
+    - Aplicaciones que requieren multiples interfaces para los mismos datos.
+  </TabItem>
+  <TabItem label="Desventajas">
+    - Mayor complejidad inicial para proyectos pequenos.
+    - Requiere mas archivos y estructura que una aplicacion monolitica.
+    - Curva de aprendizaje para desarrolladores nuevos.
   </TabItem>
 </Tabs>
 
----
+## MVC en el Contexto Web
 
-## Estructura de un proyecto MVC en PHP
+Segun [GeeksforGeeks](https://www.geeksforgeeks.org/software-engineering/mvc-framework-introduction/), en aplicaciones web modernas:
+
+- El **Modelo** reside en el servidor (clases PHP, base de datos)
+- La **Vista** se genera en el servidor y se envia al navegador (HTML/CSS/JS)
+- El **Controlador** recibe las peticiones HTTP y coordina la respuesta
+
+:::note[MVC Web vs MVC Original]
+En el MVC original (Smalltalk), el Modelo podia notificar directamente a las Vistas. En el contexto web, el servidor no puede iniciar comunicacion con el navegador, por lo que el Controlador suele coordinar las actualizaciones despues de procesar una solicitud.
+:::
+
+## Estructura de un Proyecto MVC en PHP
 
 <FileTree>
-- models
-    - User.php
-    - Connection.php
-- views
-    - user_list.php
+- config/
+    - database.php       # Configuracion de base de datos
+- models/
+    - Connection.php     # Clase base para conexion a BD
+    - User.php           # Modelo de usuario
+- views/
+    - user_list.php      # Lista de usuarios
     - user_create_form.php
     - user_update_form.php
-    - user_delete_form.php
-- controllers
-    - user_index.php
-    - user_store.php
-    - user_update.php
-    - user_delete.php
-- index.php
-- config.php
+- controllers/
+    - user_index.php     # Listar usuarios
+    - user_store.php     # Crear usuario
+    - user_update.php    # Actualizar usuario
+    - user_delete.php    # Eliminar usuario
+- index.php              # Punto de entrada
+- .htaccess              # Configuracion de Apache
 </FileTree>
 
 ---
 
 ## 1. Modelo (Model)
 
-El modelo representa los datos y la lógica de negocio. Aquí se define la estructura de los datos y los métodos para interactuar con la base de datos.
+El modelo representa los datos y la logica de negocio. Define la estructura de los datos y los metodos para interactuar con la base de datos.
 
-### Conexión a la base de datos
+### Conexion a la base de datos
 
 ```php
-// models\Connection.php
-class Connection{
-    protected $connection;
-    private $host = "localhost";
-    private $user = "root";
-    private $password = "";
-    private $db = "backend";
-    private $port = 3306;
+<?php
+declare(strict_types=1);
 
-    protected function connect(){
-        try{
-            $this->connection = mysqli_connect($this->host, $this->user, $this->password, $this->db, $this->port);
-        } catch (Exception $e){
-            echo "Error: " . $e->getMessage();
-            die("Connection failed");
+namespace App\Models;
+
+class Connection {
+    protected ?\mysqli $connection = null;
+    private string $host = "localhost";
+    private string $user = "root";
+    private string $password = "";
+    private string $db = "backend";
+    private int $port = 3306;
+
+    protected function connect(): void {
+        $this->connection = new \mysqli(
+            $this->host,
+            $this->user,
+            $this->password,
+            $this->db,
+            $this->port
+        );
+
+        if ($this->connection->connect_error) {
+            throw new \Exception("Error de conexion: " . $this->connection->connect_error);
         }
     }
-}
-```
-**Explicación:**  
-Esta clase centraliza la conexión a la base de datos. Todos los modelos pueden heredar de ella para reutilizar la conexión.
 
-### Definición del modelo User
-
-```php
-// models\User.php
-class User extends Connection{
-    public $id;
-    public $name;
-    public $age;
-    public $email;
-    public $password;
-    public $created_at;
-    public $updated_at;
-    // ...métodos...
-}
-```
-**Explicación:**  
-Define los atributos de un usuario y hereda la conexión a la base de datos.
-
-### Crear un usuario
-
-```php
-// models\User.php
-public function create(){
-    $this->connect();
-    $stmt = mysqli_prepare(
-        $this->connection,
-        "INSERT INTO users (name, age, email, password) VALUES (?, ?, ?, ?)"
-    );
-    $stmt->bind_param("siss", $this->name, $this->age, $this->email, $this->password);
-    $stmt->execute();
-    $stmt->close();
-}
-```
-**Explicación:**  
-Este método inserta un nuevo usuario en la base de datos usando una consulta preparada.
-
-### Obtener todos los usuarios
-
-```php
-// models\User.php
-public function getAll(){
-    $this->connect();
-    $stmt = mysqli_prepare($this->connection, "SELECT * FROM users");
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $users = array();
-    while ($row = $result->fetch_assoc()) {
-        array_push($users, $row);
+    protected function getConnection(): \mysqli {
+        if ($this->connection === null) {
+            $this->connect();
+        }
+        return $this->connection;
     }
-    return $users;
 }
 ```
-**Explicación:**  
-Devuelve un array con todos los usuarios registrados en la base de datos.
 
-### Buscar, actualizar y eliminar usuarios
+### Modelo User con operaciones CRUD
 
 ```php
-// models\User.php
-public function getFirst($id){
-    $this->connect();
-    $stmt = mysqli_prepare($this->connection, "SELECT * FROM users WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    return $result->fetch_assoc();
-}
+<?php
+declare(strict_types=1);
 
-public function update($id){
-    $this->connect();
-    $stmt = mysqli_prepare(
-        $this->connection,
-        "UPDATE users SET name = ?, age = ?, email = ?, password = ? WHERE id = ?"
-    );
-    $stmt->bind_param("sissi", $this->name, $this->age, $this->email, $this->password, $id);
-    $stmt->execute();
-    $stmt->close();
-}
+namespace App\Models;
 
-public function delete($id){
-    $this->connect();
-    $stmt = mysqli_prepare($this->connection, "DELETE FROM users WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $stmt->close();
+class User extends Connection {
+    public ?int $id = null;
+    public string $name = '';
+    public int $age = 0;
+    public string $email = '';
+    public string $password = '';
+
+    // CREATE
+    public function create(): void {
+        $conn = $this->getConnection();
+        $stmt = $conn->prepare(
+            "INSERT INTO users (name, age, email, password) VALUES (?, ?, ?, ?)"
+        );
+        $stmt->bind_param("siss", $this->name, $this->age, $this->email, $this->password);
+        $stmt->execute();
+        $this->id = $conn->insert_id;
+        $stmt->close();
+    }
+
+    // READ (all)
+    public function getAll(): array {
+        $conn = $this->getConnection();
+        $stmt = $conn->prepare("SELECT * FROM users");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $users = [];
+        while ($row = $result->fetch_assoc()) {
+            $users[] = $row;
+        }
+        $stmt->close();
+        return $users;
+    }
+
+    // READ (one)
+    public function getFirst(int $id): ?array {
+        $conn = $this->getConnection();
+        $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $stmt->close();
+        return $user ?: null;
+    }
+
+    // UPDATE
+    public function update(int $id): void {
+        $conn = $this->getConnection();
+        $stmt = $conn->prepare(
+            "UPDATE users SET name = ?, age = ?, email = ?, password = ? WHERE id = ?"
+        );
+        $stmt->bind_param("sissi", $this->name, $this->age, $this->email, $this->password, $id);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    // DELETE
+    public function delete(int $id): void {
+        $conn = $this->getConnection();
+        $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $stmt->close();
+    }
 }
 ```
-**Explicación:**  
-- `getFirst($id)`: Busca un usuario por su ID.
-- `update($id)`: Actualiza los datos de un usuario.
-- `delete($id)`: Elimina un usuario por su ID.
 
 ---
 
 ## 2. Controlador (Controller)
 
-El controlador recibe las solicitudes del usuario, procesa la lógica y decide qué vista mostrar.
+El controlador recibe las solicitudes del usuario, procesa la logica y decide que vista mostrar.
 
-### Controlador para registrar usuario
+### Controlador para crear usuario
 
 ```php
-// controllers\user_store.php
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../models/User.php';
+
+use App\Models\User;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = new User();
-    $user->name = $_POST['name'];
-    $user->age = $_POST['age'];
-    $user->email = $_POST['email'];
-    $user->password = $_POST['password'];
+    $user->name = $_POST['name'] ?? '';
+    $user->age = (int) ($_POST['age'] ?? 0);
+    $user->email = $_POST['email'] ?? '';
+    $user->password = password_hash($_POST['password'] ?? '', PASSWORD_BCRYPT);
     $user->create();
     header('Location: user_index.php');
     exit;
-} else if($_SERVER['REQUEST_METHOD'] == 'GET') {
-    include '../views/user_create_form.php';
+} else {
+    include __DIR__ . '/../views/user_create_form.php';
     exit;
 }
 ```
-**Explicación:**  
-Si la petición es POST, crea un usuario y redirige a la lista. Si es GET, muestra el formulario de registro.
 
 ### Controlador para listar usuarios
 
 ```php
-// controllers\user_index.php
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../models/User.php';
+
+use App\Models\User;
+
 $user = new User();
 $users = $user->getAll();
-include '../views/user_list.php';
+include __DIR__ . '/../views/user_list.php';
 exit;
 ```
-**Explicación:**  
-Obtiene todos los usuarios y muestra la vista correspondiente.
 
 ---
 
 ## 3. Vista (View)
 
-Las vistas muestran la información al usuario. Solo contienen HTML y PHP para mostrar datos, sin lógica de negocio.
+Las vistas muestran la informacion al usuario. Solo contienen HTML y PHP para mostrar datos, sin logica de negocio.
 
 ### Formulario de registro
 
 ```php
-// views\user_create_form.php
-<form action="../controllers/user_store.php" method="POST">
-    <label for="name">Nombre:</label>
-    <input type="text" id="name" name="name" required>
-    <label for="age">Edad:</label>
-    <input type="number" id="age" name="age" required>
-    <label for="email">Correo electrónico:</label>
-    <input type="email" id="email" name="email" required>
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" required>
-    <button type="submit">Registrar</button>
-</form>
+<!-- views/user_create_form.php -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Usuario</title>
+</head>
+<body>
+    <h1>Registrar Nuevo Usuario</h1>
+    <form action="../controllers/user_store.php" method="POST">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="age">Edad:</label>
+        <input type="number" id="age" name="age" min="1" required>
+
+        <label for="email">Correo electronico:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Contrasena:</label>
+        <input type="password" id="password" name="password" minlength="6" required>
+
+        <button type="submit">Registrar</button>
+    </form>
+    <a href="user_index.php">Volver a la lista</a>
+</body>
+</html>
 ```
-**Explicación:**  
-Formulario simple para registrar un usuario.
 
 ### Tabla de usuarios
 
 ```php
-// views\user_list.php
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Edad</th>
-        <th>Email</th>
-        <th>Acciones</th>
-    </tr>
-    <?php foreach ($users as $user): ?>
-        <tr>
-            <td><?= htmlspecialchars($user['id']) ?></td>
-            <td><?= htmlspecialchars($user['name']) ?></td>
-            <td><?= htmlspecialchars($user['age']) ?></td>
-            <td><?= htmlspecialchars($user['email']) ?></td>
-            <td>
-                <a href="user_update.php?id=<?= htmlspecialchars($user['id']) ?>">Actualizar</a>
-                <a href="user_delete.php?id=<?= htmlspecialchars($user['id']) ?>">Eliminar</a>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</table>
+<!-- views/user_list.php -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Usuarios</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Lista de Usuarios</h1>
+    <a href="user_store.php">+ Nuevo Usuario</a>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Edad</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (empty($users)): ?>
+                <tr><td colspan="5">No hay usuarios registrados</td></tr>
+            <?php else: ?>
+                <?php foreach ($users as $u): ?>
+                <tr>
+                    <td><?= htmlspecialchars((string)$u['id']) ?></td>
+                    <td><?= htmlspecialchars($u['name']) ?></td>
+                    <td><?= htmlspecialchars((string)$u['age']) ?></td>
+                    <td><?= htmlspecialchars($u['email']) ?></td>
+                    <td>
+                        <a href="user_update.php?id=<?= $u['id'] ?>">Editar</a> |
+                        <a href="user_delete.php?id=<?= $u['id'] ?>"
+                           onclick="return confirm('Estas seguro?')">Eliminar</a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</body>
+</html>
 ```
-**Explicación:**  
-Muestra la lista de usuarios en una tabla con enlaces para actualizar o eliminar.
-
-### Formulario de actualización
-
-```php
-// views\user_update_form.php
-<form action="user_update.php" method="POST">
-    <input type="hidden" name="id" value="<?= htmlspecialchars($userData['id']) ?>">
-    <label for="name">Nombre:</label>
-    <input type="text" id="name" name="name" value="<?= htmlspecialchars($userData['name']) ?>" required>
-    <label for="age">Edad:</label>
-    <input type="number" id="age" name="age" value="<?= htmlspecialchars($userData['age']) ?>" required>
-    <label for="email">Correo electrónico:</label>
-    <input type="email" id="email" name="email" value="<?= htmlspecialchars($userData['email']) ?>" required>
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" value="<?= htmlspecialchars($userData['password']) ?>" required>
-    <button type="submit">Actualizar</button>
-</form>
-```
-**Explicación:**  
-Formulario para editar los datos de un usuario existente.
 
 ---
 
-## Flujo de una petición en MVC
+## Flujo Completo de una Peticion MVC
 
 <Steps>
-  1. El usuario accede a una URL (por ejemplo, `/controllers/user_index.php`).
-  2. El controlador (`user_index.php`) solicita los datos al modelo (`User.php`).
-  3. El modelo obtiene los datos de la base de datos y los devuelve al controlador.
-  4. El controlador pasa los datos a la vista (`user_list.php`).
-  5. La vista muestra los datos al usuario.
+  1. El usuario accede a `/controllers/user_index.php` desde el navegador.
+  2. El controlador crea una instancia del modelo `User` y llama a `getAll()`.
+  3. El modelo ejecuta la consulta SQL y devuelve los datos al controlador.
+  4. El controlador incluye la vista `user_list.php` pasando los datos.
+  5. La vista renderiza los datos en HTML y lo muestra al usuario.
 </Steps>
 
 ---
 
-## Resumen visual :badge[Codigo]{variant="success"}
+## Mejores Practicas en MVC
+
+<Card title="Separacion de Responsabilidades" icon="approve-check">
+  - El **Modelo** nunca debe generar HTML
+  - La **Vista** nunca debe ejecutar consultas SQL
+  - El **Controlador** debe ser delgado (thin controller), solo coordina
+</Card>
+
+<Card title="Seguridad" icon="warning">
+  - Usa siempre `htmlspecialchars()` al mostrar datos en vistas
+  - Usa consultas preparadas en el modelo
+  - Valida todos los datos de entrada en el controlador
+  - Usa `password_hash()` para almacenar contrasenas
+</Card>
+
+<Card title="Estructura Recomendada" icon="rocket">
+  - Usa namespaces para organizar tus clases (PSR-4)
+  - Separa la configuracion (base de datos) en archivos dedicados
+  - Usa un front controller (`index.php`) para enrutar todas las peticiones
+</Card>
+
+---
+
+## Resumen Visual
 
 ![Diagrama MVC](https://codingornot.com/wp-content/uploads/2017/10/mvc-modelo-vista-controlador.png)
 
 ---
 
-## Ejemplo completo: Registrar y listar usuarios
+## Actividad: Implementar MVC Completo
 
-1. El usuario accede a `/controllers/user_store.php` (GET) y ve el formulario de registro.
-2. Al enviar el formulario (POST), el controlador crea el usuario y redirige a la lista.
-3. `/controllers/user_index.php` obtiene los usuarios y muestra la vista de lista.
+<Card title="Actividad MVC">
+En base al ejemplo anterior, implementa un sistema completo de gestion de **Productos** con arquitectura MVC:
 
-import {LinkCard} from "@astrojs/starlight/components"
+- Crea la tabla `products` con: `id`, `name`, `description`, `price`, `stock`, `created_at`
+- Implementa el modelo `Product` con todas las operaciones CRUD
+- Crea los controladores para: listar, crear, editar y eliminar
+- Diseña las vistas correspondientes
 
+### Requisitos:
+1. Usar consultas preparadas en todo el modelo
+2. Validar que `price > 0` y `stock >= 0` antes de guardar
+3. Usar `htmlspecialchars()` en todas las vistas
+4. Implementar confirmacion antes de eliminar
+5. Mostrar mensajes de exito/error al usuario
 
-<LinkCard title="Codigo completo" description="Codigo completo en el repositorio de github" href="https://github.com/hesitorremitos/backend-github/tree/main/6.arquitectura-mvc" target="_blank"/>
+### Extra (opcional):
+- Implementar paginacion en la lista de productos
+- Agregar busqueda por nombre
+- Crear un layout compartido para todas las vistas (header/footer)
 
+:::tip
+Siguiendo el patron MVC, si necesitas cambiar la interfaz (colores, diseno), solo modificas las vistas. Si necesitas cambiar la base de datos, solo modificas el modelo. Si necesitas agregar logica, solo modificas los controladores.
+:::
+</Card>
+
+<LinkCard title="Codigo de referencia" description="Ejemplo completo en GitHub" href="https://github.com/hesitorremitos/backend-github/tree/main/6.arquitectura-mvc" target="_blank"/>
 
 ---
 
-<Card title="Conclusión" icon="approve">
-La arquitectura MVC en PHP permite desarrollar aplicaciones web organizadas, escalables y fáciles de mantener. Separar la lógica de negocio, la presentación y el control de flujo es clave para proyectos profesionales y colaborativos.
-</Card>
+## Referencias
 
-## Actividad 7 :badge[Actividad]{variant=caution}
-En base al proyecto existente, que puede descargarlo del repositorio `6.arquitectura-mvc`, realice lo siguiente:
-
-<Card title="Actividad 7">
-- Crear un una nueva tabla Publicaciones(posts) en la base de datos con los siguientes campos:
-    - id (int, primary key, auto increment)
-    - title (varchar)
-    - content (text)
-    - created_at (timestamp)
-    - updated_at (timestamp)
-    - user_id (int, foreign key referencing users(id))
-- Siguiendo el mismo patrón MVC, crear el modelo, controlador y vistas necesarias para **registrar** y **listar publicaciones**.
-- En la lista de usuarios agregar los botones de **Ver publicaciones** y **Crear publicación** para cada usuario.
-
-:::tip
-**Logica de negocio:**  Se refiere a la parte del código que se encarga de procesar los datos y realizar las operaciones necesarias para cumplir con los requerimientos de la aplicación. Comunmente se encuentra en el modelo, pero puede estar en el controlador dependiendo de la complejidad de la aplicación.
-
-Se recomienda crear **metodos** en el modelo `User`, por ejemplo:
--  `$user->getPosts()`, que devuelva todas las publicaciones de un usuario.
--  `$user->createPost()`, que permita crear una nueva publicación.
--  `$user->getPost($id)`, que devuelva una publicación específica por su ID..
-
-En el modelo `Post` se pueden crear los siguientes métodos:
--  `$post->getUser()`, que devuelva el usuario que creó la publicación.
-:::
-</Card>
+- [Trygve Reenskaug - MVC Papers](https://heim.ifi.uio.no/~trygver/themes/mvc/mvc-index.html)
+- [Visual Paradigm - What is MVC?](https://www.visual-paradigm.com/guide/uml-unified-modeling-language/what-is-model-view-control-mvc/)
+- [GeeksforGeeks - MVC Framework Introduction](https://www.geeksforgeeks.org/software-engineering/mvc-framework-introduction/)
+- [Codecademy - MVC Architecture Explained](https://www.codecademy.com/article/mvc-architecture-model-view-controller)
+- [UNC Chapel Hill - MVC Lecture Notes](https://www.cs.unc.edu/~dewan/comp401/current/Class%20Notes/MVC.pdf)

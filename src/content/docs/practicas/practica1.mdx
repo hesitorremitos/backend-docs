@@ -1,64 +1,180 @@
 ---
-title: Práctica 3
-description: Práctica 3 del curso de Backend 
+title: Practica 3 - API RESTful con Laravel
+description: Practica de API RESTful usando Laravel, Eloquent ORM y arquitectura MVC.
 ---
 
-import {FileTree} from "@astrojs/starlight/components"
+import { FileTree, Card, Steps } from '@astrojs/starlight/components'
+import { LinkCard } from '@astrojs/starlight/components'
 
-Dato el siguiente tabla de productos:
+# Practica 3: API RESTful de Productos con Laravel
 
-| Campo | Descripción |
-| ----- | ----------- |
-| id | Identificador único del producto |
-| nombre | Nombre del producto |
-| precio | Precio del producto |
-| stock | Cantidad disponible en inventario |
-| creado_en | Fecha de creación del producto |
-| actualizado_en | Fecha de última actualización del producto |
-| eliminado | Indica si el producto ha sido eliminado (booleano) |
+<Card title="Objetivo" icon="target">
+Desarrollar una API RESTful completa para la gestion de productos utilizando **Laravel**, aplicando los conceptos de **MVC**, **Eloquent ORM**, **migraciones** y **validacion de datos**. Esta practica integra los conocimientos adquiridos en las secciones anteriores del curso.
+</Card>
 
-1. Realizar una API RESTful para gestionar productos con las siguientes operaciones:
-  - Crear un producto
-  - Leer todos los productos
-  - Leer un producto por ID
-  - Actualizar un producto por ID
-  - Eliminar un producto por ID (marcar como eliminado)
+## Requisitos Previos
 
-2. Usar la arquitectura MVC (Excluyendo la capa de vista) para estructurar el proyecto.
-3. Debe hacerlo en Flask y Express.
+- PHP 8.1 o superior instalado
+- Composer instalado
+- Laravel CLI o instalacion via Composer
+- Cliente REST (Thunder Client, Postman, o similar)
 
-## En Flask
-- Usar Flask para crear la API RESTful.
-- Los modelos deben funcionar en MySQL y PostgreSQL.
+## Especificacion del Modelo de Datos
+
+Crea una migracion para la tabla `products` con la siguiente estructura:
+
+| Campo | Tipo | Restricciones |
+|-------|------|---------------|
+| id | unsignedBigInteger | PK, auto-increment |
+| name | string(255) | required, unique |
+| description | text | nullable |
+| price | decimal(10,2) | required, min:0 |
+| stock | unsignedInteger | required, default:0 |
+| category_id | unsignedBigInteger | FK a categories |
+| is_active | boolean | default:true |
+| created_at | timestamp | auto |
+| updated_at | timestamp | auto |
+
+Ademas, crea la tabla `categories`:
+
+| Campo | Tipo | Restricciones |
+|-------|------|---------------|
+| id | unsignedBigInteger | PK, auto-increment |
+| name | string(100) | required, unique |
+| slug | string(100) | required, unique |
+| created_at | timestamp | auto |
+| updated_at | timestamp | auto |
+
+## Tareas a Realizar
+
+### Parte 1: Configuracion y Modelos
+
+<Steps>
+1. Crea un nuevo proyecto Laravel llamado `api-productos`
+2. Configura la conexion a la base de datos en `.env`
+3. Crea el modelo `Category` con su migracion y seeder
+4. Crea el modelo `Product` con su migracion
+5. Establece la relacion: **Category hasMany Product**, **Product belongsTo Category**
+6. Ejecuta las migraciones
+7. Crea factories y seeders para generar datos de prueba (minimo 5 categorias y 20 productos)
+</Steps>
+
+### Parte 2: Controladores y API
+
+<Steps>
+1. Crea `CategoryController` como API Resource Controller
+2. Crea `ProductController` como API Resource Controller
+3. Implementa validacion con Form Requests para:
+   - StoreProductRequest: valida name, description, price, stock, category_id
+   - UpdateProductRequest: valida mismos campos pero opcionales (sometimes)
+4. Crea API Resources para transformar la respuesta:
+   - `ProductResource`: incluye datos de la categoria relacionada
+   - `CategoryResource`: incluye conteo de productos
+5. Implementa scopes en Product:
+   - `scopeActive()`: productos con is_active = true
+   - `scopeInStock()`: productos con stock > 0
+   - `scopePriceRange($min, $max)`: productos dentro de rango de precio
+</Steps>
+
+### Parte 3: Rutas y Endpoints
+
+Define las siguientes rutas en `routes/api.php`:
+
+```
+GET    /api/v1/categories              -> Listar categorias
+POST   /api/v1/categories              -> Crear categoria
+GET    /api/v1/categories/{id}         -> Ver categoria
+PUT    /api/v1/categories/{id}         -> Actualizar categoria
+DELETE /api/v1/categories/{id}         -> Eliminar categoria
+GET    /api/v1/categories/{id}/products -> Productos de categoria
+
+GET    /api/v1/products                -> Listar productos (con filtros opcionales)
+POST   /api/v1/products                -> Crear producto
+GET    /api/v1/products/{id}           -> Ver producto
+PUT    /api/v1/products/{id}           -> Actualizar producto
+DELETE /api/v1/products/{id}           -> Eliminar producto
+```
+
+**Parametros de consulta para `/api/v1/products`**:
+- `?category={slug}`: Filtrar por categoria
+- `?min_price={valor}`: Precio minimo
+- `?max_price={valor}`: Precio maximo
+- `?search={texto}`: Busqueda por nombre o descripcion
+- `?in_stock=true`: Solo productos en stock
+- `?sort=price&order=asc`: Ordenamiento
+
+### Parte 4: Testing
+
+<Steps>
+1. Crea tests de feature para:
+   - Listar productos (verifica estructura JSON y paginacion)
+   - Crear producto (verifica validacion y creacion exitosa)
+   - Actualizar producto (verifica modificacion de datos)
+   - Eliminar producto (verifica eliminacion)
+   - Filtrar productos por categoria y rango de precio
+2. Ejecuta los tests: `php artisan test`
+</Steps>
+
+## Estructura del Proyecto
+
 <FileTree>
-- models
-  - Producto.py
-- controllers
-  - ProductoController.py
-- routes
-  - api.py
-- app.py
-- requirements.txt
-- .env
-- .gitignore // (opcional)
+- app/
+  - Http/
+    - Controllers/
+      - Api/
+        - CategoryController.php
+        - ProductController.php
+    - Requests/
+      - StoreProductRequest.php
+      - UpdateProductRequest.php
+    - Resources/
+      - CategoryResource.php
+      - ProductResource.php
+  - Models/
+    - Category.php
+    - Product.php
+- database/
+  - factories/
+    - CategoryFactory.php
+    - ProductFactory.php
+  - seeders/
+    - CategorySeeder.php
+    - ProductSeeder.php
+    - DatabaseSeeder.php
+  - migrations/
+- routes/
+  - api.php
+- tests/
+  - Feature/
+    - CategoryApiTest.php
+    - ProductApiTest.php
 </FileTree>
 
-:::note
-Defina una variable de entorno `DB_TYPE` u otro nombre para seleccionar entre MySQL y PostgreSQL.
-:::
+## Criterios de Evaluacion
 
-## En Express
-- Usar Express, Sequelize para crear la API RESTful.
-- Los modelos deben funcionar en MySQL y PostgreSQL.
-<FileTree>
-- models
-  - Producto.js
-- controllers
-  - ProductoController.js
-- routes
-    - api.js
-- app.js
-- db.config.js
-- package.json
-- .gitignore // (opcional)
-</FileTree>
+| Criterio | Puntaje |
+|----------|---------|
+| Migraciones y relaciones correctas | 15% |
+| CRUD completo con validacion | 25% |
+| API Resources implementados | 15% |
+| Filtros y scopes funcionando | 20% |
+| Tests pasando correctamente | 15% |
+| Codigo limpio y organizado (PSR) | 10% |
+
+## Entrega
+
+1. Subir el proyecto a un repositorio de GitHub
+2. Incluir archivo `README.md` con:
+   - Instrucciones de instalacion
+   - Endpoints disponibles con ejemplos
+   - Capturas de pantalla de los tests pasando
+3. Desplegar en [Cloud Panel](https://cloud.inf-530.click) (opcional, extra)
+
+<LinkCard
+  href="https://laravel.com/docs/11.x/eloquent-resources"
+  title="API Resources - Laravel Docs"
+  description="Documentacion oficial de API Resources en Laravel."
+  icon="https://laravel.com/img/logomark.min.svg"
+  iconWidth={24}
+  iconHeight={24}
+/>

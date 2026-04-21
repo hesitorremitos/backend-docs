@@ -1,0 +1,447 @@
+---
+title: Eloquent ORM
+description: Aprende a usar Eloquent ORM en Laravel para interactuar con la base de datos de manera sencilla y elegante.
+---
+
+import { Card, Steps, Tabs, TabItem, FileTree } from '@astrojs/starlight/components'
+import { LinkCard } from '@astrojs/starlight/components'
+
+# Eloquent ORM
+
+<Card title="Que es Eloquent?" icon="information">
+Eloquent es el **Object-Relational Mapping (ORM)** incluido por defecto en Laravel. Fue creado por Taylor Otwell y permite interactuar con la base de datos usando modelos PHP en lugar de escribir SQL manualmente. Cada modelo corresponde a una tabla en la base de datos.
+</Card>
+
+:::tip[Documentacion Oficial]
+Esta guia se basa en la [documentacion oficial de Eloquent de Laravel](https://laravel.com/docs/11.x/eloquent).
+:::
+
+## Convenciones de Eloquent
+
+Eloquent sigue convenciones que aceleran el desarrollo:
+
+| Elemento | Convencion | Ejemplo |
+|----------|-----------|---------|
+| Nombre del modelo | Singular, PascalCase | `User`, `BlogPost` |
+| Nombre de tabla | Plural, snake_case | `users`, `blog_posts` |
+| Clave primaria | `id` auto-incremental | - |
+| Timestamps | `created_at` y `updated_at` | Controlado por `$timestamps` |
+
+:::note
+Puedes personalizar cualquiera de estas convenciones sobrescribiendo propiedades en tu modelo.
+:::
+
+## Crear un Modelo
+
+```bash
+php artisan make:model User
+```
+
+Con recursos adicionales:
+```bash
+php artisan make:model User -m    # Con migracion
+php artisan make:model User -c    # Con controlador
+php artisan make:model User -f    # Con factory
+php artisan make:model User -s    # Con seeder
+php artisan make:model User -mcfs # Todo en uno
+```
+
+### Estructura basica de un modelo
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    use HasFactory;
+
+    // Si el nombre de la tabla no sigue la convencion
+    protected $table = 'usuarios';
+
+    // Si no usas timestamps
+    public $timestamps = false;
+
+    // Clave primaria personalizada
+    protected $primaryKey = 'user_id';
+
+    // Tipo de clave primaria (string en vez de int)
+    protected $keyType = 'string';
+
+    // Campos que se pueden asignar masivamente (mass assignment)
+    protected $fillable = ['name', 'email', 'password'];
+
+    // Campos que NO se pueden asignar masivamente (alternativa a $fillable)
+    // protected $guarded = ['id', 'is_admin'];
+}
+```
+
+## Operaciones CRUD con Eloquent
+
+### CREATE (Crear)
+
+<Tabs>
+  <TabItem label="Forma basica">
+    ```php
+    use App\Models\User;
+
+    $user = new User();
+    $user->name = 'Juan Perez';
+    $user->email = 'juan@example.com';
+    $user->password = bcrypt('contrasena');
+    $user->save();
+    ```
+  </TabItem>
+  <TabItem label="Mass Assignment">
+    ```php
+    $user = User::create([
+        'name' => 'Juan Perez',
+        'email' => 'juan@example.com',
+        'password' => bcrypt('contrasena'),
+    ]);
+    ```
+  </TabItem>
+  <TabItem label="firstOrCreate">
+    ```php
+    // Busca por email, si no existe lo crea
+    $user = User::firstOrCreate(
+        ['email' => 'juan@example.com'],
+        ['name' => 'Juan Perez', 'password' => bcrypt('contrasena')]
+    );
+    ```
+  </TabItem>
+</Tabs>
+
+### READ (Leer)
+
+<Tabs>
+  <TabItem label="Obtener todos">
+    ```php
+    $users = User::all();           // Coleccion de todos los usuarios
+    $users = User::get();           // Equivalente a all()
+    $count = User::count();         // Contar registros
+    ```
+  </TabItem>
+  <TabItem label="Buscar por ID">
+    ```php
+    $user = User::find(1);          // Buscar por ID, devuelve null si no existe
+    $user = User::findOrFail(1);    // Lanza 404 si no existe
+    ```
+  </TabItem>
+  <TabItem label="Consultas con condiciones">
+    ```php
+    // WHERE simple
+    $users = User::where('status', 'active')->get();
+
+    // WHERE con operadores
+    $users = User::where('age', '>', 18)->get();
+
+    // Multiples condiciones
+    $users = User::where('status', 'active')
+                  ->where('age', '>', 18)
+                  ->get();
+
+    // WHERE con OR
+    $users = User::where('status', 'active')
+                  ->orWhere('role', 'admin')
+                  ->get();
+
+    // LIKE
+    $users = User::where('name', 'like', '%Juan%')->get();
+
+    // Ordenamiento y limites
+    $users = User::orderBy('name', 'asc')
+                  ->take(10)
+                  ->get();
+
+    // Seleccionar columnas especificas
+    $users = User::select('id', 'name', 'email')->get();
+    ```
+  </TabItem>
+</Tabs>
+
+### UPDATE (Actualizar)
+
+<Tabs>
+  <TabItem label="Actualizar instancia">
+    ```php
+    $user = User::find(1);
+    $user->name = 'Juan Actualizado';
+    $user->save();
+    ```
+  </TabItem>
+  <TabItem label="Actualizacion masiva">
+    ```php
+    // Actualizar todos los usuarios activos
+    User::where('status', 'pending')
+        ->update(['status' => 'active']);
+    ```
+  </TabItem>
+</Tabs>
+
+### DELETE (Eliminar)
+
+<Tabs>
+  <TabItem label="Eliminar instancia">
+    ```php
+    $user = User::find(1);
+    $user->delete();
+    ```
+  </TabItem>
+  <TabItem label="Eliminacion directa">
+    ```php
+    User::destroy(1);                    // Por ID
+    User::destroy([1, 2, 3]);            // Multiples IDs
+    User::where('inactive', true)->delete(); // Por condicion
+    ```
+  </TabItem>
+</Tabs>
+
+## Relaciones entre Modelos
+
+Eloquent facilita definir relaciones entre tablas:
+
+### Uno a Muchos (One to Many)
+
+Un usuario tiene muchas publicaciones:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class User extends Model
+{
+    protected $fillable = ['name', 'email', 'password'];
+
+    // Un usuario tiene muchos posts
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+}
+```
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Post extends Model
+{
+    protected $fillable = ['title', 'content', 'user_id'];
+
+    // Un post pertenece a un usuario
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+```
+
+Uso:
+```php
+// Obtener posts de un usuario
+$user = User::find(1);
+foreach ($user->posts as $post) {
+    echo $post->title;
+}
+
+// Obtener el autor de un post
+$post = Post::find(1);
+echo $post->user->name;
+
+// Crear un post para un usuario
+$user->posts()->create([
+    'title' => 'Nuevo Post',
+    'content' => 'Contenido del post',
+]);
+```
+
+### Tipos de Relaciones
+
+| Relacion | Metodo | Descripcion |
+|----------|--------|-------------|
+| Uno a Uno | `hasOne()` / `belongsTo()` | Un perfil por usuario |
+| Uno a Muchos | `hasMany()` / `belongsTo()` | Un usuario tiene muchos posts |
+| Muchos a Muchos | `belongsToMany()` | Usuarios y roles |
+| Has Many Through | `hasManyThrough()` | Acceso a traves de otra relacion |
+
+## Mutadores y Accesores
+
+Permiten modificar datos al leer o escribir:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    protected $fillable = ['name', 'email', 'password'];
+
+    // Accesor: se ejecuta al leer el atributo
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => ucwords($value),
+        );
+    }
+
+    // Mutador y Accesor combinados
+    protected function email(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => strtolower($value),
+            set: fn (string $value) => strtolower($value),
+        );
+    }
+
+    // Accesor virtual (no existe en la BD)
+    protected function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => "{$this->first_name} {$this->last_name}",
+        );
+    }
+}
+```
+
+## Casting de Atributos
+
+Convierte automaticamente atributos a tipos de datos:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    protected $fillable = ['name', 'price', 'is_active', 'metadata', 'released_at'];
+
+    protected $casts = [
+        'price' => 'float',
+        'is_active' => 'boolean',
+        'metadata' => 'array',        // JSON <-> Array
+        'released_at' => 'datetime',  // String <-> Carbon
+        'stock' => 'integer',
+    ];
+}
+```
+
+Tipos de cast disponibles:
+
+| Cast | Descripcion |
+|------|-------------|
+| integer | Entero |
+| float / double | Decimal |
+| string | Cadena |
+| boolean | Booleano |
+| array | JSON a Array |
+| object | JSON a Objeto |
+| datetime | String a Carbon |
+| collection | JSON a Collection |
+| encrypted | Valor encriptado |
+
+## Scopes (Alcances)
+
+Los scopes permiten reutilizar condiciones de consulta:
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    protected $fillable = ['name', 'price', 'stock', 'is_active'];
+
+    // Scope local: reutilizable
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeInStock(Builder $query): Builder
+    {
+        return $query->where('stock', '>', 0);
+    }
+
+    public function scopePriceRange(Builder $query, float $min, float $max): Builder
+    {
+        return $query->whereBetween('price', [$min, $max]);
+    }
+}
+```
+
+Uso:
+```php
+// Encadenar scopes
+$products = Product::active()->inStock()->get();
+
+// Scope con parametros
+$products = Product::priceRange(10, 100)->get();
+
+// Combinar
+$products = Product::active()->inStock()->priceRange(10, 100)->get();
+```
+
+## Ejercicio Practico
+
+<Card title="Sistema de Blog" icon="rocket">
+Implementa un sistema de blog con las siguientes entidades:
+
+### Modelos:
+1. **Author** (autores)
+   - `name`, `email`, `bio`
+
+2. **Post** (publicaciones)
+   - `title`, `slug`, `content`, `published_at`, `author_id`
+   - Relacion: pertenece a Author
+
+3. **Category** (categorias)
+   - `name`, `slug`
+   - Relacion: muchos a muchos con Post
+
+### Tareas:
+1. Crea los modelos con sus migraciones y relaciones
+2. Implementa factories para generar datos de prueba
+3. Crea seeders para poblar la base de datos
+4. Implementa scopes en Post: `published()`, `recent()`
+5. Usa accesores para generar el slug automaticamente
+6. Implementa casts para `published_at` como datetime
+
+### Endpoints a crear:
+- `GET /api/authors` - Listar autores con sus posts
+- `GET /api/posts` - Listar posts publicados recientes
+- `GET /api/posts/{slug}` - Ver un post por su slug
+- `GET /api/categories/{slug}/posts` - Posts por categoria
+
+<LinkCard
+  href="https://laravel.com/docs/11.x/eloquent"
+  title="Documentacion oficial de Eloquent"
+  description="Consulta la documentacion completa de Eloquent ORM."
+  icon="https://laravel.com/img/logomark.min.svg"
+  iconWidth={24}
+  iconHeight={24}
+/>
+</Card>

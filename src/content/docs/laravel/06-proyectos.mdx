@@ -1,95 +1,159 @@
 ---
-title: Ideas para Proyectos
-description: Ideas para REST API con Laravel
-keywords: laravel, proyectos, ideas, rest api
+title: Proyectos Laravel
+description: Listado de proyectos sugeridos para Laravel
 ---
 
-import { B, Info, Note } from '@astrojs/starlight/components'
+import { Card, Steps } from '@astrojs/starlight/components'
 
-:::info
-Estos proyectos están inspirados en el repositorio [Public APIs](https://github.com/public-apis/public-apis).  
-¡Ideales para practicar tus habilidades con **Laravel** y APIs REST!
-:::
+# Proyectos para Practicar Laravel
 
-Los requerimientos son los minimos, el estudiante es libre de agregar mas funcionalidades o mejorar las ya existentes.
-**Requisitos generales:**
-- Implementa operaciones **CRUD** completas.
-- Las migraciones deben estar a consideración del Estudiante.
-- Incluye al menos **2 modelos relacionados** y sus migraciones.
-- Las rutas deben seguir el estándar **REST**.
-- Debe estar desplegado en el hosting [Cloud Panel](https://cloud.inf-530.click)
+A continuacion se presentan proyectos propuestos para practicar los conceptos aprendidos en el curso. Estos proyectos cubren desde nivel basico hasta avanzado, permitiendo aplicar progresivamente los conocimientos de MVC, Eloquent, Blade, Middleware y API REST.
 
----
+## 1. Inventario de Libreria (Basico)
 
-## API de anime
+Un sistema simple para gestionar libros y categorias.
 
-Una API que permita a los usuarios buscar información sobre animes, personajes, episodios y más.
+<Steps>
+1. Configurar el proyecto con autenticacion (Breeze o Jetstream)
+2. Crear modelo `Category` con nombre y descripcion
+3. Crear modelo `Book` con titulo, autor, ISBN, precio, stock y categoria
+4. Implementar CRUD completo para ambos modelos con validacion
+5. Usar Blade para las vistas con layout compartido
+6. Implementar busqueda por titulo o autor
+</Steps>
 
-**Ejemplo de endpoints:**
-- `/animes`: Listar todos los animes.
-- `/animes?año=2023`: Filtrar animes por año.
-- `/animes?genero=acción`: Filtrar animes por género.
-- `/animes?nombre=Naruto`: Buscar animes por nombre.
-- `/animes/{id}`: Obtener detalles de un anime específico.
-- `/animes/{id}/personajes`: Listar personajes de un anime específico mas CRUD.
-- etc... Defina los endpoints que considere necesarios.
+**Habilidades practicadas**: CRUD, validacion, Blade, relaciones, busqueda
 
-**Inspiración:**  
-[Jikan API Docs](https://docs.api.jikan.moe/) — Una API no oficial para obtener información sobre animes y mangas.
+## 2. API REST de una Tienda Online (Intermedio)
 
----
+Desarrollar una API completa para gestion de productos con autenticacion.
 
-## API de Rick and Morty
+### Requisitos:
 
-Una API que permita a los usuarios explorar el universo de Rick and Morty, incluyendo personajes, episodios y ubicaciones.
+| Entidad | Campos | Relaciones |
+|---------|--------|------------|
+| Product | name, description, price, stock, image_url, is_active | belongsTo Category |
+| Category | name, slug, description | hasMany Product |
+| Order | user_id, total, status, shipping_address | belongsTo User, hasMany OrderItem |
+| OrderItem | order_id, product_id, quantity, price | belongsTo Order, belongsTo Product |
 
-**Ejemplo de endpoints:**
-- `/personajes`: Listar todos los personajes.
-- `/personajes/{id}`: Obtener detalles de un personaje específico.
-- `/episodios`: Listar todos los episodios.
-- `/episodios?desde=2023-01-01&hasta=2023-12-31`: Filtrar episodios por fecha.
-- `/episodios?nombre=Pilot`: Buscar episodios por nombre.
-- `/episodios/{id}`: Obtener detalles de un episodio específico.
-- `/episodios/{id}/personajes`: Listar personajes de un episodio específico mas CRUD.
-- etc... Defina los endpoints que considere necesarios.
+### Funcionalidades:
 
-**Inspiración:**  
-[Rick and Morty API Docs](https://rickandmortyapi.com/documentation) — Documentación oficial de la API de Rick and Morty.
+<Steps>
+1. Autenticacion completa con Sanctum (registro, login, logout)
+2. CRUD de productos y categorias
+3. Carrito de compras (sesion o base de datos)
+4. Proceso de checkout y creacion de ordenes
+5. Filtrado de productos por categoria, rango de precio y disponibilidad
+6. Paginacion y ordenamiento de resultados
+7. API Resources para transformar respuestas
+8. Form Requests para validacion
+9. Policies para autorizacion (solo admin puede crear/editar productos)
+10. Testing de endpoints con PHPUnit
+</Steps>
 
----
+## 3. Blog con Panel de Administracion (Intermedio)
 
-## API de películas
+Sistema de blog con roles de usuario y panel administrativo.
 
-Una API que permita a los usuarios buscar información sobre películas, actores, géneros y más.
+### Funcionalidades:
 
-**Ejemplo de endpoints:**
-- `/peliculas`: Listar todas las películas.
-- `/peliculas?año=2023`: Filtrar películas por año.
-- `/peliculas?genero=acción`: Filtrar películas por género.
-- `/peliculas?nombre=Inception`: Buscar películas por nombre.
-- `/peliculas/{id}`: Obtener detalles de una película específica.
-- `/peliculas/{id}/actores`: Listar actores de una película específica mas CRUD.
-- etc... Defina los endpoints que considere necesarios.
+<Steps>
+1. **Autenticacion y Autorizacion**:
+   - Registro y login de usuarios
+   - Roles: Administrador, Editor, Lector
+   - Middleware para proteccion de rutas segun rol
 
-**Inspiración:**  
-[The Movie Database (TMDB) API Docs](https://developers.themoviedb.org/3) — Documentación oficial de la API de TMDB.
+2. **Gestion de Posts**:
+   - CRUD completo de publicaciones
+   - Editor de texto enriquecido (Markdown o WYSIWYG)
+   - Estados: Borrador, Publicado, Archivado
+   - Slug automatico para URLs amigables
 
-:::note
-Requiere una clave de API para acceder a los datos, por lo que deberás registrarte en su sitio web para obtener una clave de API gratuita.
-:::
+3. **Sistema de Comentarios**:
+   - Comentarios anidados (respuestas)
+   - Moderacion de comentarios
 
+4. **Categorias y Etiquetas**:
+   - Relaciones polimorficas o muchos a muchos
+   - Nube de etiquetas
 
-## API de Musica
-Una API que permita a los usuarios buscar información sobre canciones, artistas, álbumes y géneros musicales.
-**Ejemplo de endpoints:**
-- `/canciones`: Listar todas las canciones.
-- `/canciones?año=2023`: Filtrar canciones por año.
-- `/canciones?genero=rock`: Filtrar canciones por género.
-- `/canciones?nombre=Bohemian Rhapsody`: Buscar canciones por nombre.
-- `/canciones/{id}`: Obtener detalles de una canción específica.
-- `/canciones/{id}/artistas`: Listar artistas de una canción específica mas CRUD.
-- etc... Defina los endpoints que considere necesarios.
-**Inspiración:**  
-[Spotify API Docs](https://developer.spotify.com/documentation/web-api/) — Documentación oficial de la API de Spotify.
+5. **Panel de Administracion**:
+   - Dashboard con estadisticas (posts, comentarios, usuarios)
+   - Gestion de usuarios
+   - Moderacion de comentarios
+</Steps>
 
-## Saludo a ronal
+## 4. API de Gestion de Tareas - Kanban (Avanzado)
+
+Sistema de gestion de proyectos tipo Trello con API completa.
+
+### Modelos:
+
+| Modelo | Descripcion |
+|--------|-------------|
+| `Workspace` | Espacio de trabajo |
+| `Board` | Tablero dentro de un workspace |
+| `Column` | Columna del tablero (To Do, Doing, Done) |
+| `Task` | Tarea dentro de una columna |
+| `Label` | Etiqueta de color para tareas |
+| `Comment` | Comentario en una tarea |
+
+### Funcionalidades Avanzadas:
+
+<Steps>
+1. **Drag & Drop**: Reordenamiento de tareas entre columnas via API
+2. **WebSockets**: Actualizacion en tiempo real con Laravel Echo + Pusher
+3. **Archivos Adjuntos**: Subida de archivos a S3 o almacenamiento local
+4. **Notificaciones**: Sistema de notificaciones en app y por email
+5. **Busqueda Full-Text**: Busqueda avanzada con Laravel Scout
+6. **Exportacion**: Exportar tableros a CSV o PDF
+</Steps>
+
+## 5. Red Social Minimalista (Avanzado)
+
+Plataforma social con funcionalidades core.
+
+### Funcionalidades:
+
+<Steps>
+1. **Perfiles de Usuario**:
+   - Avatar, biografia, enlaces sociales
+   - Seguir/Dejar de seguir usuarios
+   - Feed personalizado
+
+2. **Publicaciones**:
+   - Texto, imagenes y enlaces
+   - Me gusta y compartir
+   - Hashtags con busqueda
+
+3. **Sistema de Mensajes**:
+   - Mensajes directos entre usuarios
+   - Conversaciones en tiempo real
+
+4. **Notificaciones**:
+   - Me gusta, comentarios, nuevos seguidores
+   - Notificaciones en tiempo real
+</Steps>
+
+## Recomendaciones para todos los Proyectos
+
+<Card title="Buenas Practicas" icon="approve-check">
+- Usa siempre `declare(strict_types=1);` en archivos PHP
+- Implementa validacion con Form Requests
+- Usa API Resources para transformar respuestas
+- Escribe tests para tus endpoints y modelos
+- Documenta tu API con herramientas como Scribe o Swagger
+- Sigue los estandares PSR para el estilo de codigo
+- Usa migraciones y seeders para la base de datos
+- Implementa manejo de errores con try/catch
+</Card>
+
+## Despliegue
+
+Una vez completado tu proyecto, puedes desplegarlo en:
+
+- [Cloud Panel](https://cloud.inf-530.click) - Plataforma del curso
+- [Laravel Cloud](https://cloud.laravel.com) - Oficial de Laravel
+- [Laravel Forge](https://forge.laravel.com) - Para servidores propios
+- [DigitalOcean](https://www.digitalocean.com) - VPS con Laravel

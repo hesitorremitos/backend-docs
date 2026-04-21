@@ -1,24 +1,25 @@
 ---
 title: Javascript Basico
-description: Aprende los fundamentos de Javascript
-draft: false
+description: Aprende los fundamentos de Javascript para el desarrollo web frontend
 ---
 
-Javascript es un lenguaje de programacion que se utiliza para crear sitios web interactivos, sus caracteristicas:
-- **Lenguaje de programacion interpretado**: significa que el codigo se ejecuta linea por linea, no se compila en ningun momento.
-- **Se ejecuta solamente en el navegador**: es decir, que el codigo Javascript se ejecuta en el navegador del usuario, pero no afecta directamente a los archivos del cliente, solamnente se ejecuta en el navegador.
-- Se ejecuta ni bien es cargado en el arachivo HTML.
+import { Card, Steps, Tabs, TabItem } from '@astrojs/starlight/components'
+
+# JavaScript Basico
+
+JavaScript es un lenguaje de programacion que se utiliza para crear sitios web interactivos. Sus principales caracteristicas son:
+- **Lenguaje de programacion interpretado**: el codigo se ejecuta linea por linea sin necesidad de compilacion previa.
+- **Se ejecuta en el navegador**: el codigo JavaScript se ejecuta en el navegador del usuario, permitiendo interacciones dinamicas sin recargar la pagina.
+- **Multiplataforma**: funciona en todos los navegadores modernos sin modificaciones.
 
 :::tip
-Piensa en javascript como el cerebro de tu sitio web, que se encarga de la interaccion con el usuario. Añadiendo dinamismo y vida a tu sitio web.
-Es importante entender que javascript no puede interactuar directamente con nuestro equipo.
+Piensa en JavaScript como el cerebro de tu sitio web, encargado de la interaccion con el usuario, anadiendo dinamismo y vida a la pagina. Es importante entender que JavaScript no puede interactuar directamente con el sistema de archivos del equipo por razones de seguridad.
 :::
 
-## Comenzando a escribir Javascript `<script>`
+## Integracion de JavaScript en HTML
 
-Para escribir y ejecutar codigo Javascript en un archivo HTML, se utiliza la etiqueta `<script>`, que se coloca en el `<head>` o al final del  `<body>` del archivo HTML.
-La etiqueta `<script>` es una etiqueta con contenido(Codigo), ahora escribe tu primer *Hola Mundo* en Javascript.
-- La funcion `alert()` muestra un mensaje en una ventana emergente.
+Para escribir y ejecutar codigo JavaScript en un archivo HTML, se utiliza la etiqueta `<script>`, que puede colocarse en el `<head>` o al final del `<body>` del archivo HTML.
+
 ```html
 <script>
     alert("Hola Mundo");
@@ -28,391 +29,229 @@ La etiqueta `<script>` es una etiqueta con contenido(Codigo), ahora escribe tu p
 ```
 
 :::caution
-Nota que el mensaje `Hola Mundo` se muestra una vez la pagina es cargada, esto se debe a que el codigo Javascript **se ejecuta ni bien es cargado** en el archivo HTML.
-La funcion `alert()` no es recomendada para mostrar mensajes en un sitio web, ya que puede llegar a ser molesto para el usuario.
+El mensaje `Hola Mundo` se muestra una vez la pagina es cargada porque el codigo JavaScript se ejecuta inmediatamente al ser cargado en el archivo HTML. La funcion `alert()` no es recomendada para entornos de produccion ya que interrumpe la experiencia del usuario.
 :::
 
+### Script Externo
 
+El codigo JavaScript puede escribirse en un archivo aparte e incluirse con el atributo `src`:
 
-## Consola de Javascript
-Usar la funcion `alert()` puede llegar a ser molesto, lo mas recomendable es usar la **consola** de Javascript para ver los mensajes de depuracion de nuestro codigo.
-
-La consola de Javascript es una herramienta que nos permite ver los mensajes de error, advertencias y mensajes de depuracion de nuestro codigo Javascript.
-
-```javascript
-// Imprimir un mensaje en la consola
-var edad =10;
-let nombre = "Juan";
-// Asignacion de variables
-edad = 15
-console.log("Hola, mi nombre es "+nombre+" y tengo "+edad+" años");
-```
-
-:::tip
-Para abrir la consola de Javascript en tu navegador, presiona `F12` y selecciona la pestaña `Consola`.
-:::
-
-## Cargando Javascript en un archivo externo
-El codigo Javascript puede ser escrito en un archivo aparte y ser incluido en el archivo HTML con la propiedad `src` de la etiqueta `<script>`.
-
-
-```html "src="scripts/hola.js"" ins={3}
-<!--index.html-->
-<!-- Incluyendo un script externo -->
+```html
+<!-- index.html -->
 <script src="scripts/hola.js"></script>
 ```
 
-
 ```js
 // scripts/hola.js
-// Imprimir un mensaje en la consola
-var edad =10;
 let nombre = "Juan";
-// Asignacion de variables
-edad = 15
-console.log("Hola, mi nombre es "+nombre+" y tengo "+edad+" años");
+let edad = 15;
+console.log("Hola, mi nombre es " + nombre + " y tengo " + edad + " años");
 ```
-:::nota
-Los scripts tiene la terminacion `.js`, y se recomienda que se encuentren en la carpeta `scripts` de tu proyecto.
 
-Tambien recuerda que el codigo Javascript se ejecuta ni bien es cargado en el archivo HTML.
+:::note
+Los archivos JavaScript tienen la extension `.js`. Se recomienda colocarlos en la carpeta `scripts/` del proyecto.
+:::
+
+## Consola de JavaScript
+
+La consola es una herramienta esencial para la depuracion. Permite ver mensajes de error, advertencias y resultados de expresiones.
+
+```js
+let edad = 10;
+let nombre = "Juan";
+edad = 15;
+console.log("Hola, mi nombre es " + nombre + " y tengo " + edad + " años");
+```
+
+:::tip
+Para abrir la consola en tu navegador, presiona `F12` y selecciona la pestana `Consola`.
 :::
 
 ## Variables
-:::warning
-Debe realizar todo el codigo de esta seccion en un archivo js para su revision
+
+JavaScript es un lenguaje de **tipado dinamico**, lo que significa que no es necesario especificar el tipo de dato explicitamente. Existen tres formas de declarar variables:
+
+| Palabra clave | Descripcion | Alcance | Recomendacion |
+|---------------|-------------|---------|---------------|
+| `var` | Forma tradicional | Funcion | Evitar en codigo moderno |
+| `let` | Forma moderna | Bloque | **Usar por defecto** |
+| `const` | Constante | Bloque | **Usar cuando el valor no cambia** |
+
+```js
+let nombre = "Juan";     // Variable mutable
+const PI = 3.1416;       // Constante (no se puede reasignar)
+// var edad = 25;        // Evitar - tiene alcance de funcion y permite hoisting problematico
+```
+
+:::caution
+No se puede reasignar una constante. `const PI = 3;` despues de declarada generara un error.
 :::
 
-Javascript es un lenguaje de **tipado dinamico**, lo que significa que no es necesario especificar el tipo de dato que se almacenara en una variable, ya que el lenguaje lo hace por nosotros.
+## Tipos de Datos
 
-Existen tres formas de declarar variables en javascript:
-- `var`: es la forma antigua de declarar variables, pero aun se utiliza en algunos casos.
-- `let`: es la forma moderna de declarar variables, y es la mas recomendada.
+JavaScript tiene los siguientes tipos de datos primitivos:
 
-```javascript
-// Declaracion de variables en javascript
-var edad = 10;
-let nombre = "Juan";
-
-alert(nombre);
-alert(edad);
-```
-
-## Operadores
-Los operadores son simbolos que se utilizan para realizar operaciones matematicas, logicas y de comparacion.
-
-Javascript usa los mismos operadores que otros lenguajes de programacion, como:
-| Operador | Descripcion |
-|----------|-------------|
-| `+`      | Suma        |
-| `-`      | Resta       |
-| `*`      | Multiplicacion |
-| `/`      | Division    |
-| `%`      | Modulo      |
-| `++`     | Incremento  |
-| `--`     | Decremento  |
-| `=`      | Asignacion  |
-| `==`     | Igualdad    |
-| `!=`     | Diferente   |
-| `>`      | Mayor que   |
-| `<`      | Menor que   |
-| `>=`     | Mayor o igual que |
-| `<=`     | Menor o igual que |
-| `&&`     | Y logico    |
-| `\|\|`     | O logico    |
-| `!`      | Negacion    |
-
-
-### Declaracion de variables 
-```js
-// Declaracion de variables
-let a = 10;
-let b = 5;
-```
-
-### Operaciones matematicas
-Javascript al igual que muchos lenguajes de **alto nivel** soporta operaciones matematicas.
-
-:::info
-Revise la consola para ver los resultados de las operaciones.
-:::
+| Tipo | Descripcion | Ejemplo |
+|------|-------------|---------|
+| `string` | Cadena de texto | `"Hola"`, `'Mundo'` |
+| `number` | Numero (entero o decimal) | `42`, `3.14` |
+| `boolean` | Valor logico | `true`, `false` |
+| `null` | Ausencia intencional de valor | `null` |
+| `undefined` | Variable declarada sin valor | `undefined` |
+| `symbol` | Identificador unico (ES6+) | `Symbol('id')` |
+| `bigint` | Numero entero grande (ES2020) | `9007199254740991n` |
 
 ```js
-a + b; // 15
-a - b; // 5
-a * b; // 50
-a / b; // 2
-a % b; // 0
-```
-### Operaciones de incremento y decremento.
-Tambien conocidos como **operadores unarios**, se utilizan para incrementar o decrementar el valor de una variable en una unidad.
-```js
-// Incremento y decremento (despues)
-a++;
-b--;
-console.log(a);
-console.log(b);
-// Incremento y decremento (antes)
-++a;
---b;
-console.log(a);
-console.log(b);
-```
-
-### Operadores de comparacion
-Los operadores de comparacion se utilizan para comparar dos valores y retornar un valor booleano `true` o `false`.
-```js
-// Operadores de comparacion
-a > b; // true
-a < b; // false
-a == b; // false
-a != b; // true
-```
-
-### Operadores logicos
-Los operadores logicos se utilizan para realizar operaciones logicas entre dos valores booleanos.
-```js
-// Operadores logicos
-true || false // true
-true && false // false
-!true // false
-```
-
-## Constantes
-Las constantes son variables que no pueden cambiar su valor una vez que han sido declaradas, se declaran con la palabra reservada `const`.
-
-```javascript del={5}
-// Declaracion de constantes
-const PI = 3.1416;
-const GRAVEDAD = 9.8;
-
-PI = 3; // Error, no se puede reasignar una constante
-consola.log(PI);
-```
-
-## Tipos de datos
-Javascript es un lenguaje de tipado dinamico, lo que significa que no es necesario especificar el tipo de dato que se almacenara en una variable, ya que el lenguaje lo hace por nosotros.
-
-Esto llega a ser una ventaja y desventaja:
-- Ventaja: no es necesario especificar el tipo de dato.
-- Desventaja: puede llegar a ser confuso el tipo de dato que se esta almacenando en una variable.
-
-
-Note que en el siguiente ejemplo, la variable `a` es un numero, pero al sumarla con la variable `b` que es un string, el resultado es un string, y el resultado de la **suma** no es el esperado.
-```js
-// Declaracion de variables
-let a = '1'
-let b = 7
-let suma = a + b
-console.log(suma) // 17
-```
-
-### La funcion `typeof`
-La funcion `typeof` nos permite saber el tipo de dato que se esta almacenando en una variable.
-
-```js
-// Declaracion de variables
 let a = 10;
 let b = "Hola Mundo";
 let c = true;
+let d = null;
 
-console.log(typeof a); // number
-console.log(typeof b); // string
-console.log(typeof c); // boolean
+console.log(typeof a); // "number"
+console.log(typeof b); // "string"
+console.log(typeof c); // "boolean"
+console.log(typeof d); // "object" (quirk historico de JS)
 ```
-:::note
-`tipeof` retorna un string con el tipo de dato que se esta almacenando en una variable, esto nos permite hacer comparaciones y validaciones en nuestro codigo.
-:::
 
-
-## Las Funciones
-Las funciones son bloques de codigo que se pueden reutilizar en nuestro programa, se declaran con la palabra reservada `function`.
-
-
-###  Definicion de funciones
-Las funciones son bloques de codigo que se pueden reutilizar en nuestro programa, se declaran con la palabra reservada `function`.
-
-- Se declaran con la palabra reservada `function`.
-- Se le asigna un nombre a la funcion con terminado de parentesis `()`.
-- Se le asigna un bloque de codigo entre llaves `{}`.
-
+:::caution[Coercion de Tipos]
+JavaScript realiza conversiones automaticas que pueden generar resultados inesperados:
 ```js
-// Declaracion de una funcion
-function saludar(){
-    console.log("Hola Mundo");
-    alert("Revise la consola");
-}
-```
-
-### Llamada a una funcion
-Para llamar a una funcion, se utiliza el nombre de la funcion seguido de parentesis `()`.
-
-Esto ejecutara el bloque de codigo que se encuentra en la funcion.
-
-```js ins={7}
-function saludar(){
-    // Bloque de codigo
-    console.log("Hola Mundo");
-    alert("Revise la consola");
-}
-// Llamada a la funcion
-saludar();
-```
-
-### Funciones anonimas
-Las funcioens aninomas carecen de nombre, y se las asigna a una variable o a una propiedad de un objeto.
-```js
-// Funcion anonima
-function(){
-    console.log("Hola Mundo");
-}
-```
-
-Estas funciones por si solas no se ejecutan, se deben asignar a una constante o variable para que almacenar la funcion y luego ejecutarla.
-
-```js
-// Uso correcto de una funcion anonima
-const saludar = function(){
-    console.log("Hola Mundo");
-}
-// Ejeccucion de la funcion
-saludar();
-```
-
-#### Usando funciones como si fueran variables
-Se puede reasignar la funcion a otra variable, y se ejecutara la nueva funcion asignada.
-```js
-// Uso en variables
-let miFuncion = function(){
-    console.log("Hola Mundo");
-    alert("Revise la consola");
-}
-miFuncion(); // Ejeccucion de la funcion
-
-// Reasingar la funcion
-miFuncion = function(){
-    console.log("La funcion ha sido reasignada");
-    console.log("Adios Mundo");
-}
-miFuncion();
-
-```
-
-### Funciones como referencia
-Las funciones en Javascript son tratadas como cualquier otro tipo de dato, se las puede asignar a una variable como si fuera un numero o un string, per sin el uso de parentesis `()`.
-
-```js
-// Declaracion de una funcion
-function miFuncion(){
-    console.log("Hola Mundo");
-}
-
-// Asignacion de una funcion a una constante
-const hola = miFuncion;
-hola(); // Ejecucion de la funcion
-```
-
-:::note
-Cuando se usa la funcion sin parentesis `()`, se esta asignando la funcion a la variable, y **no se esta ejecutando** la funcion.
-
-Imaginelo como si estuviera guardando la funcion en una caja, y luego la ejecutara cuando lo necesite.
-:::
-
-## Los Objetos
-Los objetos son estructuras de datos que nos permiten almacenar multiples valores en una sola variable, se declaran con llaves `{}`.La forma de indicar la clave y el valor es `clave: valor`.
-
-Cada par de clave y valor se separa por una coma `,`.
-
-```js
-const persona = {
-    nombre: "Juan",
-    apellido: "Perez",
-    edad: 25,
-    casado: false
-}
-```
-
-### Acceder valores de un objeto
-Para acceder a los valores de un objeto, se utiliza la notacion de punto `.` o la notacion de corchetes `[]`.
-
-```js
-// Acceder a los valores de un objeto
-console.log(persona.nombre); // Juan
-console.log(persona["apellido"]); // Perez
-console.log(persona.edad); // 25
-console.log(persona.casado); // false
-```
-
-:::note
-El uso de corchetes `[]` es util cuando se quiere acceder a una propiedad de un objeto, pero no se conoce el nombre de la propiedad, o que la clave tenga caracteres especiales como espacios o guiones.
-```js
-const persona = {
-    "nombre completo": "Juan Perez"
-}
-
-console.log(persona["nombre completo"]); // Juan Perez
+let a = '1';
+let b = 7;
+console.log(a + b); // "17" (concatenacion, no suma)
+console.log(a - b); // -6 (resta numerica)
 ```
 :::
 
-### Modificar valores de un objeto
-Para modificar los valores de un objeto se las trata como cualquier otra variable, se asigna un nuevo valor a la propiedad del objeto.
+## Operadores
+
+### Aritmeticos
+
+| Operador | Descripcion | Ejemplo | Resultado |
+|----------|-------------|---------|-----------|
+| `+` | Suma | `5 + 3` | `8` |
+| `-` | Resta | `5 - 3` | `2` |
+| `*` | Multiplicacion | `5 * 3` | `15` |
+| `/` | Division | `15 / 3` | `5` |
+| `%` | Modulo (resto) | `10 % 3` | `1` |
+| `**` | Potencia (ES2016) | `2 ** 3` | `8` |
+| `++` | Incremento | `a++` | Incrementa en 1 |
+| `--` | Decremento | `a--` | Decrementa en 1 |
+
+### Comparacion
+
+| Operador | Descripcion | Uso Recomendado |
+|----------|-------------|-----------------|
+| `===` | Igualdad estricta (valor y tipo) | **Siempre preferir** |
+| `!==` | Desigualdad estricta | **Siempre preferir** |
+| `==` | Igualdad flexible (coercion) | Evitar |
+| `!=` | Desigualdad flexible | Evitar |
+| `>`, `<` | Mayor que, Menor que | - |
+| `>=`, `<=` | Mayor o igual, Menor o igual | - |
+
+:::caution[=== vs ==]
+El operador `===` compara tanto el valor como el tipo de dato. El operador `==` realiza coercion de tipos antes de comparar, lo que puede generar resultados inesperados:
 ```js
-// Modificar valores de un objeto
-persona.edad = 30;
-persona.casado = false;
-console.log(persona.edad); // 30
-console.log(persona.casado); // false
+console.log(5 == "5");   // true (coercion)
+console.log(5 === "5");  // false (tipos diferentes)
+console.log(0 == false); // true (coercion)
+console.log(0 === false);// false (tipos diferentes)
 ```
-
-
-### Funciones dentro de  Objetos(Metodos)
-Los objetos pueden tener funciones como valores de sus propiedades, a estas funciones se les llama **metodos**.
-
-:::note
-Para asignar una funcion a una propiedad de un objeto, se recomienda usar las  **funciones anonimas**.
 :::
 
-```js
-const persona = {
-    nombre: "Juan",
-    apellido: "Perez",
-    edad: 25,
-    casado: false,
-    saludar: function(){
-        console.log("Hola Mundo");
-    }
-}
-// Llamada a un metodo
-persona.saludar();
-```
-### Definicino clave `this` en objetos
-La palabra reservada `this` se refiere al objeto que contiene la funcion, es decir, que `this` hace referencia al objeto en el que se encuentra la funcion.
+### Logicos
 
-Tambien podemos modificar las propiedades del objeto con la palabra reservada `this`.
+| Operador | Descripcion | Ejemplo |
+|----------|-------------|---------|
+| `&&` | AND logico | `true && false` → `false` |
+| `\|\|` | OR logico | `true \|\| false` → `true` |
+| `!` | NOT logico | `!true` → `false` |
+
+## Estructuras de Control
+
+### Condicionales
 
 ```js
-const persona = {
-    nombre: "Juan",
-    apellido: "Perez",
-    edad: 25,
-    casado: false,
-    saludar: function(){
-        console.log("Hola, mi nombre es "+this.nombre+" "+this.apellido);
-    },
-    matrimonio: function(){
-        this.casado = true;
-        console.log("Ahora estoy casado");
-    }
+let edad = 20;
+
+if (edad >= 18) {
+    console.log("Eres mayor de edad");
+} else if (edad >= 13) {
+    console.log("Eres adolescente");
+} else {
+    console.log("Eres menor de edad");
 }
 
-// Llamada a un metodo
-persona.saludar();
-persona.matrimonio();
-console.log(persona.casado); // Ya esta casado
+// Operador ternario (forma concisa)
+let mensaje = edad >= 18 ? "Mayor de edad" : "Menor de edad";
 ```
 
-### Objetos anidados
-Los objetos pueden tener otros objetos como valores de sus propiedades, a estos objetos se les llama **objetos anidados**.
+### Bucles
+
+```js
+// For
+for (let i = 0; i < 5; i++) {
+    console.log(i);
+}
+
+// While
+let contador = 0;
+while (contador < 5) {
+    console.log(contador);
+    contador++;
+}
+
+// For...of (iterar arrays)
+let frutas = ["manzana", "pera", "uva"];
+for (let fruta of frutas) {
+    console.log(fruta);
+}
+
+// For...in (iterar propiedades de objetos)
+let persona = { nombre: "Juan", edad: 25 };
+for (let clave in persona) {
+    console.log(clave + ": " + persona[clave]);
+}
+```
+
+## Funciones
+
+### Declaracion de Funciones
+
+```js
+// Declaracion tradicional
+function saludar(nombre) {
+    return "Hola, " + nombre;
+}
+
+// Expresion de funcion (anonima)
+const despedir = function(nombre) {
+    return "Adios, " + nombre;
+};
+
+// Arrow function (ES6+) - forma moderna recomendada
+const saludar = (nombre) => {
+    return "Hola, " + nombre;
+};
+
+// Arrow function con return implicito (una sola expresion)
+const saludar = nombre => "Hola, " + nombre;
+
+// Arrow function con parametros multiples
+const sumar = (a, b) => a + b;
+```
+
+:::tip[Arrow Functions]
+Las arrow functions (`=>`) son la forma moderna y recomendada en JavaScript. Tienen ventajas sobre las funciones tradicionales:
+- Sintaxis mas concisa
+- No tienen su propio `this` (heredan el del contexto padre)
+- No se pueden usar como constructores
+- Ideales para callbacks y funciones de una sola expresion
+:::
+
+## Objetos
+
+Los objetos son estructuras de datos que almacenan pares clave-valor:
 
 ```js
 const persona = {
@@ -421,320 +260,210 @@ const persona = {
     edad: 25,
     casado: false,
     direccion: {
-        calle: "Av. 6 de Diciembre",
+        calle: "Av. Principal",
         numero: 123,
         ciudad: "Quito"
+    },
+    saludar() {
+        return `Hola, mi nombre es ${this.nombre} ${this.apellido}`;
     }
-}
+};
+
+// Acceso a propiedades
+console.log(persona.nombre);           // "Juan"
+console.log(persona["apellido"]);      // "Perez"
+console.log(persona.direccion.calle);  // "Av. Principal"
+console.log(persona.saludar());        // "Hola, mi nombre es Juan Perez"
+
+// Desestructuracion (ES6+)
+const { nombre, edad } = persona;
+console.log(nombre); // "Juan"
 ```
 
-Para acceder a los valores de un objeto anidado, se utiliza la notacion de punto `.` o la notacion de corchetes `[]`.
+## Arrays
+
+Los arrays son colecciones ordenadas de elementos:
 
 ```js
-// Acceder a los valores de un objeto anidado
-console.log(persona.direccion.calle); // Av. 6 de Diciembre
-console.log(persona.direccion.numero); // 123
-console.log(persona["direccion"]["ciudad"]); // Quito
+let frutas = ["manzana", "pera", "uva"];
+let numeros = [1, 2, 3, 4, 5];
+
+// Metodos comunes
+frutas.push("naranja");           // Agregar al final
+frutas.pop();                      // Eliminar el ultimo
+frutas.unshift("fresa");          // Agregar al inicio
+frutas.indexOf("pera");           // Buscar indice
+frutas.includes("uva");           // Verificar existencia
+
+// Metodos funcionales (programacion funcional)
+numeros.map(n => n * 2);          // [2, 4, 6, 8, 10]
+numeros.filter(n => n > 2);       // [3, 4, 5]
+numeros.reduce((a, b) => a + b, 0); // 15 (suma total)
+numeros.find(n => n > 3);         // 4 (primer elemento que cumple)
 ```
 
-Como pudo ver en javascript **casi todo** se trata como un objeto, es importante entender esto para la siguiente seccion.
+## Manipulacion del DOM
 
-## Interactuando con el documento HTML(DOM)
-El **DOM** es la representacion de la estructura de la pagina web, y se puede acceder a los elementos del DOM con Javascript para realizar operaciones y mostrar resultados en la pagina web.
+El DOM (Document Object Model) es la representacion en memoria de la estructura HTML de la pagina.
 
-:::tip
-Imaguna que el **DOM** hace referencia a todos los elementos HTML ya cargados o que se pueden **ver** en la pagina web.
-:::
+### Seleccion de Elementos
 
-import {TabItem, Tabs} from '@astrojs/starlight/components'
-
-### Seleccionar elementos del DOM
-Para seleccionar un elemento del DOM, se utiliza la funcion `document.querySelector()`, que recibe como parametro un **selector CSS**.
-
-<Tabs>
-<TabItem label="script.js" >
 ```js
-// Seleccionar un elemento del DOM (boton)
+// Seleccion por ID
 const boton = document.querySelector("#btn-form");
-console.log(boton); // Revise la consola
+
+// Seleccion por clase
+const items = document.querySelectorAll(".item");
+
+// Seleccion por etiqueta
+const parrafos = document.querySelectorAll("p");
 ```
-</TabItem>
 
-<TabItem label="index.html">
-Se sobreentiende la estructura basica de un archivo HTML, por lo que solo se mostrara el formulario.
-```html ins={17}
-<form>
-    <div>
-        <!-- Campo usuario -->
-        <label for="username">Usuario:</label>
-        <input type="text" id="username" placeholder="Ingrese su usuario">
-    </div>
-    <br>
-    <div>
-        <!-- Campo contraseña -->
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" placeholder="Ingrese su contraseña">
-    </div>
-    <br>
-    <button type="submit" id="btn-form">Iniciar sesión</button>
-</form>
-<!-- Incluyendo un script externo -->
-<script src="script.js"></script>
-```
-</TabItem>
-</Tabs>
-
-
-
-### Accediendo a los valores de un elemento
-Para acceder a los valores de un elemento del DOM se usa la misma notaion de punto `.` que se usa en los objetos.
-
-Los elements html tienen distintas **propiedades** y **metodos** que se pueden acceder con Javascript. Puede consultar la [documentacion](https://developer.mozilla.org/es/docs/Web/API/Element) para mas informacion.
+### Modificacion de Elementos
 
 ```js
 const boton = document.querySelector("#btn-form");
-// Acceder a las propiedades de un elemento
-const tipo = boton.type;
-const texto = boton.textContent;
-console.log(tipo); // submit
-console.log(texto); // Iniciar sesion
-```
 
-### Modificar las propiedades de un elemento
-Para modificar las propiedades de un elemento del DOM se usa la misma notaion de punto `.` que se usa en los objetos.
+// Modificar texto
+boton.textContent = "Enviar";
 
-```js
-// Modificar las propiedades de un elemento
-boton.textContent = "Enviar al servidor";
-
-// Objetos anidados
+// Modificar estilos
 boton.style.backgroundColor = "blue";
-boton.style.color = "red";
+boton.style.color = "white";
+
+// Modificar atributos
+boton.setAttribute("disabled", "true");
+boton.removeAttribute("disabled");
+
+// Agregar/eliminar clases
+boton.classList.add("activo");
+boton.classList.remove("inactivo");
+boton.classList.toggle("visible");
 ```
 
-:::caution
-Preguntese ¿Porque cambiar el texto del boton a `Enviar al servidor`, el _color de fondo_ a `azul` y el _color del texto_ a `rojo`?
-:::
+## Manejo de Eventos
 
-
-## Eventos en Javascript
-Los eventos son acciones que ocurren en la pagina web, como hacer **click** en un boton, enviar un formulario, cargar la pagina, etc.
-
-La manera antigua de asignar eventos a los elementos del DOM es con la propiedad `onclick` y asignarle una funcion que se ejecutara cuando ocurra el evento.
-
-<Tabs>
-<TabItem label="index.html">
-```html "onclick="saludar()""
-<button type="submit" id="btn-form" onclick="saludar()">Iniciar sesión</button>
-```
-</TabItem>
-
-<TabItem label="script.js">
-```js
-function saludar() {
-  alert("Hola Mundo");
-}
-```
-</TabItem>
-</Tabs>
-Ahora cuando se haga click en el boton `Iniciar sesion`, se ejecutara la funcion `saludar()`.
-
-### Manejo de eventos con buenas practicas
-Cuando se realiza una pagina web, es recomendable separar el codigo Javascript del archivo HTML, para que sea mas facil de mantener y de entender. Por lo que no debe evitar usar codigo Javascript en el archivo HTML.
-
-La alternativa a la [seccion anterior](/guides/05-javascript/#eventos-en-javascript) es asignar un evento a un elemento del DOM con la funcion `addEventListener()`, que recibe dos parametros:
-1. El nombre del evento. Ej. `click`, `submit`, `load`, etc.
-2. La funcion que se ejecutara cuando ocurra el evento. 
-    Esta debe ser una referencia o una funcion anonima.
+Los eventos permiten responder a acciones del usuario. La forma moderna y recomendada es usando `addEventListener`:
 
 ```js
-// Seleccionar un elemento del DOM (boton)
 const boton = document.querySelector("#btn-form");
 
-// Definimos la funcion a usar
-function saludar() {
-  alert("Hola Mundo");
-}
+// Forma moderna (recomendada)
+boton.addEventListener("click", (evento) => {
+    evento.preventDefault(); // Evitar comportamiento por defecto
+    console.log("Boton clickeado");
+});
 
-// Asignar un evento a un elemento del DOM
-boton.addEventListener("click", saludar);
-```
-Esto deberia hacer lo mismo que el ejemplo anterior, pero con la diferencia que el codigo Javascript esta separado del archivo HTML.
-
-
-
-
-### Otros eventos comunes
-Todos los eventos se definen de la misma manera, solo cambia el nombre del evento que se quiere asignar. Se le puede aplicar a las distintas etiquetas HTML estudiadas.
-
-Ej: El objeto `window` hacer referencia a la ventana del navegador, y se puede asignar eventos a la ventana del navegador.
-```js
-window.addEventListener("load", function(){
-    alert("La pagina ha sido cargada");
+// Evento de envio de formulario
+const formulario = document.querySelector("form");
+formulario.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    // Validar y enviar datos
 });
 ```
-Algunos de los eventos mas comunes son:
 
-| Evento | Descripcion |Etiqutas HTML |
-|--------|-------------|--------------|
-| click  | Se ejecuta cuando se hace click en un elemento | Todos los elementos |
-| submit | Se ejecuta cuando se envia un formulario | Formularios |
-| load   | Se ejecuta cuando la pagina ha sido cargada | Ventana del navegador |
-| keyup  | Se ejecuta cuando se suelta una tecla | Input, textarea |
-| change | Se ejecuta cuando se cambia el valor de un input | Input, select, textarea |
-| focus  | Se ejecuta cuando un elemento recibe el foco | Todos los elementos |
-| blur   | Se ejecuta cuando un elemento pierde el foco | Todos los elementos |
-| scroll | Se ejecuta cuando se hace scroll en la pagina | Ventana del navegador |
-|mouseover| Se ejecuta cuando el cursor pasa por encima de un elemento | Todos los elementos |
-|mouseout | Se ejecuta cuando el cursor sale de un elemento | Todos los elementos |
+### Eventos Comunes
 
-Puede consultar la [documentacion de eventos](https://developer.mozilla.org/es/docs/Web/Events) para mas informacion sobre los eventos en Javascript.
+| Evento | Descripcion | Elementos |
+|--------|-------------|-----------|
+| `click` | Clic del raton | Todos |
+| `submit` | Envio de formulario | `<form>` |
+| `input` | Cambio en un input | `<input>`, `<textarea>` |
+| `change` | Cambio confirmado | `<input>`, `<select>` |
+| `keydown` | Tecla presionada | Elementos con foco |
+| `load` | Carga completada | `window` |
+| `DOMContentLoaded` | DOM listo | `document` |
 
-
-
-## Condicionales `if` y `else`
-Los condicionales son estructuras de control que que en base a una condicion, ejecutan un bloque de codigo u otro.
-
-Al igual que otros lenguajes se tiene las palabras reservadas:
-- `if`: si la condicion es verdadera, se ejecuta el bloque de codigo.
-- `else`: si la condicion es falsa, se ejecuta el bloque de codigo.
-
-```js
-// Declaracion de variables
-let a = 10;
-let b = 5;
-
-// Condicional
-if(a > b){
-    // Si la condicion es verdadera
-    console.log("a es mayor que b");
-}
-else{
-    // Si la condicion es falsa
-    console.log("a es menor que b");
-}
-```
-## Ejercicio
-Se tiene el siguiente formulario
-
-:::note
-El atributo `action="#"` en el formulario, hace referencia a la misma pagina, por lo que al enviar el formulario, la pagina no se recargara.
+:::tip[DOMContentLoaded vs load]
+- `DOMContentLoaded`: Se ejecuta cuando el DOM esta listo (no espera imagenes/CSS). Ideal para scripts que manipulan el DOM.
+- `load`: Se ejecuta cuando toda la pagina (incluyendo imagenes) esta cargada. Usar solo cuando se necesite todo el contenido.
 :::
+
+## Ejercicio Practico: Validacion de Formulario
+
+Implementa un formulario con validacion completa usando los conceptos aprendidos:
+
 ```html
-<form action="#">
+<form action="#" id="registro-form">
     <div>
-        <!-- Campo email -->
         <label for="email">Correo:</label>
-        <input type="text" id="email" placeholder="Ingrese su usuario">
+        <input type="text" id="email" placeholder="Ingrese su correo">
     </div>
-    <br>
     <div>
-        <!-- Campo contraseña -->
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" placeholder="Ingrese su contraseña">
+        <label for="password">Contrasena:</label>
+        <input type="password" id="password" placeholder="Minimo 6 caracteres">
     </div>
-    <br>
-    <button type="submit">Iniciar sesión</button>
+    <button type="submit">Registrar</button>
 </form>
 ```
-Valide los campos del formulario con las siguientes reglas:
-- El campo correo y contraseña no deben estar vacios.
-- El campo correo debe tener una '@'.
-- El campo contraseña debe tener al menos 6 caracteres.
-- Si las reglas se cumplen, mostrar un mensaje de bienvenida.
 
-import {Steps} from '@astrojs/starlight/components';
+```js
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector("#registro-form");
+    const emailInput = document.querySelector("#email");
+    const passwordInput = document.querySelector("#password");
 
-<Steps>
-1. Asignamos los ID a los elementos del formulario.
-    ```html "id="email""  
-    <button type="submit" id="btn-form">Iniciar sesion</button>
-    ```
-2. Seleccionamos los elementos del formulario.
-    ```js
-    const email = document.querySelector("#email");
-    const password = document.querySelector("#password");
-    const boton = document.querySelector("#btn-form");
-    ```
-3. Definimos las funciones  de validacion
-    - Validacion de correo electronico
-        ```js
-        // script.js
-        // Validar correo electronico
-        function validateEmail() {
-        email_value = email.value;
-            // No debe estar vacio
-            if (email_value == "") {
-                alert("El campo correo no puede estar vacio");
-            // Debe tener una '@ '
-            } else if (!email_value.includes("@")) {
-                alert("El campo correo debe tener una '@'");
-            } else {
-                console.log("Correo valido");
-            }
+    form.addEventListener("submit", (evento) => {
+        evento.preventDefault();
+
+        let errores = [];
+
+        // Validar email
+        if (emailInput.value.trim() === "") {
+            errores.push("El correo no puede estar vacio");
+        } else if (!emailInput.value.includes("@")) {
+            errores.push("El correo debe contener @");
         }
-        ```
-    - Validacion de contraseña
-        ```js
-        // script.js
-        // Validar contraseña
-        function validatePassword() {
-            if (password.value  == "") {
-                alert("El campo contraseña no puede estar vacio");
-            } else if (password_value.length < 6) {
-                alert("El campo contraseña debe tener al menos 6 caracteres");
-            } else {
-                console.log("Contraseña valida");
-            }
+
+        // Validar password
+        if (passwordInput.value.length < 6) {
+            errores.push("La contrasena debe tener al menos 6 caracteres");
         }
-        ```
-4. Asignamos los eventos a los elementos del formulario usamos una funcion anonima.
-    ```js
-    boton.addEventListener("click", function(){
-        validateEmail();
-        validatePassword();
+
+        if (errores.length > 0) {
+            console.error("Errores:", errores);
+        } else {
+            console.log("Registro exitoso!");
+        }
     });
-    ```
+});
+```
 
-</Steps>
+<Card title="Actividad: Formulario de Registro Completo" icon="pencil">
 
-Como resultado se deberia de tener un formulario que valide los campos del correo y contraseña, y muestre en consola si los campos son validos.
+Crea un formulario de registro con las siguientes caracteristicas:
 
-## Hazlo tu mismo :badge[Actividad]{variant=caution}
+1. **Campos requeridos**:
+   - Nombre Completo (texto)
+   - Edad (numero)
+   - Correo Electronico (email)
+   - Contrasena (password, minimo 6 caracteres)
+   - Confirmar Contrasena (debe coincidir)
 
-import {Card} from '@astrojs/starlight/components';
+2. **Requisitos**:
+   - Todos los campos son obligatorios
+   - La edad debe ser mayor o igual a 18
+   - El correo debe contener `@` y un dominio valido
+   - Las contrasenas deben coincidir
+   - Los scripts deben estar en archivos externos
 
-<Card title='Actividad de clase 3' >
+3. **Interfaz**:
+   - Usa checkboxes para indicar que campo fue validado correctamente
+   - Los mensajes de error deben mostrarse en la consola
+   - Cambia el color de fondo del campo segun su estado (valido/invalido)
 
-1. Cree un formulario con los siguientes campos:
-    - Nombre Completo
-    - Edad
-    - Correo
-    - Contraseña
-    - Confirmar contraseña
-    - Boton de enviar
-2. La pagina debe tener un icono 
-
-3. Los **scripts** y **estilos** deben estar en archivos separados.
-
-4. Valide los campos del formulario con las siguientes reglas:
-    - Todos los campos deben estar llenos.
-    - El campo correo debe tener una '@'.
-    - El campo contraseña debe tener al menos 6 caracteres.
-    - El campo confirmar contraseña debe ser igual al campo contraseña.
-    - La persona debe ser mayor de edad(mayor a 18 años).
-
-5. Todos los mensajes de validacion se deberan en otros `inputs` de tipo `checkbox`, Solamente los **ERRORES** se deberan mostrar en consola.
-    :::note
-    Los checkboxs tienen la propiedad `checked` que se puede asignar `true` o `false` para marcar o desmarcar el checkbox. 
-    Tambien los elementos html tienen la propiedad `style` que se puede asignar un objeto con las propiedades de **css**.
-    ```js
-    const rev_email = document.querySelector("#rev_email");
-    rev_email.checked = true; // or false
-    // Cambiar color de fondo del contenedor padre
-    rev_email.parentElement.style.backgroundColor = "red";
-    ```
-    :::
-
-![Actividad 3](@assets/javascript/practica1.png)
+:::note
+Los checkboxes tienen la propiedad `checked` que se puede asignar `true` o `false`:
+```js
+const checkbox = document.querySelector("#rev_email");
+checkbox.checked = true;
+checkbox.parentElement.style.backgroundColor = "green";
+```
+:::
 </Card>
+
+:::tip[Recursos Adicionales]
+- [MDN JavaScript](https://developer.mozilla.org/es/docs/Web/JavaScript) - Documentacion oficial completa
+- [JavaScript.info](https://es.javascript.info/) - Tutorial moderno de JavaScript
+- [Eloquent JavaScript](https://eloquentjavascript.net/) - Libro gratuito (disponible en espanol)
+:::

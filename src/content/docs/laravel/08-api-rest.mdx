@@ -1,0 +1,561 @@
+---
+title: API RESTful en Laravel
+description: Aprende a construir APIs RESTful profesionales con Laravel, incluyendo autenticacion, recursos y validacion.
+---
+
+import { Card, Steps, Tabs, TabItem } from '@astrojs/starlight/components'
+import { LinkCard } from '@astrojs/starlight/components'
+
+# API RESTful en Laravel
+
+<Card title="Que es una API RESTful?" icon="information">
+Una **API RESTful** (Representational State Transfer) es una interfaz que permite la comunicacion entre sistemas usando el protocolo HTTP. Laravel proporciona herramientas robustas para construir APIs profesionales rapidamente.
+</Card>
+
+:::tip[Documentacion Oficial]
+Esta guia se basa en la [documentacion oficial de Laravel para APIs](https://laravel.com/docs/11.x/routing#route-groups).
+:::
+
+## Principios REST
+
+Las APIs RESTful siguen estos principios fundamentales:
+
+| Principio | Descripcion |
+|-----------|-------------|
+| **Stateless** | Cada peticion es independiente, el servidor no guarda estado entre peticiones |
+| **Cliente-Servidor** | Separacion clara entre cliente y servidor |
+| **Cacheable** | Las respuestas pueden ser cacheadas |
+| **Uniform Interface** | Uso consistente de URLs, metodos HTTP y codigos de estado |
+| **Resource-Based** | Todo es un recurso identificado por una URL |
+
+## Convenciones de Endpoints REST
+
+| Metodo HTTP | Endpoint | Accion | Descripcion |
+|-------------|----------|--------|-------------|
+| GET | `/api/users` | index | Listar todos los recursos |
+| POST | `/api/users` | store | Crear un nuevo recurso |
+| GET | `/api/users/{id}` | show | Mostrar un recurso especifico |
+| PUT/PATCH | `/api/users/{id}` | update | Actualizar un recurso |
+| DELETE | `/api/users/{id}` | destroy | Eliminar un recurso |
+
+## Configuracion Inicial para APIs
+
+### Instalar Sanctum (Autenticacion)
+
+Sanctum es el sistema de autenticacion ligero de Laravel para APIs:
+
+```bash
+php artisan install:api
+```
+
+Esto configura automaticamente:
+- Rutas API en `routes/api.php`
+- Middleware de autenticacion
+- Migraciones para tokens de API
+
+### Estructura de Rutas API
+
+```php
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
+
+// routes/api.php
+Route::prefix('v1')->group(function () {
+
+    // Rutas publicas
+    Route::get('/users', [UserController::class, 'index']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+
+    // Rutas protegidas (requieren autenticacion)
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/users', [UserController::class, 'store']);
+        Route::put('/users/{id}', [UserController::class, 'update']);
+        Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    });
+
+});
+```
+
+## Controlador API Resource
+
+Laravel proporciona controladores optimizados para APIs:
+
+```bash
+php artisan make:controller Api/UserController --api
+```
+
+Esto genera un controlador con los metodos: `index`, `store`, `show`, `update`, `destroy`.
+
+### Ejemplo de Controlador API Completo
+
+```php
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
+class UserController extends Controller
+{
+    /**
+     * GET /api/users
+     * Listar todos los usuarios
+     */
+    public function index(): JsonResponse
+    {
+        $users = User::select('id', 'name', 'email', 'created_at')
+                      ->orderBy('name')
+                      ->paginate(10);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $users
+        ]);
+    }
+
+    /**
+     * POST /api/users
+     * Crear un nuevo usuario
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Usuario creado exitosamente',
+            'data' => $user
+        ], Response::HTTP_CREATED);
+    }
+
+    /**
+     * GET /api/users/{id}
+     * Mostrar un usuario especifico
+     */
+    public function show(int $id): JsonResponse
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Usuario no encontrado'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $user
+        ]);
+    }
+
+    /**
+     * PUT /api/users/{id}
+     * Actualizar un usuario
+     */
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Usuario no encontrado'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,' . $id,
+            'password' => 'sometimes|string|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $data = $request->only(['name', 'email']);
+        if ($request->has('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Usuario actualizado',
+            'data' => $user
+        ]);
+    }
+
+    /**
+     * DELETE /api/users/{id}
+     * Eliminar un usuario
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Usuario no encontrado'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Usuario eliminado'
+        ], Response::HTTP_OK);
+    }
+}
+```
+
+## API Resources (Transformacion de Datos)
+
+Las API Resources permiten transformar los modelos antes de enviarlos como JSON:
+
+```bash
+php artisan make:resource UserResource
+```
+
+```php
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class UserResource extends JsonResource
+{
+    /**
+     * Transforma el recurso en un array.
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'nombre' => $this->name,
+            'correo' => $this->email,
+            'fecha_registro' => $this->created_at->format('d/m/Y'),
+            'posts_count' => $this->whenCounted('posts'),
+            'links' => [
+                'self' => '/api/users/' . $this->id,
+                'posts' => '/api/users/' . $this->id . '/posts',
+            ],
+        ];
+    }
+}
+```
+
+Uso en el controlador:
+```php
+use App\Http\Resources\UserResource;
+
+public function show(int $id): JsonResponse
+{
+    $user = User::findOrFail($id);
+    return response()->json([
+        'status' => 'success',
+        'data' => new UserResource($user)
+    ]);
+}
+
+public function index(): JsonResponse
+{
+    $users = User::paginate(10);
+    return response()->json([
+        'status' => 'success',
+        'data' => UserResource::collection($users)
+    ]);
+}
+```
+
+## Autenticacion con Sanctum
+
+### Registro de usuario
+
+```php
+public function register(Request $request): JsonResponse
+{
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'status' => 'success',
+        'token' => $token,
+        'user' => $user
+    ], 201);
+}
+```
+
+### Login
+
+```php
+public function login(Request $request): JsonResponse
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required|string',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
+    }
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Credenciales invalidas'
+        ], 401);
+    }
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'status' => 'success',
+        'token' => $token,
+        'token_type' => 'Bearer',
+        'user' => $user
+    ]);
+}
+```
+
+### Logout
+
+```php
+public function logout(Request $request): JsonResponse
+{
+    $request->user()->currentAccessToken()->delete();
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Sesion cerrada correctamente'
+    ]);
+}
+```
+
+### Uso de Tokens
+
+Una vez autenticado, incluye el token en las peticiones:
+
+```
+Authorization: Bearer {tu_token_aqui}
+```
+
+## Manejo de Errores y Respuestas
+
+### Trait para respuestas consistentes
+
+```php
+<?php
+
+namespace App\Traits;
+
+use Illuminate\Http\JsonResponse;
+
+trait ApiResponse
+{
+    protected function successResponse(mixed $data, string $message = 'OK', int $code = 200): JsonResponse
+    {
+        return response()->json([
+            'status' => 'success',
+            'message' => $message,
+            'data' => $data
+        ], $code);
+    }
+
+    protected function errorResponse(string $message, int $code, mixed $errors = null): JsonResponse
+    {
+        $response = [
+            'status' => 'error',
+            'message' => $message,
+        ];
+
+        if ($errors !== null) {
+            $response['errors'] = $errors;
+        }
+
+        return response()->json($response, $code);
+    }
+}
+```
+
+Uso:
+```php
+class UserController extends Controller
+{
+    use ApiResponse;
+
+    public function show(int $id): JsonResponse
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return $this->errorResponse('Usuario no encontrado', 404);
+        }
+
+        return $this->successResponse(new UserResource($user));
+    }
+}
+```
+
+## Testing de APIs
+
+Laravel incluye herramientas para testing de APIs:
+
+```php
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class UserApiTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_can_list_users(): void
+    {
+        User::factory()->count(3)->create();
+
+        $response = $this->getJson('/api/v1/users');
+
+        $response->assertStatus(200)
+                 ->assertJsonStructure([
+                     'status',
+                     'data' => [
+                         'data' => [
+                             '*' => ['id', 'name', 'email']
+                         ]
+                     ]
+                 ]);
+    }
+
+    public function test_can_create_user(): void
+    {
+        $data = [
+            'name' => 'Juan Perez',
+            'email' => 'juan@example.com',
+            'password' => 'password123',
+        ];
+
+        $response = $this->postJson('/api/v1/users', $data);
+
+        $response->assertStatus(201)
+                 ->assertJson([
+                     'status' => 'success',
+                     'message' => 'Usuario creado exitosamente'
+                 ]);
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'juan@example.com'
+        ]);
+    }
+
+    public function test_cannot_create_user_with_invalid_data(): void
+    {
+        $response = $this->postJson('/api/v1/users', []);
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors(['name', 'email', 'password']);
+    }
+}
+```
+
+## Ejercicio: API Completa de Productos
+
+<Card title="API RESTful de Productos" icon="rocket">
+Implementa una API RESTful completa para gestion de productos con las siguientes caracteristicas:
+
+### Requisitos:
+
+1. **Modelo Product** con campos:
+   - `name`, `description`, `price` (decimal), `stock` (integer), `is_active` (boolean)
+
+2. **CRUD completo** con validacion:
+   - `name`: requerido, string, max 255
+   - `description`: opcional, string
+   - `price`: requerido, numerico, min 0
+   - `stock`: requerido, integer, min 0
+   - `is_active`: boolean, default true
+
+3. **API Resource** para transformar la salida (ocultar campos sensibles)
+
+4. **Autenticacion** con Sanctum para operaciones de escritura
+
+5. **Respuestas consistentes** usando un trait ApiResponse
+
+6. **Testing** con al menos 3 pruebas: listar, crear, validacion
+
+### Endpoints:
+```
+GET    /api/v1/products          # Listar productos (paginado)
+POST   /api/v1/products          # Crear producto (auth)
+GET    /api/v1/products/{id}     # Ver producto
+PUT    /api/v1/products/{id}     # Actualizar producto (auth)
+DELETE /api/v1/products/{id}     # Eliminar producto (auth)
+POST   /api/v1/register          # Registro
+POST   /api/v1/login             # Login
+POST   /api/v1/logout            # Logout (auth)
+```
+
+<LinkCard
+  href="https://laravel.com/docs/11.x/sanctum"
+  title="Laravel Sanctum"
+  description="Documentacion oficial de autenticacion con Sanctum."
+  icon="https://laravel.com/img/logomark.min.svg"
+  iconWidth={24}
+  iconHeight={24}
+/>
+</Card>
