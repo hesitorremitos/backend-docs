@@ -1,0 +1,409 @@
+---
+title: "Vistas en Laravel - Introducción a Blade"
+description: "Aprende a crear vistas con el motor de plantillas Blade en Laravel. Herencia de layouts, directivas de control y paso de datos."
+keywords:
+  - Laravel
+  - Blade
+  - Vistas
+  - Templates
+  - Directivas Blade
+  - "@extends"
+  - "@yield"
+  - "@section"
+  - "@foreach"
+  - "@forelse"
+---
+
+import { Card, LinkCard } from '@astrojs/starlight/components';
+
+# Vistas en Laravel - Introducción a Blade
+
+Las **vistas** son la capa de presentación en Laravel que separa la lógica de negocio de la interfaz visual. Laravel incluye un motor de plantillas llamado **[Blade](https://laravel.com/docs/11.x/blade)** que compila a PHP puro, por lo que no añade sobrecarga a tu aplicación.
+
+:::tip[¿Por qué separar la vista de la lógica?]
+Separar la presentación de la lógica hace que tu código sea más **mantenible**, más fácil de **escalar** y permite que diseñadores y desarrolladores trabajen en paralelo.
+:::
+
+---
+
+## Conceptos básicos de Blade
+
+### Dónde se almacenan las vistas
+
+Todas las vistas de Blade se guardan en `resources/views/` con extensión `.blade.php`.
+
+```text
+resources/views/
+├── home.blade.php
+├── layouts/
+│   └── app.blade.php
+└── admin/
+    └── users.blade.php
+```
+
+Para referenciar subcarpetas, usa notación de punto:
+
+```php
+return view('admin.users');
+```
+
+### Sintaxis de salida de datos
+
+| Sintaxis | Descripción | Seguridad |
+|---|---|---|
+| `{{ $variable }}` | Escapa HTML (recomendado) | Seguro contra XSS |
+| `{!! $html !!}` | No escapa HTML (raw) | Usar con precaución |
+| `{{-- comentario --}}` | Comentario Blade (no aparece en el HTML) | — |
+
+```blade title="resources/views/home.blade.php"
+<p>Hola, {{ $nombre }}</p>
+
+<div>{!! $contenidoHtml !!}</div>
+```
+
+:::caution[¡Cuidado con \{!! \!!}]
+Nunca uses `{!! !!}` con datos que vienen del usuario sin sanitizar. Es una puerta abierta a ataques XSS (Cross-Site Scripting). Úsalo solo cuando necesites renderizar HTML generado por ti.
+:::
+
+---
+
+## Layout y herencia
+
+El layout es la plantilla base que define la estructura HTML común (head, header, footer). Las vistas hijas heredan de él usando la [herencia de templates](https://laravel.com/docs/11.x/blade#layouts-using-template-inheritance).
+
+### Paso 1: Layout base
+
+```blade title="resources/views/layouts/app.blade.php"
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Mi Aplicación')</title>
+</head>
+<body>
+    <header>
+        <h1>Mi Aplicación</h1>
+    </header>
+
+    <main>
+        @yield('content')
+    </main>
+
+    <footer>
+        <p>&copy; {{ date('Y') }} Mi Aplicación</p>
+    </footer>
+</body>
+</html>
+```
+
+### Paso 2: Vista hija
+
+```blade title="resources/views/saludo.blade.php"
+@extends('layouts.app')
+
+@section('title', 'Página de Saludo')
+
+@section('content')
+    <h2>¡Bienvenido!</h2>
+    <p>Hola, {{ $nombre }}. Gracias por visitarnos.</p>
+@endsection
+```
+
+### Paso 3: Ruta que renderiza la vista
+
+```php title="routes/web.php"
+Route::get('/saludo', function () {
+    return view('saludo', ['nombre' => 'Carlos']);
+});
+```
+
+### Referencia rápida de directivas de layout
+
+| Directiva | Función |
+|---|---|
+| `@extends('layouts.app')` | Hereda del layout especificado |
+| `@section('nombre')` | Define contenido de una sección |
+| `@yield('nombre')` | Marca el lugar donde se inserta la sección |
+| `@yield('nombre', 'default')` | Sección con valor por defecto |
+
+---
+
+## Paso de datos a las vistas
+
+### Forma 1: Array asociativo
+
+```php
+Route::get('/perfil', function () {
+    return view('perfil', [
+        'nombre' => 'Ana',
+        'edad'   => 25,
+    ]);
+});
+```
+
+### Forma 2: Helper `compact()` (recomendado)
+
+```php
+Route::get('/perfil', function () {
+    $nombre = 'Ana';
+    $edad = 25;
+    $ciudad = 'Madrid';
+
+    return view('perfil', compact('nombre', 'edad', 'ciudad'));
+});
+```
+
+### Forma 3: Desde un controlador
+
+```php title="app/Http/Controllers/ProductoController.php"
+public function index()
+{
+    $productos = Producto::all();
+    $total = Producto::count();
+
+    return view('productos.index', compact('productos', 'total'));
+}
+```
+
+:::tip[¿Cuál usar?]
+`compact()` es el más usado en proyectos reales porque es conciso y legible. Cuando las variables coincidan con los nombres de la vista, es la mejor opción.
+:::
+
+---
+
+## Directivas de control
+
+### Condicionales: @if, @elseif, @else, @endif
+
+```blade title="resources/views/perfil.blade.php"
+@if($edad >= 18)
+    <p>Eres mayor de edad.</p>
+@elseif($edad >= 16)
+    <p>Eres adolescente.</p>
+@else
+    <p>Eres menor de edad.</p>
+@endif
+```
+
+:::note[¿Qué pasa con @unless?]
+`@unless` es equivalente a `@if(!condicion)`. Si necesitas negar una condición, simplemente usa `@if(!$variable)` — funciona igual.
+:::
+
+### @switch
+
+```blade title="resources/views/prioridad.blade.php"
+@switch($prioridad)
+    @case('alta')
+        <span>Alta prioridad</span>
+        @break
+    @case('media')
+        <span>Prioridad media</span>
+        @break
+    @case('baja')
+        <span>Baja prioridad</span>
+        @break
+    @default
+        <span>Sin prioridad</span>
+@endswitch
+```
+
+### Bucles: @foreach y @forelse
+
+**@foreach** — Itera sobre colecciones y arrays:
+
+```blade title="resources/views/productos/index.blade.php"
+@foreach($productos as $producto)
+    <div>
+        <h3>{{ $producto->nombre }}</h3>
+        <p>Precio: ${{ number_format($producto->precio, 2) }}</p>
+    </div>
+@endforeach
+```
+
+**Variable `$loop`** — Dentro de `@foreach`, Blade crea automáticamente la variable `$loop`:
+
+| Propiedad | Descripción |
+|---|---|
+| `$loop->index` | Índice actual (empieza en 0) |
+| `$loop->iteration` | Número de iteración (empieza en 1) |
+| `$loop->first` | `true` si es la primera iteración |
+| `$loop->last` | `true` si es la última iteración |
+| `$loop->count` | Total de elementos |
+
+**@forelse** — Como `@foreach`, pero con bloque `@empty` cuando la colección está vacía:
+
+```blade title="resources/views/productos/lista.blade.php"
+@forelse($productos as $producto)
+    <div>
+        #{{ $loop->iteration }} - {{ $producto->nombre }}
+    </div>
+@empty
+    <p>No se encontraron productos.</p>
+@endforelse
+```
+
+Los [bucles de Blade](https://laravel.com/docs/11.x/blade#loops) incluyen también `@for` y `@while`, pero los bucles de PHP nativos también funcionan dentro de Blade sin problema.
+
+---
+
+## Formularios con Blade
+
+Blade incluye [directivas para formularios](https://laravel.com/docs/11.x/blade#forms) seguros:
+
+```blade title="resources/views/productos/create.blade.php"
+<form action="/productos" method="POST">
+    @csrf
+
+    <input type="text" name="nombre" value="{{ old('nombre') }}">
+    @error('nombre')
+        <span>{{ $message }}</span>
+    @enderror
+
+    <button type="submit">Guardar</button>
+</form>
+```
+
+| Directiva | Función |
+|---|---|
+| `@csrf` | Token de protección CSRF (obligatorio en POST) |
+| `@method('PUT')` | Simula métodos HTTP como PUT, PATCH, DELETE |
+| `@error('campo')` | Muestra errores de validación para un campo |
+| `old('campo')` | Recupera el valor enviado previamente |
+
+---
+
+## @include — Reutilizar fragmentos
+
+Puedes incluir partes de vistas en otras plantillas:
+
+```blade
+@include('partials.header')
+
+@include('partials.producto-card', ['producto' => $item])
+
+@includeIf('partials.analytics')
+```
+
+Para más opciones como componentes reutilizables, slots y layouts anidados, consulta la [documentación oficial de Blade](https://laravel.com/docs/11.x/blade).
+
+---
+
+<Card title=":badge[Ejercicio]{variant=caution} Página de Productos">
+
+Crea una vista de productos aplicando layout, herencia, directivas de control y paso de datos.
+
+### Archivo 1: Layout base
+
+```blade title="resources/views/layouts/app.blade.php"
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>@yield('title', 'Tienda Online')</title>
+</head>
+<body>
+    <header>
+        <h1>Mi Tienda</h1>
+    </header>
+    <main>
+        @yield('content')
+    </main>
+    <footer>
+        <p>&copy; {{ date('Y') }} Mi Tienda Laravel</p>
+    </footer>
+</body>
+</html>
+```
+
+### Archivo 2: Vista de productos
+
+```blade title="resources/views/products/index.blade.php"
+@extends('layouts.app')
+
+@section('title', 'Catálogo de Productos')
+
+@section('content')
+    <h2>Catálogo de Productos</h2>
+    <p>Total: {{ $total }} productos</p>
+
+    @forelse($productos as $producto)
+        <div>
+            <h3>#{{ $loop->iteration }} - {{ $producto['nombre'] }}</h3>
+            <p>SKU: {{ $producto['sku'] ?? 'N/A' }}</p>
+            <p>${{ number_format($producto['precio'], 2) }}</p>
+
+            @if($producto['stock'] > 10)
+                <span>En stock ({{ $producto['stock'] }} unidades)</span>
+            @elseif($producto['stock'] > 0)
+                <span>Stock bajo ({{ $producto['stock'] }} unidades)</span>
+            @else
+                <span>Agotado</span>
+            @endif
+
+            @if($loop->last)
+                <p>Fin del catálogo — {{ $loop->count }} producto(s)</p>
+            @endif
+        </div>
+    @empty
+        <p>No hay productos en el catálogo.</p>
+    @endforelse
+@endsection
+```
+
+### Archivo 3: Ruta con datos de prueba
+
+```php title="routes/web.php"
+Route::get('/productos', function () {
+    $productos = [
+        ['nombre' => 'Laptop Dell', 'sku' => 'LAP-001', 'precio' => 12500.00, 'stock' => 25],
+        ['nombre' => 'Mouse Logitech', 'sku' => 'MOU-002', 'precio' => 450.00, 'stock' => 8],
+        ['nombre' => 'Teclado RGB', 'sku' => 'TEC-003', 'precio' => 1899.00, 'stock' => 0],
+    ];
+
+    $total = count($productos);
+
+    return view('products.index', compact('productos', 'total'));
+});
+```
+
+Al visitar `/productos` deberías ver:
+- Una lista con **3 productos** y su número de iteración.
+- **Stock** mostrado como "En stock", "Stock bajo" o "Agotado".
+- Un mensaje de **fin del catálogo** en el último producto.
+
+</Card>
+
+---
+
+## Referencias
+
+<LinkCard
+  title="Vistas en Laravel 11.x"
+  description="Documentación oficial sobre cómo crear y organizar vistas en Laravel."
+  href="https://laravel.com/docs/11.x/views"
+/>
+
+<LinkCard
+  title="Plantillas Blade"
+  description="Guía completa del motor de plantillas Blade: directivas, componentes, layouts y más."
+  href="https://laravel.com/docs/11.x/blade"
+/>
+
+<LinkCard
+  title="Bucles en Blade"
+  description="Documentación específica sobre @foreach, @forelse, @for y la variable $loop."
+  href="https://laravel.com/docs/11.x/blade#loops"
+/>
+
+<LinkCard
+  title="Componentes Blade"
+  description="Cómo crear componentes reutilizables con <x-component> y slots."
+  href="https://laravel.com/docs/11.x/blade#components"
+/>
+
+<LinkCard
+  title="Formularios en Blade"
+  description="Directivas @csrf, @method, @error y manejo de formularios."
+  href="https://laravel.com/docs/11.x/blade#forms"
+/>

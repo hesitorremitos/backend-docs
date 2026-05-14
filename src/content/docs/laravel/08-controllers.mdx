@@ -1,0 +1,559 @@
+---
+title: 'Controladores en Laravel'
+description: 'Aprende a crear y usar controladores en Laravel para organizar la lógica de tu aplicación. Desde controladores básicos hasta resource controllers completos con CRUD API.'
+keywords: ['Laravel', 'Controladores', 'Controllers', 'Resource Controller', 'API Controller', 'Route Model Binding', 'CRUD']
+---
+
+import { Card, LinkCard, Steps } from '@astrojs/starlight/components';
+
+Los **[controladores](https://laravel.com/docs/11.x/controllers)** son clases PHP que agrupan la lógica de manejo de solicitudes HTTP. En lugar de escribir toda la lógica como *closures* en el archivo de rutas, los controladores permiten **organizar el código de forma limpia, modular y mantenable**.
+
+Pensemos en una tienda online con decenas de acciones relacionadas con productos. Si toda esa lógica viviera en `routes/web.php`, el código se volvería ilegible. Los controladores resuelven este problema.
+
+## Conceptos clave
+
+### Flujo de una solicitud en Laravel
+
+```
+Request (navegador/cliente)
+    ↓
+Ruta (routes/web.php o routes/api.php)
+    ↓
+Controlador (app/Http/Controllers/)
+    ↓
+Modelo (app/Models/) ←→ Base de datos
+    ↓
+Vista (resources/views/) o Respuesta JSON
+    ↓
+Response (al cliente)
+```
+
+### Separación de responsabilidades
+
+| Componente | Responsabilidad |
+|---|---|
+| **Rutas** | Definen las URLs y a qué controlador/método dirigirse |
+| **Controladores** | Reciben la solicitud, coordinan la lógica de negocio |
+| **Modelos** | Interactúan con la base de datos |
+| **Vistas** | Presentan la información al usuario |
+
+:::tip[Buena práctica]
+Las rutas solo deben definir URLs. Todo el procesamiento, validación y lógica de negocio debe vivir en los controladores (o en clases auxiliares como Form Requests y Services).
+:::
+
+## Creación de un controlador
+
+### Generar el controlador con Artisan
+
+```bash
+php artisan make:controller NombreController
+```
+
+Esto crea un archivo en `app/Http/Controllers/` con esta estructura:
+
+```php title="app/Http/Controllers/NombreController.php"
+<?php
+
+namespace App\Http\Controllers;
+
+class NombreController extends Controller
+{
+    // Los métodos se definen aquí
+}
+```
+
+### Método que retorna una vista
+
+```php title="app/Http/Controllers/HomeController.php"
+<?php
+
+namespace App\Http\Controllers;
+
+class HomeController extends Controller
+{
+    public function index()
+    {
+        return view('home');
+    }
+}
+```
+
+```php
+use App\Http\Controllers\HomeController;
+
+Route::get('/', [HomeController::class, 'index']);
+```
+
+### Método que usa Request para datos de formulario
+
+```php title="app/Http/Controllers/ProductoController.php"
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class ProductoController extends Controller
+{
+    public function store(Request $request)
+    {
+        $nombre = $request->input('nombre');
+        $precio = $request->input('precio');
+
+        return response()->json([
+            'mensaje' => 'Producto creado exitosamente',
+            'datos' => compact('nombre', 'precio'),
+        ], 201);
+    }
+}
+```
+
+## Tipos de controladores
+
+### Controlador básico
+
+Métodos definidos manualmente, útiles para acciones personalizadas:
+
+```php title="app/Http/Controllers/DashboardController.php"
+<?php
+
+namespace App\Http\Controllers;
+
+class DashboardController extends Controller
+{
+    public function estadisticas()
+    {
+        return view('dashboard.estadisticas');
+    }
+
+    public function reportes()
+    {
+        return view('dashboard.reportes');
+    }
+}
+```
+
+### Controlador de recurso ([Resource Controller](https://laravel.com/docs/11.x/controllers#resource-controllers))
+
+Genera automáticamente los 7 métodos estándar para CRUD completo:
+
+```bash
+php artisan make:controller ProductoController --resource
+```
+
+| Método del controlador | Verbo HTTP | Ruta generada | Descripción |
+|---|---|---|---|
+| `index()` | GET | `/productos` | Listar todos los recursos |
+| `create()` | GET | `/productos/create` | Mostrar formulario de creación |
+| `store()` | POST | `/productos` | Guardar un nuevo recurso |
+| `show($id)` | GET | `/productos/{id}` | Mostrar un recurso específico |
+| `edit($id)` | GET | `/productos/{id}/edit` | Mostrar formulario de edición |
+| `update($id)` | PUT/PATCH | `/productos/{id}` | Actualizar un recurso |
+| `destroy($id)` | DELETE | `/productos/{id}` | Eliminar un recurso |
+
+:::info
+Los métodos `create` y `edit` devuelven **vistas con formularios HTML**, por eso solo se usan en aplicaciones web tradicionales. En APIs RESTful no se necesitan porque los clientes manejan sus propias interfaces.
+:::
+
+### Controlador de API Resource
+
+Genera solo los 5 métodos necesarios para [APIs](https://laravel.com/docs/11.x/controllers#api-resource-routes) (sin `create` ni `edit`):
+
+```bash
+php artisan make:controller ProductoController --api
+```
+
+| Método del controlador | Verbo HTTP | Ruta generada | Descripción |
+|---|---|---|---|
+| `index()` | GET | `/productos` | Listar todos |
+| `store()` | POST | `/productos` | Crear nuevo |
+| `show($id)` | GET | `/productos/{id}` | Mostrar uno |
+| `update($id)` | PUT/PATCH | `/productos/{id}` | Actualizar |
+| `destroy($id)` | DELETE | `/productos/{id}` | Eliminar |
+
+Este es el tipo de controlador **ideal para APIs RESTful** modernas.
+
+## Definición de rutas
+
+### Ruta simple
+
+```php
+use App\Http\Controllers\UserController;
+
+// GET /users → UserController@index
+Route::get('/users', [UserController::class, 'index']);
+
+// GET /users/{id} → UserController@show
+Route::get('/users/{id}', [UserController::class, 'show']);
+
+// POST /users → UserController@store
+Route::post('/users', [UserController::class, 'store']);
+```
+
+### Rutas de recurso
+
+Genera las 7 rutas del CRUD automáticamente:
+
+```php
+use App\Http\Controllers\ProductController;
+
+// Genera automáticamente las 7 rutas del CRUD
+Route::resource('products', ProductController::class);
+```
+
+### Rutas de API resource
+
+Solo genera las 5 rutas para APIs:
+
+```php
+use App\Http\Controllers\ProductController;
+
+// Genera solo 5 rutas (index, store, show, update, destroy)
+Route::apiResource('products', ProductController::class);
+```
+
+### Tabla de rutas generadas
+
+| Método HTTP | Ruta | Acción del controlador | Nombre de la ruta |
+|---|---|---|---|
+| GET | `/products` | `index()` | `products.index` |
+| GET | `/products/create` | `create()` | `products.create` |
+| POST | `/products` | `store()` | `products.store` |
+| GET | `/products/{product}` | `show()` | `products.show` |
+| GET | `/products/{product}/edit` | `edit()` | `products.edit` |
+| PUT/PATCH | `/products/{product}` | `update()` | `products.update` |
+| DELETE | `/products/{product}` | `destroy()` | `products.destroy` |
+
+### Ver rutas registradas
+
+```bash
+php artisan route:list
+
+# Filtrar por nombre
+php artisan route:list --name=products
+```
+
+:::note[Nombres de rutas]
+Laravel asigna automáticamente **nombres** a cada ruta (columna "Nombre de la ruta"). Estos nombres son útiles para generar URLs en vistas y redirecciones sin hardcodearlas.
+:::
+
+## Route Model Binding
+
+El **[Route Model Binding](https://laravel.com/docs/11.x/routing#route-model-binding)** es una de las características más potentes de Laravel. Cuando declaras un parámetro de tipo `Modelo`, Laravel **busca automáticamente** el registro en la base de datos por su ID:
+
+```php title="app/Http/Controllers/ProductController.php"
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Product;
+use Illuminate\Http\Request;
+
+class ProductController extends Controller
+{
+    // Laravel busca automáticamente Product con ID = {product}
+    public function show(Product $product)
+    {
+        return response()->json($product);
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $product->update($request->all());
+        return response()->json($product);
+    }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+        return response()->json(null, 204);
+    }
+}
+```
+
+:::info[¿Cómo funciona?]
+Cuando Laravel recibe una petición a `GET /products/5`, detecta que el parámetro `$product` es del tipo `App\Models\Product`. Automáticamente ejecuta `Product::findOrFail(5)` y pasa el resultado al método. Si no existe, devuelve un error 404 automáticamente.
+:::
+
+Para más opciones como [Route Model Binding con clave personalizada](https://laravel.com/docs/11.x/routing#route-model-binding) o [controladores invocables](https://laravel.com/docs/11.x/controllers#single-action-controllers), consulta la documentación oficial.
+
+## Ejemplo completo: CRUD API de Productos
+
+<Steps>
+
+1. **Crear el controlador con `--api`**:
+
+   ```bash
+   php artisan make:controller ProductController --api
+   ```
+
+2. **Crear el modelo y la migración**:
+
+   ```bash
+   php artisan make:model Product -m
+   ```
+
+   :::tip[Recuerda]
+   El flag `-m` genera la migración automáticamente. Consulta el [capítulo de Modelos](/laravel/06-models) para más detalles.
+   :::
+
+3. **Implementar el controlador completo**:
+
+   ```php title="app/Http/Controllers/ProductController.php"
+   <?php
+
+   namespace App\Http\Controllers;
+
+   use App\Models\Product;
+   use Illuminate\Http\Request;
+
+   class ProductController extends Controller
+   {
+       public function index()
+       {
+           $products = Product::all();
+           return response()->json($products);
+       }
+
+       public function store(Request $request)
+       {
+           $validated = $request->validate([
+               'name' => 'required|string|max:255',
+               'description' => 'nullable|string',
+               'price' => 'required|numeric|min:0',
+               'stock' => 'required|integer|min:0',
+           ]);
+
+           $product = Product::create($validated);
+           return response()->json($product, 201);
+       }
+
+       public function show(Product $product)
+       {
+           return response()->json($product);
+       }
+
+       public function update(Request $request, Product $product)
+       {
+           $validated = $request->validate([
+               'name' => 'sometimes|required|string|max:255',
+               'description' => 'nullable|string',
+               'price' => 'sometimes|required|numeric|min:0',
+               'stock' => 'sometimes|required|integer|min:0',
+           ]);
+
+           $product->update($validated);
+           return response()->json($product);
+       }
+
+       public function destroy(Product $product)
+       {
+           $product->delete();
+           return response()->json(null, 204);
+       }
+   }
+   ```
+
+4. **Definir las rutas**:
+
+   ```php
+   <?php
+
+   use Illuminate\Support\Facades\Route;
+   use App\Http\Controllers\ProductController;
+
+   Route::apiResource('products', ProductController::class);
+   ```
+
+5. **Verificar y probar**:
+
+   ```bash
+   php artisan route:list --name=products
+   ```
+
+   ```bash
+   # Listar productos
+   curl http://localhost:8000/api/products
+
+   # Crear producto
+   curl -X POST http://localhost:8000/api/products \
+     -H "Content-Type: application/json" \
+     -d '{"name":"Laptop","price":999.99,"stock":10}'
+
+   # Ver producto (Route Model Binding)
+   curl http://localhost:8000/api/products/1
+
+   # Actualizar producto
+   curl -X PUT http://localhost:8000/api/products/1 \
+     -H "Content-Type: application/json" \
+     -d '{"name":"Laptop Pro","price":1299.99}'
+
+   # Eliminar producto
+   curl -X DELETE http://localhost:8000/api/products/1
+   ```
+
+</Steps>
+
+:::tip[Validación con `sometimes`]
+En el método `update` usamos `'name' => 'sometimes|required|string|max:255'`. La regla `sometimes` significa: "solo valida este campo si está presente en la solicitud". Esto permite actualizaciones parciales donde el cliente envía solo los campos que quiere modificar.
+:::
+
+## Ejercicio práctico
+
+<Card title=":badge[Actividad]{variant=caution} CRUD de Categorías con Controlador">
+
+Implementa un CRUD completo para gestionar categorías usando un **API Resource Controller**:
+
+**Paso 1:** Crea la migración:
+
+```bash
+php artisan make:migration create_categories_table
+```
+
+```php
+Schema::create('categories', function (Blueprint $table) {
+    $table->id();
+    $table->string('nombre');
+    $table->text('descripcion')->nullable();
+    $table->timestamps();
+});
+```
+
+**Paso 2:** Ejecuta la migración y crea el modelo:
+
+```bash
+php artisan migrate
+php artisan make:model Category
+```
+
+```php title="app/Models/Category.php"
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Category extends Model
+{
+    protected $fillable = ['nombre', 'descripcion'];
+}
+```
+
+**Paso 3:** Crea e implementa el controlador:
+
+```bash
+php artisan make:controller CategoryController --api
+```
+
+```php title="app/Http/Controllers/CategoryController.php"
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Category;
+use Illuminate\Http\Request;
+
+class CategoryController extends Controller
+{
+    public function index()
+    {
+        return response()->json(Category::all());
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $category = Category::create($validated);
+        return response()->json($category, 201);
+    }
+
+    public function show(Category $category)
+    {
+        return response()->json($category);
+    }
+
+    public function update(Request $request, Category $category)
+    {
+        $validated = $request->validate([
+            'nombre' => 'sometimes|required|string|max:255',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $category->update($validated);
+        return response()->json($category);
+    }
+
+    public function destroy(Category $category)
+    {
+        $category->delete();
+        return response()->json(null, 204);
+    }
+}
+```
+
+**Paso 4:** Define las rutas y prueba:
+
+```php
+use App\Http\Controllers\CategoryController;
+
+Route::apiResource('categories', CategoryController::class);
+```
+
+```bash
+# Probar cada operación
+GET    /api/categories
+POST   /api/categories      Body: {"nombre": "Electrónica", "descripcion": "Dispositivos"}
+GET    /api/categories/1
+PUT    /api/categories/1     Body: {"nombre": "Electrónica y Tecnología"}
+DELETE /api/categories/1
+```
+
+</Card>
+
+## Más funcionalidades
+
+Para controladores avanzados, consulta la documentación oficial:
+
+- [Controladores invocables (Single Action)](https://laravel.com/docs/11.x/controllers#single-action-controllers) — un controlador con un solo método `__invoke()`.
+- [Controladores anidados](https://laravel.com/docs/11.x/controllers#resource-controllers) — rutas jerárquicas como `/users/{user}/posts`.
+- [Middleware en controladores](https://laravel.com/docs/11.x/controllers#controller-middleware) — asignar middleware desde el constructor.
+- [Form Requests](https://laravel.com/docs/11.x/validation#form-request-validation) — clases dedicadas para validaciones complejas.
+- [Paginación](https://laravel.com/docs/11.x/pagination) — `paginate()` en lugar de `all()` para grandes conjuntos de datos.
+- [Cache](https://laravel.com/docs/11.x/cache) — cachear resultados frecuentes para mejorar rendimiento.
+- [Autorización con Policies](https://laravel.com/docs/11.x/authorization) — verificar permisos dentro de los controladores.
+
+## Referencias
+
+<LinkCard
+  title="Controllers - Laravel Docs"
+  description="Documentación oficial de controladores en Laravel 11.x."
+  href="https://laravel.com/docs/11.x/controllers"
+/>
+
+<LinkCard
+  title="Resource Controllers - Laravel Docs"
+  description="Guía completa sobre controladores de recurso y sus convenciones."
+  href="https://laravel.com/docs/11.x/controllers#resource-controllers"
+/>
+
+<LinkCard
+  title="Route Model Binding - Laravel Docs"
+  description="Documentación sobre la inyección automática de modelos en rutas."
+  href="https://laravel.com/docs/11.x/routing#route-model-binding"
+/>
+
+<LinkCard
+  title="Form Requests - Laravel Docs"
+  description="Validación de datos mediante clases dedicadas."
+  href="https://laravel.com/docs/11.x/validation#form-request-validation"
+/>
+
+<LinkCard
+  title="Authorization - Laravel Docs"
+  description="Sistema de Policies y permisos en Laravel."
+  href="https://laravel.com/docs/11.x/authorization"
+/>

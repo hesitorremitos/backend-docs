@@ -1,0 +1,403 @@
+---
+title: 'Modelos en Laravel'
+description: 'Aprende a crear modelos con Eloquent ORM y a usarlos directamente en rutas para operar la base de datos sin necesidad de controladores.'
+keywords: ['Laravel', 'Eloquent', 'Modelos', 'ORM', 'Rutas', 'CRUD', 'MVC']
+---
+
+import { Card, LinkCard } from '@astrojs/starlight/components';
+
+# Modelos en Laravel — Uso Directo en Rutas
+
+En el patrón MVC, las **M** corresponden a los **Modelos**. En Laravel, los modelos son clases PHP que utilizan [Eloquent ORM](https://laravel.com/docs/11.x/eloquent) para representar tablas de la base de datos. Cada instancia equivale a una fila, y cada propiedad a una columna.
+
+Gracias a Eloquent, puedes consultar, crear, actualizar y eliminar registros sin escribir SQL manualmente. En este capítulo aprenderás a **crear modelos y usarlos directamente en rutas**, sin controladores.
+
+---
+
+## 1. Creación de un Modelo
+
+### 1.1 Comando Artisan
+
+```bash
+php artisan make:model NombreDelModelo
+```
+
+Consulta la [generación de modelos](https://laravel.com/docs/11.x/eloquent#generating-model-classes) para todas las opciones disponibles (`-m`, `-c`, `-r`, etc.).
+
+:::tip[Convención de nombres]
+El modelo se llama en **singular** con la primera letra mayúscula (`Product`). Laravel asume que la tabla es el [plural](https://laravel.com/docs/11.x/eloquent#table-names) (`products`).
+:::
+
+### 1.2 Personalizar tabla y clave primaria
+
+Si la tabla no sigue la [convención](https://laravel.com/docs/11.x/eloquent#table-names), puedes definirla en el modelo:
+
+```php title="app/Models/Product.php"
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    protected $table = 'mis_productos';
+    protected $primaryKey = 'producto_id';
+    public $timestamps = false;
+}
+```
+
+### 1.3 Asignación masiva: `$fillable` y `$guarded`
+
+Cuando usas `create()` o `update()` con un array, Laravel protege contra la [asignación masiva](https://laravel.com/docs/11.x/eloquent#mass-assignment). Debes indicar qué campos se permiten:
+
+```php title="app/Models/Product.php"
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    // Solo estos campos pueden asignarse en masa
+    protected $fillable = ['name', 'price', 'stock', 'description'];
+
+    // Alternativa: proteger solo ciertos campos
+    // protected $guarded = ['id', 'is_admin'];
+}
+```
+
+:::caution[Importante]
+Si usas `Product::create([...])` sin definir `$fillable` o `$guarded`, Laravel lanza un error de **Mass Assignment**.
+:::
+
+---
+
+## 2. Migración asociada al modelo
+
+Para que el modelo funcione, necesitas la tabla correspondiente. Consulta la guía completa de migraciones en [Database: Migraciones](/laravel/04-database).
+
+---
+
+## 3. Usar Modelos Directamente en Rutas
+
+En este capítulo trabajamos **sin controladores**. Todas las operaciones se hacen directamente en las rutas con closures.
+
+### 3.1 Obtener todos los registros
+
+```php title="routes/web.php"
+Route::get('/products', function () {
+    $products = Product::all();
+
+    return response()->json($products);
+});
+```
+
+`Product::all()` ejecuta un `SELECT * FROM products` y devuelve una [colección](https://laravel.com/docs/11.x/eloquent#collections).
+
+### 3.2 Obtener un registro por ID
+
+```php title="routes/web.php"
+Route::get('/products/{id}', function ($id) {
+    $product = Product::find($id);
+
+    if (!$product) {
+        return response()->json(['message' => 'Producto no encontrado'], 404);
+    }
+
+    return response()->json($product);
+});
+```
+
+`Product::find($id)` busca por la clave primaria y devuelve `null` si no existe.
+
+### 3.3 Obtener un registro o fallar automáticamente
+
+```php title="routes/web.php"
+Route::get('/products/{id}', function ($id) {
+    $product = Product::findOrFail($id);
+
+    return response()->json($product);
+});
+```
+
+[`findOrFail()`](https://laravel.com/docs/11.x/eloquent#retrieving-single-models) devuelve el registro o una respuesta **404** automáticamente, sin necesidad del `if`.
+
+### 3.4 Crear un registro
+
+```php title="routes/web.php"
+Route::post('/products', function (Request $request) {
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'price' => 'required|numeric|min:0',
+        'stock' => 'required|integer|min:0',
+        'description' => 'nullable|string',
+    ]);
+
+    $product = Product::create($validated);
+
+    return response()->json($product, 201);
+});
+```
+
+`$request->validate()` verifica los datos; si falla, Laravel responde con errores **422** automáticamente. Para más detalles sobre [insertar y actualizar modelos](https://laravel.com/docs/11.x/eloquent#inserting-and-updating-models).
+
+### 3.5 Actualizar un registro
+
+```php title="routes/web.php"
+Route::put('/products/{id}', function (Request $request, $id) {
+    $product = Product::findOrFail($id);
+
+    $validated = $request->validate([
+        'name' => 'sometimes|required|string|max:255',
+        'price' => 'sometimes|required|numeric|min:0',
+        'stock' => 'sometimes|required|integer|min:0',
+        'description' => 'nullable|string',
+    ]);
+
+    $product->update($validated);
+
+    return response()->json($product);
+});
+```
+
+La regla `sometimes` permite actualizaciones parciales: solo se valida si el campo está presente.
+
+### 3.6 Eliminar un registro
+
+```php title="routes/web.php"
+Route::delete('/products/{id}', function ($id) {
+    $product = Product::findOrFail($id);
+    $product->delete();
+
+    return response()->json(['message' => 'Producto eliminado']);
+});
+```
+
+### 3.7 Filtrar con WHERE
+
+```php title="routes/web.php"
+Route::get('/products/search', function (Request $request) {
+    $query = $request->query('q');
+
+    if (!$query) {
+        return response()->json(['message' => 'Parámetro q requerido'], 400);
+    }
+
+    $products = Product::where('name', 'like', "%{$query}%")->get();
+
+    return response()->json($products);
+});
+```
+
+Laravel escapa automáticamente los valores, protegiendo contra SQL Injection.
+
+### 3.8 Primer resultado y orden
+
+```php title="routes/web.php"
+Route::get('/products/top-stock', function () {
+    $products = Product::where('stock', '>', 0)
+        ->orderBy('stock', 'desc')
+        ->limit(10)
+        ->get();
+
+    return response()->json($products);
+});
+```
+
+| Método | Descripción |
+|--------|-------------|
+| `orderBy('col', 'asc/desc')` | Ordena los resultados |
+| `limit(n)` | Limita la cantidad de registros |
+| `latest('col')` | Orden descendente por columna |
+| `->first()` | Devuelve un solo objeto (o `null`) |
+
+---
+
+## 4. Ejercicio Práctico: API de Productos
+
+<Card title=":badge[Ejercicio]{variant=caution} API completa de Productos usando solo rutas y modelos">
+
+Crea una API REST completa **sin controladores** en `routes/api.php`.
+
+**Requisitos previos:**
+1. Ejecuta `php artisan make:model Product`
+2. Crea la migración con `name`, `price`, `stock`, `description`
+3. Define `$fillable = ['name', 'price', 'stock', 'description']` en el modelo
+4. Ejecuta `php artisan migrate`
+
+**Rutas a implementar:**
+
+```php title="routes/api.php"
+<?php
+
+use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use App\Models\Product;
+
+// GET /api/products
+Route::get('/products', function () {
+    return response()->json(Product::all());
+});
+
+// GET /api/products/{id}
+Route::get('/products/{id}', function ($id) {
+    return response()->json(Product::findOrFail($id));
+});
+
+// POST /api/products
+Route::post('/products', function (Request $request) {
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'price' => 'required|numeric|min:0',
+        'stock' => 'required|integer|min:0',
+        'description' => 'nullable|string',
+    ]);
+
+    return response()->json(Product::create($validated), 201);
+});
+
+// PUT /api/products/{id}
+Route::put('/products/{id}', function (Request $request, $id) {
+    $product = Product::findOrFail($id);
+    $product->update($request->validate([
+        'name' => 'sometimes|required|string|max:255',
+        'price' => 'sometimes|required|numeric|min:0',
+        'stock' => 'sometimes|required|integer|min:0',
+    ]));
+
+    return response()->json($product);
+});
+
+// DELETE /api/products/{id}
+Route::delete('/products/{id}', function ($id) {
+    Product::findOrFail($id)->delete();
+
+    return response()->json(['message' => 'Producto eliminado']);
+});
+
+// GET /api/products/search?q=term
+Route::get('/products/search', function (Request $request) {
+    $term = $request->query('q');
+
+    if (!$term) {
+        return response()->json(['message' => 'Parámetro q requerido'], 400);
+    }
+
+    return response()->json(
+        Product::where('name', 'like', "%{$term}%")->get()
+    );
+});
+```
+
+**Actividad adicional:** Agrega una ruta `GET /api/products/low-stock` que devuelva productos con stock menor a 5 unidades.
+
+</Card>
+
+---
+
+## 5. Otras Funcionalidades Útiles
+
+### 5.1 Contar registros
+
+```php title="routes/web.php"
+Route::get('/products/count', function () {
+    $total = Product::count();
+    $expensive = Product::where('price', '>', 1000)->count();
+
+    return response()->json(compact('total', 'expensive'));
+});
+```
+
+### 5.2 Obtener solo una columna
+
+`pluck('columna')` devuelve un array con los valores de una columna: `Product::pluck('name')` equivale a `SELECT name FROM products`.
+
+### 5.3 Buscar o crear (`firstOrCreate`)
+
+Busca un registro. Si existe, lo devuelve; si no, lo crea con los valores proporcionados.
+
+```php title="routes/web.php"
+Route::post('/products/find-or-create', function (Request $request) {
+    $product = Product::firstOrCreate(
+        ['name' => $request->input('name')],
+        [
+            'price' => $request->input('price', 0),
+            'stock' => $request->input('stock', 0),
+        ]
+    );
+
+    return response()->json($product);
+});
+```
+
+### 5.4 Actualizar o crear (`updateOrCreate`)
+
+Si el registro existe, lo actualiza; si no, lo crea.
+
+```php title="routes/web.php"
+Route::post('/products/update-or-create', function (Request $request) {
+    $product = Product::updateOrCreate(
+        ['name' => $request->input('name')],
+        [
+            'price' => $request->input('price'),
+            'stock' => $request->input('stock'),
+        ]
+    );
+
+    return response()->json($product);
+});
+```
+
+---
+
+## Resumen
+
+| Operación | Método Eloquent | Ejemplo |
+|-----------|-----------------|---------|
+| Listar todos | `Model::all()` | `Product::all()` |
+| Buscar por ID | `Model::find($id)` | `Product::find($id)` |
+| Buscar o fallar | `Model::findOrFail($id)` | `Product::findOrFail($id)` |
+| Crear | `Model::create([...])` | `Product::create($validated)` |
+| Actualizar | `$model->update([...])` | `$product->update($validated)` |
+| Eliminar | `$model->delete()` | `$product->delete()` |
+| Filtrar | `Model::where(...)->get()` | `Product::where('name', 'like', '%x%')->get()` |
+| Primer resultado | `->first()` | `Product::where(...)->first()` |
+| Ordenar | `->orderBy('col', 'desc')` | `Product::orderBy('price')->get()` |
+| Contar | `->count()` | `Product::where(...)->count()` |
+| Solo una columna | `->pluck('col')` | `Product::pluck('name')` |
+
+---
+
+## Referencias
+
+<LinkCard
+  title="Eloquent: Getting Started"
+  description="Modelos, consultas, relaciones y más."
+  href="https://laravel.com/docs/11.x/eloquent"
+/>
+
+<LinkCard
+  title="Eloquent Mutators"
+  description="Accesores, mutadores y casting de atributos."
+  href="https://laravel.com/docs/11.x/eloquent-mutators"
+/>
+
+<LinkCard
+  title="Eloquent Relationships"
+  description="Relaciones entre modelos: hasMany, belongsTo, belongsToMany."
+  href="https://laravel.com/docs/11.x/eloquent-relationships"
+/>
+
+<LinkCard
+  title="Mass Assignment"
+  description="Configuración de fillable y guarded."
+  href="https://laravel.com/docs/11.x/eloquent#mass-assignment"
+/>
+
+<LinkCard
+  title="Soft Deleting"
+  description="Soft Deletes: eliminación lógica de registros."
+  href="https://laravel.com/docs/11.x/eloquent#soft-deleting"
+/>
