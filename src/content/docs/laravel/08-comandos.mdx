@@ -6,9 +6,11 @@ keywords: ["Laravel", "Artisan", "Comandos", "PHP", "CLI"]
 
 import { LinkCard } from '@astrojs/starlight/components';
 
-Todos los comandos de Laravel se ejecutan a través de **Artisan**, la interfaz de línea de comandos integrada. Todos comienzan con `php artisan`.
+Laravel incluye **Artisan**, una interfaz de línea de comandos que automatiza tareas comunes del desarrollo. Todos los comandos comienzan con `php artisan`.
 
 ## Requerimientos
+
+Antes de usar Artisan, asegúrate de tener instalado PHP y Composer en tu sistema:
 
 - PHP instalado y en el PATH
 - Composer instalado
@@ -20,49 +22,57 @@ composer --version
 
 ## Crear un proyecto Laravel
 
+El primer paso en cualquier proyecto es generarlo con Composer:
+
 ```bash
 composer create-project laravel/laravel nombre-proyecto
 ```
 
-El proyecto se creará en la ruta actual de la terminal.
+Esto crea la carpeta del proyecto en el directorio actual de la terminal.
 
 ## Comandos esenciales
 
 ### Servidor de desarrollo
 
+Arranca un servidor local rápido para probar tu aplicación sin configurar nada extra:
+
 ```bash
-"php artisan serve"
+php artisan serve
 ```
 
 :::tip
-Mantén la ventana abierta. Cuando se cierre, el servidor se detiene.
+Mantén la ventana de la terminal abierta mientras trabajas. Al cerrarla, el servidor se detiene.
 :::
 
 ### Habilitar API
 
-En versiones determinadas la API no viene habilitada por defecto:
+En algunas versiones de Laravel las rutas de API no están activas por defecto. Este comando genera el archivo `routes/api.php` y configura lo necesario:
 
 ```bash
 php artisan install:api
 ```
 
-Si el archivo `routes/api.php` ya existe, no es necesario ejecutar el comando.
+Si `routes/api.php` ya existe en tu proyecto, puedes omitir este paso.
 
 ### Crear migración (tabla)
+
+Las migraciones permiten definir y versionar la estructura de la base de datos con código PHP en lugar de SQL manual:
 
 ```bash
 php artisan make:migration create_usuarios_table
 ```
 
-El nombre de la tabla debe ser en **plural** con terminación en "s".
+Usa el nombre de la tabla en **plural** con terminación en "s" para seguir la convención de Laravel.
 
 ### Crear modelo
+
+Los modelos representan las tablas en código PHP y permiten interactuar con los datos mediante Eloquent:
 
 ```bash
 php artisan make:model Producto
 ```
 
-El modelo debe estar en **singular**. Para crear modelo con migración y controlador:
+El nombre del modelo va en **singular**. Si necesitas también la migración, usa la bandera `-m`:
 
 ```bash
 php artisan make:model Producto -m
@@ -70,11 +80,13 @@ php artisan make:model Producto -m
 
 ### Crear controlador
 
+Los controladores agrupan la lógica de las peticiones HTTP y organizan el código de tu aplicación:
+
 ```bash
 php artisan make:controller ProductoController
 ```
 
-Para un controlador API con métodos CRUD predefinidos:
+Para una API REST, el flag `--api` genera un controlador con los métodos `index`, `store`, `show`, `update` y `destroy` listos para usar:
 
 ```bash
 php artisan make:controller ProductoController --api
@@ -82,8 +94,10 @@ php artisan make:controller ProductoController --api
 
 ### Crear múltiples recursos de una vez
 
+En lugar de ejecutar varios comandos por separado, puedes generar modelo, migración y controlador en uno solo:
+
 ```bash
-"php artisan make:model Producto -mcr --api"
+php artisan make:model Producto -mcr --api
 ```
 
 | Flag | Qué hace |
@@ -94,16 +108,18 @@ php artisan make:controller ProductoController --api
 | `--api` | Los recursos se crean para una API (sin vistas HTML) |
 
 :::caution
-Laravel pluraliza automáticamente el nombre del modelo para la tabla. Si defines "Facultad", creará "facultads". Si necesitas un nombre personalizado, define `$table` en el modelo.
+Laravel pluraliza automáticamente el nombre del modelo para nombrar la tabla. Por ejemplo, "Facultad" se convertiría en "facultads", que no es correcto. Si necesitas un nombre personalizado, define la propiedad `$table` en el modelo.
 :::
 
 ### Ejecutar migraciones
+
+Una vez definidas las migraciones, ejecútalas para crear las tablas en la base de datos:
 
 ```bash
 php artisan migrate
 ```
 
-Para reiniciar desde cero:
+Si necesitas reiniciar la base de datos desde cero (elimina todas las tablas y las recrea), usa:
 
 ```bash
 php artisan migrate:fresh
@@ -113,11 +129,15 @@ Consulta la [documentación de migraciones](https://laravel.com/docs/11.x/migrat
 
 ### Listar rutas
 
+Útil para verificar qué endpoints están disponibles y cómo se mapean a los controladores:
+
 ```bash
 php artisan route:list
 ```
 
 ### Ver todos los comandos disponibles
+
+Si necesitas descubrir qué más ofrece Artisan, este comando lista todas las opciones disponibles:
 
 ```bash
 php artisan list

@@ -6,27 +6,27 @@ keywords: ["Laravel", "Database", "Migraciones", "Schema", "Blueprint", "MySQL"]
 
 import { LinkCard, Card } from '@astrojs/starlight/components';
 
-Laravel incluye un sistema de [migraciones](https://laravel.com/docs/11.x/migrations) que funciona como **control de versiones para tu base de datos**. Te permite definir la estructura de tablas con PHP, compartirla entre desarrolladores y revertir cambios de forma controlada.
+Laravel incluye un sistema de [migraciones](https://laravel.com/docs/11.x/migrations) que funciona como **control de versiones para tu base de datos**. En lugar de modificar tablas a mano en SQL, defines la estructura con PHP, la compartes con tu equipo y puedes revertir cambios de forma segura.
 
 :::tip[Recuerda]
-Toda migración debe poder revertirse en el método `down()`. Esto garantiza que puedas deshacer cambios sin riesgo.
+Toda migración debe poder revertirse en el método `down()`. Si no puedes deshacer un cambio, no es una migración completa.
 :::
 
 ## Ejemplo rápido
 
-Crea una migración y define la tabla:
+Lo primero que necesitas es crear el archivo de migración y definir la tabla:
 
 ```bash
-php artisan make:migration create_users_table
+php artisan make:migration create_posts_table
 ```
 
-Esto genera un archivo en `database/migrations/`. Define la estructura en el método `up`:
+Esto genera un archivo en `database/migrations/` con una clase que tiene dos métodos: `up()` (para crear) y `down()` (para revertir). Dentro de `up()` defines la estructura. Por ejemplo, para una tabla de publicaciones (`posts`):
 
-```php title="database/migrations/xxxx_create_users_table.php"
-Schema::create('users', function (Blueprint $table) {
-    "table->id();"
-    $table->string('name');
-    $table->string('email')->unique();
+```php title="database/migrations/xxxx_create_posts_table.php"
+Schema::create('posts', function (Blueprint $table) {
+    $table->id();
+    $table->string('title');
+    $table->text('content');
     $table->timestamps();
 });
 ```
@@ -37,6 +37,8 @@ php artisan migrate
 
 ## Tipos de columna más usados
 
+Blueprint ofrece muchos tipos de columna. Estos son los que usarás en la mayoría de tus tablas:
+
 ```php title="database/migrations/xxxx_create_products_table.php"
 Schema::create('products', function (Blueprint $table) {
     $table->id();                          // Clave primaria autoincremental
@@ -46,9 +48,9 @@ Schema::create('products', function (Blueprint $table) {
     $table->boolean('is_active');          // true/false
     $table->decimal('price', 8, 2);        // Decimal con precisión
     $table->text('description');           // TEXT (largo)
-    "table->foreignId('user_id')->constrained()->onDelete('cascade');"
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
     $table->timestamps();                  // created_at + updated_at
-    "$table->softDeletes();"
+    $table->softDeletes();
 });
 ```
 
@@ -56,14 +58,14 @@ Schema::create('products', function (Blueprint $table) {
 | Columna | Tipo en BD | Uso |
 |---|---|---|
 | `id` | `BIGINT UNSIGNED AUTO_INCREMENT` | Identificador único |
-| `name` | `VARCHAR(255)` | Nombre |
+| `name` | `VARCHAR(255)` | Nombre del producto |
 | `sku` | `VARCHAR(255) UNIQUE` | Código único |
 | `price` | `DECIMAL(8,2)` | Precio con 2 decimales |
-| `user_id` | `BIGINT UNSIGNED` | FK → `users.id` |
+| `user_id` | `BIGINT UNSIGNED` | FK → `users.id` (autor) |
 | `deleted_at` | `TIMESTAMP NULL` | Borrado lógico |
 :::
 
-Otros tipos útiles para cuando los necesites:
+Cuando estos no sean suficientes, Laravel ofrece más tipos especializados:
 
 ```php
 $table->date('birthday');              // YYYY-MM-DD
@@ -78,7 +80,7 @@ $table->uuid('identifier');            // UUID v4
 Para la [lista completa de tipos de columna](https://laravel.com/docs/11.x/migrations#available-column-types) disponibles, consulta la documentación oficial.
 
 :::note[String con longitud personalizada]
-Por defecto, `$table->string('name')` crea un `VARCHAR(255)`. Si necesitas menos caracteres:
+Por defecto, `$table->string('name')` crea un `VARCHAR(255)`. Puedes reducirlo pasando la longitud como segundo argumento:
 ```php
 $table->string('country_code', 3);  // VARCHAR(3)
 ```
@@ -86,21 +88,21 @@ $table->string('country_code', 3);  // VARCHAR(3)
 
 ## Modificadores de columna
 
-Los [modificadores](https://laravel.com/docs/11.x/migrations#column-modifiers) se encadenan al final de la definición del tipo:
+Los tipos de columna definen qué datos se almacenan, pero los [modificadores](https://laravel.com/docs/11.x/migrations#column-modifiers) controlan detalles como valores por defecto, nulabilidad y posición. Se encadenan al final de la definición del tipo:
 
 ```php title="database/migrations/xxxx_create_posts_table.php"
 Schema::create('posts', function (Blueprint $table) {
     $table->id();
-    "$table->string('subtitle')->nullable();"           // Permite NULL
-    "$table->boolean('published')->default(false);"     // Valor por defecto
-    "$table->string('slug')->unique();"                 // Índice único
+    $table->string('subtitle')->nullable();           // Permite NULL
+    $table->boolean('published')->default(false);     // Valor por defecto
+    $table->string('slug')->unique();                 // Índice único
     $table->decimal('revenue', 12, 2)->comment('Ingresos en local');
     $table->string('phone')->after('email');            // Posición (MySQL)
     $table->timestamps();
 });
 ```
 
-Puedes combinar modificadores:
+Los modificadores se pueden combinar libremente para ajustar el comportamiento de una columna:
 
 ```php
 $table->string('email')
@@ -110,6 +112,8 @@ $table->string('email')
 ```
 
 ## Creación y actualización de tablas
+
+Hasta ahora hemos usado `Schema::create` para crear tablas nuevas. Pero conforme tu aplicación evoluciona, también necesitarás modificar tablas existentes.
 
 **Crear tabla** con el método [`create`](https://laravel.com/docs/11.x/migrations#creating-tables):
 
@@ -122,7 +126,7 @@ Schema::create('posts', function (Blueprint $table) {
 });
 ```
 
-**Actualizar tabla existente** (agregar columna) con el método [`table`](https://laravel.com/docs/11.x/migrations#modifying-tables):
+**Agregar columna a una tabla existente** con el método [`table`](https://laravel.com/docs/11.x/migrations#modifying-tables):
 
 ```php
 Schema::table('users', function (Blueprint $table) {
@@ -130,7 +134,7 @@ Schema::table('users', function (Blueprint $table) {
 });
 ```
 
-**Eliminar columna:**
+**Eliminar columna** de una tabla existente:
 
 ```php
 Schema::table('users', function (Blueprint $table) {
@@ -138,27 +142,29 @@ Schema::table('users', function (Blueprint $table) {
 });
 ```
 
-**Renombrar tabla:**
+**Renombrar tabla** sin perder datos:
 
 ```php
 Schema::rename('customers', 'clients');
 ```
 
 :::caution[Modificar columnas existentes]
-Para cambiar el tipo de una columna o renombrar columnas, necesitas instalar `doctrine/dbal`:
+Crear, agregar y eliminar columnas funciona directamente con Laravel. Pero para cambiar el tipo o renombrar una columna existente, necesitas instalar `doctrine/dbal`:
 ```bash
 composer require doctrine/dbal
 ```
 Consulta la [documentación sobre modificación de columnas](https://laravel.com/docs/11.x/migrations#modifying-columns) para más detalles.
 :::
 
-**Eliminar tabla:**
+**Eliminar tabla** de forma segura (no lanza error si no existe):
 
 ```php
 Schema::dropIfExists('posts');
 ```
 
 ## Índices
+
+Los índices aceleran las consultas que filtran o buscan por ciertas columnas. Agregar índices a las columnas que uses frecuentemente en `WHERE`, `ORDER BY` o `JOIN` puede mejorar significativamente el rendimiento:
 
 ```php title="database/migrations/xxxx_add_indexes_to_users_table.php"
 Schema::table('users', function (Blueprint $table) {
@@ -169,11 +175,11 @@ Schema::table('users', function (Blueprint $table) {
 });
 ```
 
-Consulta la [documentación sobre índices](https://laravel.com/docs/11.x/migrations#indexes) para crear, nombrar e eliminar índices de forma manual.
+Consulta la [documentación sobre índices](https://laravel.com/docs/11.x/migrations#indexes) para crear, nombrar y eliminar índices de forma manual.
 
 ## Claves foráneas
 
-Laravel ofrece una sintaxis moderna para definir [claves foráneas](https://laravel.com/docs/11.x/migrations#foreign-key-constraints):
+Las claves foráneas garantizan la integridad referencial entre tablas: impiden que se inserten valores huérfanos y definen qué pasa cuando un registro padre se elimina. Laravel ofrece una sintaxis moderna para definirlas:
 
 ```php
 // Forma moderna (recomendada)
@@ -184,9 +190,11 @@ $table->unsignedBigInteger('user_id');
 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 ```
 
-El método `constrained()` usa convenciones para determinar la tabla y columna referenciada automáticamente.
+Con `constrained()`, Laravel deduce automáticamente la tabla y columna de referencia a partir del nombre de la columna (`user_id` → tabla `users`, columna `id`). Si tu convención no coincide, puedes especificar la tabla manualmente: `constrained('admins')`.
 
 ## Comandos de migración
+
+Estos son los comandos que usarás a diario para gestionar el estado de tu base de datos:
 
 | Comando | Descripción |
 |---|---|
@@ -199,9 +207,11 @@ El método `constrained()` usa convenciones para determinar la tabla y columna r
 | `php artisan migrate:fresh --seed` | Fresh + ejecuta seeders |
 | `php artisan migrate:status` | Muestra estado de cada migración |
 
-Consulta la [documentación completa de comandos de migración](https://laravel.com/docs/11.x/migrations#artisan-commands).
+Consulta la [documentación completa de comandos de migración](https://laravel.com/docs/11.x/migrations#artisan-commands) para más detalles.
 
 ## Convención de nombres
+
+Laravel genera nombres de archivo automáticamente, pero si sigues estas convenciones, artisan creará la migración con la estructura correcta desde el inicio:
 
 ```bash
 php artisan make:migration create_orders_table        # Crear tabla

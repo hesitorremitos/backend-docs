@@ -14,14 +14,14 @@ keywords:
   - "@forelse"
 ---
 
-import { Card, LinkCard } from '@astrojs/starlight/components';
+import { Card, LinkCard, FileTree } from '@astrojs/starlight/components';
 
 # Vistas en Laravel - Introducción a Blade
 
-Las **vistas** son la capa de presentación en Laravel que separa la lógica de negocio de la interfaz visual. Laravel incluye un motor de plantillas llamado **[Blade](https://laravel.com/docs/11.x/blade)** que compila a PHP puro, por lo que no añade sobrecarga a tu aplicación.
+Las **vistas** son la capa de presentación de Laravel: se encargan de mostrar la información al usuario, mientras que la lógica de negocio se queda en controladores y modelos. Laravel incluye **[Blade](https://laravel.com/docs/11.x/blade)**, un motor de plantillas que compila a PHP puro y no añade sobrecarga a tu aplicación. Blade ofrece una sintaxis clara para imprimir datos, crear condiciones, iterar y mucho más.
 
 :::tip[¿Por qué separar la vista de la lógica?]
-Separar la presentación de la lógica hace que tu código sea más **mantenible**, más fácil de **escalar** y permite que diseñadores y desarrolladores trabajen en paralelo.
+Separar la presentación de la lógica hace que tu código sea más **mantenible**, más fácil de **escalar** y permite que diseñadores y desarrolladores trabajen en paralelo sin pisarse.
 :::
 
 ---
@@ -32,16 +32,16 @@ Separar la presentación de la lógica hace que tu código sea más **mantenible
 
 Todas las vistas de Blade se guardan en `resources/views/` con extensión `.blade.php`.
 
-```text
-resources/views/
-├── home.blade.php
-├── layouts/
-│   └── app.blade.php
-└── admin/
-    └── users.blade.php
-```
+<FileTree>
+- resources/views/
+  - home.blade.php
+  - layouts/
+    - app.blade.php
+  - admin/
+    - users.blade.php
+</FileTree>
 
-Para referenciar subcarpetas, usa notación de punto:
+Laravel usa la notación de punto para referenciar vistas dentro de subcarpetas:
 
 ```php
 return view('admin.users');
@@ -69,7 +69,9 @@ Nunca uses `{!! !!}` con datos que vienen del usuario sin sanitizar. Es una puer
 
 ## Layout y herencia
 
-El layout es la plantilla base que define la estructura HTML común (head, header, footer). Las vistas hijas heredan de él usando la [herencia de templates](https://laravel.com/docs/11.x/blade#layouts-using-template-inheritance).
+Si no existieran los layouts, tendrías que repetir el mismo `<head>`, `<header>` y `<footer>` en cada vista. Cualquier cambio —como agregar un CSS nuevo— requeriría editar todos los archivos. Los layouts resuelven esto: definen la estructura HTML común **una sola vez** y las vistas hijas se limitan a rellenar las secciones que cambian. Esto aplica el principio **DRY** (*Don't Repeat Yourself*) y hace que tu proyecto sea mucho más mantenible.
+
+El layout es la plantilla base que define la estructura HTML compartida (head, header, footer). Las vistas hijas heredan de él usando la [herencia de templates](https://laravel.com/docs/11.x/blade#layouts-using-template-inheritance).
 
 ### Paso 1: Layout base
 
@@ -131,6 +133,8 @@ Route::get('/saludo', function () {
 
 ## Paso de datos a las vistas
 
+Para que una vista muestre información, necesitas pasarle variables desde la ruta o el controlador. Laravel ofrece tres formas de hacerlo:
+
 ### Forma 1: Array asociativo
 
 ```php
@@ -174,6 +178,8 @@ public function index()
 
 ## Directivas de control
 
+Las directivas de Blade te permiten añadir lógica condicional y bucles directamente en la plantilla, con una sintaxis más legible que el PHP puro.
+
 ### Condicionales: @if, @elseif, @else, @endif
 
 ```blade title="resources/views/perfil.blade.php"
@@ -187,7 +193,7 @@ public function index()
 ```
 
 :::note[¿Qué pasa con @unless?]
-`@unless` es equivalente a `@if(!condicion)`. Si necesitas negar una condición, simplemente usa `@if(!$variable)` — funciona igual.
+`@unless` hace lo mismo que `@if(!$condicion)`. Puedes usar cualquiera de las dos formas, aunque `@if` con negación es más común y explícito.
 :::
 
 ### @switch
@@ -210,7 +216,7 @@ public function index()
 
 ### Bucles: @foreach y @forelse
 
-**@foreach** — Itera sobre colecciones y arrays:
+El bucle más común en Blade es **@foreach**, que itera sobre colecciones y arrays:
 
 ```blade title="resources/views/productos/index.blade.php"
 @foreach($productos as $producto)
@@ -221,7 +227,7 @@ public function index()
 @endforeach
 ```
 
-**Variable `$loop`** — Dentro de `@foreach`, Blade crea automáticamente la variable `$loop`:
+Dentro de cada `@foreach`, Blade pone a tu disposición la variable **`$loop`** con información útil sobre la iteración actual:
 
 | Propiedad | Descripción |
 |---|---|
@@ -231,7 +237,7 @@ public function index()
 | `$loop->last` | `true` si es la última iteración |
 | `$loop->count` | Total de elementos |
 
-**@forelse** — Como `@foreach`, pero con bloque `@empty` cuando la colección está vacía:
+¿Qué pasa si la colección está vacía? **@forelse** es como `@foreach`, pero añade un bloque `@empty` para mostrar un mensaje alternativo:
 
 ```blade title="resources/views/productos/lista.blade.php"
 @forelse($productos as $producto)
@@ -243,13 +249,13 @@ public function index()
 @endforelse
 ```
 
-Los [bucles de Blade](https://laravel.com/docs/11.x/blade#loops) incluyen también `@for` y `@while`, pero los bucles de PHP nativos también funcionan dentro de Blade sin problema.
+Blade también incluye `@for` y `@while`, aunque se usan mucho menos que `@foreach` y `@forelse`. Puedes consultar todos los detalles en la documentación sobre [bucles de Blade](https://laravel.com/docs/11.x/blade#loops).
 
 ---
 
 ## Formularios con Blade
 
-Blade incluye [directivas para formularios](https://laravel.com/docs/11.x/blade#forms) seguros:
+Los formularios necesitan protección CSRF y manejo de errores. Blade incluye [directivas específicas](https://laravel.com/docs/11.x/blade#forms) que simplifican estas tareas:
 
 ```blade title="resources/views/productos/create.blade.php"
 <form action="/productos" method="POST">
@@ -275,7 +281,7 @@ Blade incluye [directivas para formularios](https://laravel.com/docs/11.x/blade#
 
 ## @include — Reutilizar fragmentos
 
-Puedes incluir partes de vistas en otras plantillas:
+Además de la herencia, Blade permite incluir fragmentos parciales dentro de cualquier plantilla. Esto es útil para elementos que se repiten en varias páginas pero no justifican un layout completo:
 
 ```blade
 @include('partials.header')
@@ -285,7 +291,7 @@ Puedes incluir partes de vistas en otras plantillas:
 @includeIf('partials.analytics')
 ```
 
-Para más opciones como componentes reutilizables, slots y layouts anidados, consulta la [documentación oficial de Blade](https://laravel.com/docs/11.x/blade).
+Además de includes y layouts, Blade soporta **componentes** reutilizables con slots y atributos. Para más opciones, consulta la [documentación oficial de Blade](https://laravel.com/docs/11.x/blade).
 
 ---
 

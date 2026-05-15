@@ -6,9 +6,9 @@ keywords: ['Laravel', 'Controladores', 'Controllers', 'Resource Controller', 'AP
 
 import { Card, LinkCard, Steps } from '@astrojs/starlight/components';
 
-Los **[controladores](https://laravel.com/docs/11.x/controllers)** son clases PHP que agrupan la lógica de manejo de solicitudes HTTP. En lugar de escribir toda la lógica como *closures* en el archivo de rutas, los controladores permiten **organizar el código de forma limpia, modular y mantenable**.
+Los **[controladores](https://laravel.com/docs/11.x/controllers)** son clases PHP que agrupan la lógica de manejo de solicitudes HTTP. En lugar de escribir *closures* sueltas en el archivo de rutas, los controladores permiten **organizar el código de forma limpia, modular y mantenable**.
 
-Pensemos en una tienda online con decenas de acciones relacionadas con productos. Si toda esa lógica viviera en `routes/web.php`, el código se volvería ilegible. Los controladores resuelven este problema.
+Imagina una tienda online con decenas de acciones sobre productos: listar, crear, actualizar, eliminar… Si toda esa lógica viviera en `routes/web.php`, el archivo se volvería inmanejable. Los controladores resuelven este problema concentrando cada grupo de acciones en su propia clase.
 
 ## Conceptos clave
 
@@ -43,13 +43,15 @@ Las rutas solo deben definir URLs. Todo el procesamiento, validación y lógica 
 
 ## Creación de un controlador
 
+Veamos cómo crear uno desde cero.
+
 ### Generar el controlador con Artisan
 
 ```bash
 php artisan make:controller NombreController
 ```
 
-Esto crea un archivo en `app/Http/Controllers/` con esta estructura:
+Esto crea un archivo en `app/Http/Controllers/` con la estructura base:
 
 ```php title="app/Http/Controllers/NombreController.php"
 <?php
@@ -61,6 +63,8 @@ class NombreController extends Controller
     // Los métodos se definen aquí
 }
 ```
+
+A continuación veremos dos ejemplos de métodos: uno que devuelve una vista y otro que procesa datos de un formulario.
 
 ### Método que retorna una vista
 
@@ -110,9 +114,11 @@ class ProductoController extends Controller
 
 ## Tipos de controladores
 
+Laravel ofrece tres tipos de controladores según el caso de uso: el **básico** para lógica a medida, el **resource** para CRUD completo en aplicaciones web, y el **API resource** para APIs RESTful. La elección depende de qué acciones necesites exponer.
+
 ### Controlador básico
 
-Métodos definidos manualmente, útiles para acciones personalizadas:
+Cuando necesitas acciones específicas que no encajan en un CRUD estándar, un controlador básico te permite definir cada método manualmente:
 
 ```php title="app/Http/Controllers/DashboardController.php"
 <?php
@@ -135,7 +141,7 @@ class DashboardController extends Controller
 
 ### Controlador de recurso ([Resource Controller](https://laravel.com/docs/11.x/controllers#resource-controllers))
 
-Genera automáticamente los 7 métodos estándar para CRUD completo:
+Cuando necesitas un CRUD completo con vistas HTML para formularios, este tipo genera automáticamente los 7 métodos estándar:
 
 ```bash
 php artisan make:controller ProductoController --resource
@@ -157,7 +163,7 @@ Los métodos `create` y `edit` devuelven **vistas con formularios HTML**, por es
 
 ### Controlador de API Resource
 
-Genera solo los 5 métodos necesarios para [APIs](https://laravel.com/docs/11.x/controllers#api-resource-routes) (sin `create` ni `edit`):
+Para APIs RESTful no hace falta mostrar formularios, así que este tipo genera solo los 5 métodos [necesarios](https://laravel.com/docs/11.x/controllers#api-resource-routes) (sin `create` ni `edit`):
 
 ```bash
 php artisan make:controller ProductoController --api
@@ -171,11 +177,15 @@ php artisan make:controller ProductoController --api
 | `update($id)` | PUT/PATCH | `/productos/{id}` | Actualizar |
 | `destroy($id)` | DELETE | `/productos/{id}` | Eliminar |
 
-Este es el tipo de controlador **ideal para APIs RESTful** modernas.
+Es el tipo de controlador **ideal para APIs RESTful** modernas.
+
+Con los tres tipos claros, veamos cómo se asignan las rutas a cada uno.
 
 ## Definición de rutas
 
 ### Ruta simple
+
+Para un controlador básico, cada ruta se define de forma individual:
 
 ```php
 use App\Http\Controllers\UserController;
@@ -192,7 +202,7 @@ Route::post('/users', [UserController::class, 'store']);
 
 ### Rutas de recurso
 
-Genera las 7 rutas del CRUD automáticamente:
+Para un resource controller, una sola línea genera las 7 rutas del CRUD:
 
 ```php
 use App\Http\Controllers\ProductController;
@@ -203,7 +213,7 @@ Route::resource('products', ProductController::class);
 
 ### Rutas de API resource
 
-Solo genera las 5 rutas para APIs:
+Y para un API resource controller, igualmente una línea, pero genera solo las 5 rutas necesarias:
 
 ```php
 use App\Http\Controllers\ProductController;
@@ -226,6 +236,8 @@ Route::apiResource('products', ProductController::class);
 
 ### Ver rutas registradas
 
+Para comprobar qué rutas tiene tu aplicación:
+
 ```bash
 php artisan route:list
 
@@ -234,12 +246,12 @@ php artisan route:list --name=products
 ```
 
 :::note[Nombres de rutas]
-Laravel asigna automáticamente **nombres** a cada ruta (columna "Nombre de la ruta"). Estos nombres son útiles para generar URLs en vistas y redirecciones sin hardcodearlas.
+Laravel asigna automáticamente **nombres** a cada ruta (columna "Nombre de la ruta"). Estos nombres permiten generar URLs y redirecciones sin hardcodear las rutas en las vistas.
 :::
 
 ## Route Model Binding
 
-El **[Route Model Binding](https://laravel.com/docs/11.x/routing#route-model-binding)** es una de las características más potentes de Laravel. Cuando declaras un parámetro de tipo `Modelo`, Laravel **busca automáticamente** el registro en la base de datos por su ID:
+Hasta ahora hemos recibido el ID como parámetro y buscado el modelo manualmente. Pero Laravel puede hacer ese trabajo por nosotros con **[Route Model Binding](https://laravel.com/docs/11.x/routing#route-model-binding)**: cuando declaras un parámetro de tipo `Modelo`, Laravel **busca automáticamente** el registro en la base de datos por su ID.
 
 ```php title="app/Http/Controllers/ProductController.php"
 <?php
@@ -272,10 +284,12 @@ class ProductController extends Controller
 ```
 
 :::info[¿Cómo funciona?]
-Cuando Laravel recibe una petición a `GET /products/5`, detecta que el parámetro `$product` es del tipo `App\Models\Product`. Automáticamente ejecuta `Product::findOrFail(5)` y pasa el resultado al método. Si no existe, devuelve un error 404 automáticamente.
+Cuando Laravel recibe una petición a `GET /products/5`, detecta que el parámetro `$product` es del tipo `App\Models\Product`. Ejecuta `Product::findOrFail(5)` y pasa el resultado al método. Si no existe, devuelve un error 404 automáticamente.
 :::
 
 Para más opciones como [Route Model Binding con clave personalizada](https://laravel.com/docs/11.x/routing#route-model-binding) o [controladores invocables](https://laravel.com/docs/11.x/controllers#single-action-controllers), consulta la documentación oficial.
+
+Pongámoslo todo en práctica con un ejemplo completo.
 
 ## Ejemplo completo: CRUD API de Productos
 
@@ -294,7 +308,7 @@ Para más opciones como [Route Model Binding con clave personalizada](https://la
    ```
 
    :::tip[Recuerda]
-   El flag `-m` genera la migración automáticamente. Consulta el [capítulo de Modelos](/laravel/06-models) para más detalles.
+   El flag `-m` genera la migración automáticamente. Consulta el [capítulo de Modelos](/laravel/05-models) para más detalles.
    :::
 
 3. **Implementar el controlador completo**:
@@ -395,8 +409,10 @@ Para más opciones como [Route Model Binding con clave personalizada](https://la
 </Steps>
 
 :::tip[Validación con `sometimes`]
-En el método `update` usamos `'name' => 'sometimes|required|string|max:255'`. La regla `sometimes` significa: "solo valida este campo si está presente en la solicitud". Esto permite actualizaciones parciales donde el cliente envía solo los campos que quiere modificar.
+En el método `update` usamos `'name' => 'sometimes|required|string|max:255'`. La regla `sometimes` significa: "solo valida este campo si está presente en la solicitud". Esto permite actualizaciones parciales donde el cliente envía solo los campos que quiere modificar, sin necesidad de enviar todo el recurso.
 :::
+
+Ahora te toca a ti.
 
 ## Ejercicio práctico
 
@@ -516,7 +532,7 @@ DELETE /api/categories/1
 
 ## Más funcionalidades
 
-Para controladores avanzados, consulta la documentación oficial:
+Los controladores admiten muchas más capacidades. Aquí tienes algunas de las más útiles:
 
 - [Controladores invocables (Single Action)](https://laravel.com/docs/11.x/controllers#single-action-controllers) — un controlador con un solo método `__invoke()`.
 - [Controladores anidados](https://laravel.com/docs/11.x/controllers#resource-controllers) — rutas jerárquicas como `/users/{user}/posts`.

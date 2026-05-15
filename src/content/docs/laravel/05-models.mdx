@@ -8,9 +8,9 @@ import { Card, LinkCard } from '@astrojs/starlight/components';
 
 # Modelos en Laravel — Uso Directo en Rutas
 
-En el patrón MVC, las **M** corresponden a los **Modelos**. En Laravel, los modelos son clases PHP que utilizan [Eloquent ORM](https://laravel.com/docs/11.x/eloquent) para representar tablas de la base de datos. Cada instancia equivale a una fila, y cada propiedad a una columna.
+En el patrón MVC, la **M** corresponde a los **Modelos**. En Laravel, un modelo es una clase PHP que utiliza [Eloquent ORM](https://laravel.com/docs/11.x/eloquent) para representar una tabla de la base de datos: cada instancia equivale a una fila, y cada propiedad a una columna.
 
-Gracias a Eloquent, puedes consultar, crear, actualizar y eliminar registros sin escribir SQL manualmente. En este capítulo aprenderás a **crear modelos y usarlos directamente en rutas**, sin controladores.
+Eloquent te permite consultar, crear, actualizar y eliminar registros sin escribir SQL manualmente. En este capítulo vas a **crear modelos y usarlos directamente en rutas**, sin controladores, para entender cómo funcionan antes de abstraerlos.
 
 ---
 
@@ -49,7 +49,7 @@ class Product extends Model
 
 ### 1.3 Asignación masiva: `$fillable` y `$guarded`
 
-Cuando usas `create()` o `update()` con un array, Laravel protege contra la [asignación masiva](https://laravel.com/docs/11.x/eloquent#mass-assignment). Debes indicar qué campos se permiten:
+Cuando envías datos con `create()` o `update()`, existe un riesgo de seguridad: un usuario malintencionado podría inyectar campos no deseados (como `is_admin`) en la petición. Esta vulnerabilidad se conoce como **Mass Assignment**. Para protegerte, Laravel exige que declares explícitamente qué campos se permiten asignar en masa usando [asignación masiva](https://laravel.com/docs/11.x/eloquent#mass-assignment):
 
 ```php title="app/Models/Product.php"
 <?php
@@ -69,7 +69,7 @@ class Product extends Model
 ```
 
 :::caution[Importante]
-Si usas `Product::create([...])` sin definir `$fillable` o `$guarded`, Laravel lanza un error de **Mass Assignment**.
+Si usas `Product::create([...])` sin definir `$fillable` o `$guarded`, Laravel lanza un error de **Mass Assignment**. Esto es intencional: obligarte a ser explícito previene que campos sensibles se asignen por accidente.
 :::
 
 ---
@@ -82,7 +82,7 @@ Para que el modelo funcione, necesitas la tabla correspondiente. Consulta la gu�
 
 ## 3. Usar Modelos Directamente en Rutas
 
-En este capítulo trabajamos **sin controladores**. Todas las operaciones se hacen directamente en las rutas con closures.
+Hasta ahora creaste el modelo y su migración, pero aún no conectaste nada con el exterior. El flujo típico de una petición es: **el cliente hace una petición → llega a una ruta → la ruta usa el modelo para interactuar con la base de datos → devuelve una respuesta**. En este capítulo trabajamos directamente en las rutas (sin controladores) para que veas cómo interactúa el modelo con los datos antes de abstraer esa lógica.
 
 ### 3.1 Obtener todos los registros
 
@@ -94,7 +94,7 @@ Route::get('/products', function () {
 });
 ```
 
-`Product::all()` ejecuta un `SELECT * FROM products` y devuelve una [colección](https://laravel.com/docs/11.x/eloquent#collections).
+`Product::all()` ejecuta un `SELECT * FROM products` y devuelve una [colección](https://laravel.com/docs/11.x/eloquent#collections) de modelos Eloquent.
 
 ### 3.2 Obtener un registro por ID
 
@@ -110,7 +110,7 @@ Route::get('/products/{id}', function ($id) {
 });
 ```
 
-`Product::find($id)` busca por la clave primaria y devuelve `null` si no existe.
+`Product::find($id)` busca por la clave primaria. Si el registro no existe, devuelve `null`, por eso conviene verificar antes de responder.
 
 ### 3.3 Obtener un registro o fallar automáticamente
 
@@ -122,7 +122,7 @@ Route::get('/products/{id}', function ($id) {
 });
 ```
 
-[`findOrFail()`](https://laravel.com/docs/11.x/eloquent#retrieving-single-models) devuelve el registro o una respuesta **404** automáticamente, sin necesidad del `if`.
+[`findOrFail()`](https://laravel.com/docs/11.x/eloquent#retrieving-single-models) es más práctico: si el registro no existe, lanza automáticamente una respuesta **404**, ahorrándote la verificación manual.
 
 ### 3.4 Crear un registro
 
@@ -141,7 +141,7 @@ Route::post('/products', function (Request $request) {
 });
 ```
 
-`$request->validate()` verifica los datos; si falla, Laravel responde con errores **422** automáticamente. Para más detalles sobre [insertar y actualizar modelos](https://laravel.com/docs/11.x/eloquent#inserting-and-updating-models).
+`$request->validate()` verifica los datos entrantes. Si algo falla, Laravel responde automáticamente con errores **422** y no ejecuta el resto del closure. Para más detalles, consulta la guía de [insertar y actualizar modelos](https://laravel.com/docs/11.x/eloquent#inserting-and-updating-models).
 
 ### 3.5 Actualizar un registro
 
@@ -162,7 +162,7 @@ Route::put('/products/{id}', function (Request $request, $id) {
 });
 ```
 
-La regla `sometimes` permite actualizaciones parciales: solo se valida si el campo está presente.
+La regla `sometimes` permite actualizaciones parciales: solo valida el campo si está presente en la petición, así puedes enviar solo los campos que quieras cambiar.
 
 ### 3.6 Eliminar un registro
 
@@ -191,7 +191,7 @@ Route::get('/products/search', function (Request $request) {
 });
 ```
 
-Laravel escapa automáticamente los valores, protegiendo contra SQL Injection.
+Laravel escapa automáticamente los valores en las consultas, así que no te preocupes por SQL Injection al usar `where` con datos del usuario.
 
 ### 3.8 Primer resultado y orden
 
@@ -312,11 +312,11 @@ Route::get('/products/count', function () {
 
 ### 5.2 Obtener solo una columna
 
-`pluck('columna')` devuelve un array con los valores de una columna: `Product::pluck('name')` equivale a `SELECT name FROM products`.
+`pluck('columna')` extrae los valores de una sola columna como un array simple: `Product::pluck('name')` equivale a `SELECT name FROM products`, pero sin instanciar modelos completos.
 
 ### 5.3 Buscar o crear (`firstOrCreate`)
 
-Busca un registro. Si existe, lo devuelve; si no, lo crea con los valores proporcionados.
+`firstOrCreate` busca un registro por los campos indicados. Si lo encuentra, lo devuelve; si no, lo crea combinando los criterios de búsqueda con los valores adicionales.
 
 ```php title="routes/web.php"
 Route::post('/products/find-or-create', function (Request $request) {
@@ -334,7 +334,7 @@ Route::post('/products/find-or-create', function (Request $request) {
 
 ### 5.4 Actualizar o crear (`updateOrCreate`)
 
-Si el registro existe, lo actualiza; si no, lo crea.
+Similar a `firstOrCreate`, pero si el registro ya existe lo actualiza con los valores proporcionados en lugar de devolverlo tal cual.
 
 ```php title="routes/web.php"
 Route::post('/products/update-or-create', function (Request $request) {
